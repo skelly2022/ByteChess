@@ -1,16 +1,36 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "src/server/api/trpc";
+import { prisma } from "src/server/db";
 
 export const exampleRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
+  createUser: publicProcedure
+    .input(z.object({ address: z.string() }))
+    .mutation(async ({ input }) => {
+      const user = await prisma.user.findFirst({
+        where: {
+          walletAddress: input.address,
+        },
+      });
+      if (user) {
+        return user;
+      } else {
+        return prisma.user.create({
+          data: {
+            walletAddress: input.address,
+          },
+        });
+      }
     }),
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
-  }),
+  getUser: publicProcedure
+    .input(z.object({ address: z.string() }))
+    .mutation(async ({ input }) => {
+      console.log(input);
+      const user = await prisma.user.findFirst({
+        where: {
+          walletAddress: input.address,
+        },
+      });
+      return user;
+    }),
 });
