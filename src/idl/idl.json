@@ -25,5 +25,8 @@
         "fields": [{ "name": "data", "type": "u64" }]
       }
     }
-  ]
+  ],
+  "metadata": {
+    "address": "HJPJwMey3UBiGHcXJ9M5kKef9LFNo8qhGT5TLLrTFsFt"
+  }
 }

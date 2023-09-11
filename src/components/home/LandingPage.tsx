@@ -3,7 +3,7 @@ import usePlayModal from "src/hooks/usePlayModal";
 import Container from "../Container";
 import PlayVsPlay from "./PlayVsPlay";
 import { useEffect } from "react";
-// import BlockChain from "./BlockChain";
+import BlockChain from "./BlockChain";
 
 const LandingPage = () => {
   const play = usePlayModal();

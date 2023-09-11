@@ -1,29 +1,13 @@
-// import { useEffect } from "react";
-// import { program, counterPDA, CounterData } from "~/anchor/setup";
+import { useEffect } from "react";
+import { program, ChessProgramPDA } from "~/anchor/setup";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import useAnchorProgram from "~/hooks/useAnchorProgram";
 
-// const BlockChain = () => {
-//   useEffect(() => {
-//     // Fetch initial account data
-//     program.account.counter.fetch(counterPDA).then((data) => {
-//       setCounterData(data);
-//     });
+const BlockChain = () => {
+  const wallet = useWallet();
+  const program = useAnchorProgram();
+  console.log(program);
+  return <div>Hey</div>;
+};
 
-//     // Subscribe to the state PDA account change
-//     const subscriptionId = connection.onAccountChange(
-//       counterPDA,
-//       (accountInfo) => {
-//         setCounterData(
-//           program.coder.accounts.decode("counter", accountInfo.data),
-//         );
-//       },
-//     );
-
-//     return () => {
-//       // Unsubscribe from the account change subscription
-//       connection.removeAccountChangeListener(subscriptionId);
-//     };
-//   }, [program]);
-//   return <div>Hey</div>;
-// };
-
-// export default BlockChain;
+export default BlockChain;
