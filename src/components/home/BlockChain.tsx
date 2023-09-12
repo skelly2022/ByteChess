@@ -65,7 +65,7 @@ const BlockChain = () => {
   return (
     <div>
       <button onClick={handleClickInitialize} disabled={!publicKey}>
-        {/* Sign Transaction */}
+        Sign Transaction
       </button>
     </div>
   );

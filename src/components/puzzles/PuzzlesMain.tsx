@@ -21,6 +21,7 @@ const PuzzlesMain = () => {
     async onSuccess(result) {
       setPuzzleData(result);
       setLoading(true);
+
       const solutionMoves = result?.Moves.split(" ");
       setMoveArray(solutionMoves);
     },
