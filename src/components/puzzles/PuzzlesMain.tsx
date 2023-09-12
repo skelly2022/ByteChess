@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 import useUserStore from "src/hooks/useUserStore";
 import ChessPuzzle from "./ChessPuzzle";
 import ChessPuzzleDash from "./ChessPuzzleDash";
@@ -6,6 +6,9 @@ import { api } from "src/utils/api";
 import usePuzzleStore from "src/hooks/usePuzzleStore";
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { toast } from "react-hot-toast";
+import { getAssets } from "~/hooks/useAssetsStore";
+import { program } from "~/anchor/setup";
 
 const PuzzlesMain = () => {
   const puzzle = usePuzzleStore();
@@ -31,7 +34,7 @@ const PuzzlesMain = () => {
       puzzle.setPuzzleMoves([]);
       puzzle.setPuzzleFens([]);
       user.setUser(data);
-      getPuzzle.mutateAsync({ address: publicKey.toBase58() });
+      getPuzzle.mutateAsync({ address: publicKey.toBase58(), id: "" });
     },
   });
   const onCorrect = api.puzzles.onSuccess.useMutation({
@@ -40,30 +43,52 @@ const PuzzlesMain = () => {
       puzzle.setPuzzleMoves([]);
       puzzle.setPuzzleFens([]);
       user.setUser(data);
-      getPuzzle.mutateAsync({ address: publicKey.toBase58() });
+      getPuzzle.mutateAsync({ address: publicKey.toBase58(), id: "" });
     },
   });
 
-  const correct = () => {
-    onCorrect.mutateAsync({
-      address: publicKey.toBase58(),
-      puzzleRating: puzzleData?.Rating,
-      puzzleID: puzzleData?.PuzzleId,
-    });
+  const correct = async () => {
+    if (user.user.puzzleCount === 5 && puzzle.ranked === true) {
+      toast.error("Must submit rating to chain!");
+      puzzle.setSign("show");
+    } else {
+      onCorrect.mutateAsync({
+        address: publicKey.toBase58(),
+        puzzleRating: puzzleData?.Rating,
+        puzzleID: puzzleData?.PuzzleId,
+        ranked: puzzle.ranked,
+      });
+    }
   };
 
   const inCorrect = () => {
-    onFalse.mutateAsync({
+    console.log(puzzle.ran);
+    if (user.user.puzzleCount === 5 && puzzle.ranked === true) {
+      toast.error("Must submit rating to chain!");
+      puzzle.setSign("show");
+    } else {
+      onFalse.mutateAsync({
+        address: publicKey.toBase58(),
+        puzzleRating: puzzleData?.Rating,
+        puzzleID: puzzleData?.PuzzleId,
+        ranked: puzzle?.ranked,
+      });
+    }
+  };
+  const changeMode = () => {
+    getPuzzle.mutateAsync({
       address: publicKey.toBase58(),
-      puzzleRating: puzzleData?.Rating,
-      puzzleID: puzzleData?.PuzzleId,
+      id: puzzleData?.PuzzleId,
     });
   };
-
   useEffect(() => {
     // const data = { address: publicKey.toBase58() };
-    if (publicKey?.toBase58() !== undefined) {
-      getPuzzle.mutateAsync({ address: publicKey.toBase58() });
+    console.log(publicKey);
+    if (publicKey !== null) {
+      getPuzzle.mutateAsync({
+        address: publicKey.toBase58(),
+        id: "",
+      });
     }
   }, [publicKey]);
 
@@ -84,6 +109,7 @@ const PuzzlesMain = () => {
               rating={puzzleData?.Rating}
               fen={puzzleData?.FEN}
               solution={moveArray}
+              changeMode={changeMode}
             />
           </div>
         </>
@@ -95,7 +121,7 @@ const PuzzlesMain = () => {
           >
             <svg
               aria-hidden="true"
-              className="mr-2 inline h-16 w-16 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+              className="fill-blue-600 mr-2 inline h-16 w-16 animate-spin text-gray-200 dark:text-gray-600"
               viewBox="0 0 100 101"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"

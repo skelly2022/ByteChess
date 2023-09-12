@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "tiny_adventure",
+  "name": "chess_adventure",
   "instructions": [
     {
       "name": "initialize",
@@ -12,9 +12,9 @@
       "args": [{ "name": "data", "type": "u64" }]
     },
     {
-      "name": "moveLeft",
+      "name": "updateRating",
       "accounts": [{ "name": "newAccount", "isMut": true, "isSigner": false }],
-      "args": []
+      "args": [{ "name": "data", "type": "u64" }]
     }
   ],
   "accounts": [
@@ -27,6 +27,6 @@
     }
   ],
   "metadata": {
-    "address": "HJPJwMey3UBiGHcXJ9M5kKef9LFNo8qhGT5TLLrTFsFt"
+    "address": "2wkhhznqYKtLyUwu7oJho6u1RMCFLxyoR8zJoee5gkcN"
   }
 }

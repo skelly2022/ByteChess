@@ -11,15 +11,16 @@ datasource db {
 }
 
 model User {
-    id               String   @id @default(auto()) @map("_id") @db.ObjectId
-    walletAddress    String   @unique
-    puzzleRating     Int      @default(1200) // Default puzzle rating
-    puzzleRD         Int      @default(200)
-    bulletRating     Int      @default(1200) // Default bullet rating
-    blitzRating      Int      @default(1200) // Default blitz rating
-    rapidRating      Int      @default(1200) // Default rapid rating
-    createdAt        DateTime @default(now())
-    completedPuzzles String[]
+    id                String   @id @default(auto()) @map("_id") @db.ObjectId
+    walletAddress     String   @unique
+    puzzleRating      Int      @default(1200) // Default puzzle rating
+    puzzleRatingChain Int      @default(1200)
+    bulletRating      Int      @default(1200) // Default bullet rating
+    blitzRating       Int      @default(1200) // Default blitz rating
+    rapidRating       Int      @default(1200) // Default rapid rating
+    createdAt         DateTime @default(now())
+    puzzleCount       Int      @default(0)
+    completedPuzzles  String[]
 }
 
 model Puzzle {

@@ -3,6 +3,11 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "src/server/api/trpc";
 import { prisma } from "src/server/db";
 import { update } from "@echecs/elo";
+import { use } from "react";
+import { PublicKey } from "@solana/web3.js";
+import { program, connection } from "../../../anchor/setup";
+import { BN } from "@coral-xyz/anchor";
+import { Puzzle } from "lucide-react";
 
 function calculateLossRatingChange(playerRating, puzzleDifficulty) {
   const sensitivity = 0.1; // You can adjust this as needed
@@ -22,6 +27,7 @@ export const puzzleRouter = createTRPCRouter({
     .input(
       z.object({
         address: z.string(),
+        id: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
@@ -44,7 +50,7 @@ export const puzzleRouter = createTRPCRouter({
           },
           NOT: {
             PuzzleId: {
-              in: completedPuzzleIDs,
+              in: [...user.completedPuzzles, input.id],
             },
           },
         },
@@ -60,6 +66,7 @@ export const puzzleRouter = createTRPCRouter({
         address: z.string(),
         puzzleRating: z.string(),
         puzzleID: z.string(),
+        ranked: z.boolean(),
       }),
     )
     .mutation(async ({ input }) => {
@@ -68,34 +75,64 @@ export const puzzleRouter = createTRPCRouter({
           walletAddress: input.address,
         },
       });
-
-      if (!user) {
-        throw new Error("User not found");
-      }
-      const playerRating = user.puzzleRating; // Get player's current rating
-      const puzzleDifficulty = parseInt(input.puzzleRating); // The puzzle's difficulty
-      const newPlayerRating = calculateLossRatingChange(
-        playerRating,
-        puzzleDifficulty,
-      );
+      console.log(input);
       if (user.completedPuzzles.includes(input.puzzleID)) {
         console.log("Puzzle already completed");
         return; // Puzzle already completed, return without updating
       }
-      return await prisma.user.update({
-        where: { walletAddress: input.address },
-        data: {
-          puzzleRating: newPlayerRating, // Update the puzzleRating with the new rating
-          completedPuzzles: [...user.completedPuzzles, input.puzzleID], // Add the puzzle ID as a string to the completedPuzzles array
-        },
-      });
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      let rating;
+      let count;
+
+      if (input.ranked === true) {
+        if (user.puzzleCount === 5) {
+          count = 0;
+        } else {
+          count = user.puzzleCount + 1;
+        }
+        rating = user.puzzleRatingChain;
+        const puzzleDifficulty = parseInt(input.puzzleRating); // The puzzle's difficulty
+        const newPlayerRating = calculateLossRatingChange(
+          rating,
+          puzzleDifficulty,
+        );
+
+        return await prisma.user.update({
+          where: { walletAddress: input.address },
+          data: {
+            puzzleRatingChain: newPlayerRating, // Update the puzzleRating with the new rating
+            completedPuzzles: [...user.completedPuzzles, input.puzzleID],
+            puzzleCount: count, // Add the puzzle ID as a string to the completedPuzzles array
+          },
+        });
+      } else {
+        rating = user.puzzleRating;
+        const puzzleDifficulty = parseInt(input.puzzleRating); // The puzzle's difficulty
+        const newPlayerRating = calculateLossRatingChange(
+          rating,
+          puzzleDifficulty,
+        );
+        return await prisma.user.update({
+          where: { walletAddress: input.address },
+          data: {
+            puzzleRatingChain: newPlayerRating, // Update the puzzleRating with the new rating
+            completedPuzzles: [...user.completedPuzzles, input.puzzleID],
+            puzzleCount: user.puzzleCount, // Add the puzzle ID as a string to the completedPuzzles array
+          },
+        });
+      }
     }),
+
   onSuccess: publicProcedure
     .input(
       z.object({
         address: z.string(),
         puzzleRating: z.string(),
         puzzleID: z.string(),
+        ranked: z.boolean(),
       }),
     )
     .mutation(async ({ input }) => {
@@ -104,25 +141,79 @@ export const puzzleRouter = createTRPCRouter({
           walletAddress: input.address,
         },
       });
-
-      if (!user) {
-        throw new Error("User not found");
-      }
-      const playerRating = user.puzzleRating; // Get player's current rating
-      const puzzleDifficulty = parseInt(input.puzzleRating); // The puzzle's difficulty
-      const newPlayerRating = calculateWinRatingChange(
-        playerRating,
-        puzzleDifficulty,
-      );
       if (user.completedPuzzles.includes(input.puzzleID)) {
         console.log("Puzzle already completed");
         return; // Puzzle already completed, return without updating
       }
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      let rating;
+      let count;
+      if (input.ranked === true) {
+        if (user.puzzleCount === 5) {
+          count = 0;
+        } else {
+          count = user.puzzleCount + 1;
+        }
+        rating = user.puzzleRatingChain;
+        const puzzleDifficulty = parseInt(input.puzzleRating); // The puzzle's difficulty
+        const newPlayerRating = calculateWinRatingChange(
+          rating,
+          puzzleDifficulty,
+        );
+
+        return await prisma.user.update({
+          where: { walletAddress: input.address },
+          data: {
+            puzzleRatingChain: newPlayerRating, // Update the puzzleRating with the new rating
+            completedPuzzles: [...user.completedPuzzles, input.puzzleID],
+            puzzleCount: count, // Add the puzzle ID as a string to the completedPuzzles array
+          },
+        });
+      } else {
+        rating = user.puzzleRating;
+        const puzzleDifficulty = parseInt(input.puzzleRating); // The puzzle's difficulty
+        const newPlayerRating = calculateLossRatingChange(
+          rating,
+          puzzleDifficulty,
+        );
+        return await prisma.user.update({
+          where: { walletAddress: input.address },
+          data: {
+            puzzleRatingChain: newPlayerRating, // Update the puzzleRating with the new rating
+            completedPuzzles: [...user.completedPuzzles, input.puzzleID],
+            puzzleCount: user.puzzleCount, // Add the puzzle ID as a string to the completedPuzzles array
+          },
+        });
+      }
+    }),
+  updateRating: publicProcedure
+    .input(
+      z.object({
+        address: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const userUpdated = await prisma.user.findFirst({
+        where: { walletAddress: input.address },
+      });
+      return userUpdated;
+    }),
+  updateRatingChain: publicProcedure
+    .input(
+      z.object({
+        address: z.string(),
+        rating: z.number(),
+      }),
+    )
+    .mutation(async ({ input }) => {
       const userUpdated = await prisma.user.update({
         where: { walletAddress: input.address },
         data: {
-          puzzleRating: newPlayerRating, // Update the puzzleRating with the new rating
-          completedPuzzles: [...user.completedPuzzles, input.puzzleID], // Add the puzzle ID as a string to the completedPuzzles array
+          puzzleCount: 0,
+          puzzleRatingChain: input.rating, // Add the puzzle ID as a string to the completedPuzzles array
         },
       });
       return userUpdated;

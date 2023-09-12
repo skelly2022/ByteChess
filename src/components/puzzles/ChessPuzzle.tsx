@@ -221,8 +221,8 @@ const Board: React.FC<PuzzleProps> = ({
   useEffect(() => {
     // Update boardWrapper based on the windowWidth
     if (windowWidth !== null) {
-      if (windowWidth < breakpoints.large) {
-        setBoardWrapper({ width: `60.33vh` });
+      if (windowWidth < breakpoints.medium) {
+        setBoardWrapper({ width: `100vw` });
       } else {
         setBoardWrapper({ width: `80.33vh` });
       }

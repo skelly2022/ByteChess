@@ -1,6 +1,10 @@
 import { create } from "zustand";
 
 interface PuzzleStore {
+  ranked: boolean;
+  setRanked: (loading: boolean) => void;
+  sign: string;
+  setSign: (sign: string) => void;
   correct: boolean;
   loading: boolean;
   puzzleFen: any;
@@ -18,6 +22,12 @@ interface PuzzleStore {
 }
 
 const usePuzzleStore = create<PuzzleStore>((set) => ({
+  ranked: false,
+  setRanked: (loading: boolean) => set({ ranked: loading }),
+  sign: "",
+  setSign: (sign: any) => {
+    set({ sign: sign });
+  },
   correct: true,
   loading: true,
   side: "",

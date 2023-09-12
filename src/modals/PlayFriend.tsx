@@ -33,15 +33,12 @@ const LoginModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const newGame = api.games.newGame.useMutation({
     async onSuccess(data) {
-      console.log(data);
       router.push(`/play/${data.id}`);
       play.onClose();
     },
   });
 
-  console.log(getRandomColor("black"));
   function getRandomColor(preferredColor: string) {
-    console.log(preferredColor);
     if (preferredColor === "white") {
       return "white";
     } else if (preferredColor === "black") {

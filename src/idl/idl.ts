@@ -1,6 +1,6 @@
 export type ChessProgram = {
   version: "0.1.0";
-  name: "tiny_adventure";
+  name: "chess_adventure";
   instructions: [
     {
       name: "initialize";
@@ -12,14 +12,14 @@ export type ChessProgram = {
       args: [{ name: "data"; type: "u64" }];
     },
     {
-      name: "moveLeft";
+      name: "updateRating";
       accounts: [{ name: "newAccount"; isMut: true; isSigner: false }];
-      args: [];
+      args: [{ name: "data"; type: "u64" }];
     },
   ];
   accounts: [
     {
-      name: "NewAccount";
+      name: "newAccount";
       type: {
         kind: "struct";
         fields: [{ name: "data"; type: "u64" }];
@@ -30,7 +30,7 @@ export type ChessProgram = {
 
 export const IDL: ChessProgram = {
   version: "0.1.0",
-  name: "tiny_adventure",
+  name: "chess_adventure",
   instructions: [
     {
       name: "initialize",
@@ -54,7 +54,7 @@ export const IDL: ChessProgram = {
       args: [{ name: "data", type: "u64" }],
     },
     {
-      name: "moveLeft",
+      name: "updateRating",
       accounts: [
         {
           name: "newAccount",
@@ -62,12 +62,12 @@ export const IDL: ChessProgram = {
           isSigner: false,
         },
       ],
-      args: [],
+      args: [{ name: "data", type: "u64" }],
     },
   ],
   accounts: [
     {
-      name: "NewAccount",
+      name: "newAccount",
       type: {
         kind: "struct",
         fields: [
