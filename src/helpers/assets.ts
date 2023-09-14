@@ -8,6 +8,14 @@ const whiteStyle = {
   width: "45px", // Set your desired width and height here
   height: "45px",
 };
+
+const half = {
+  backgroundImage: `url('https://lichess1.org/assets/_VCyzdj/images/wbK.svg')`,
+  backgroundSize: "65px 65px",
+  width: "65px",
+  height: "65px",
+};
+
 function extractFirstAndLast5Characters(inputString) {
   if (typeof inputString !== "string" || inputString.length < 10) {
     return null; // Return null for invalid input
@@ -19,4 +27,4 @@ function extractFirstAndLast5Characters(inputString) {
   return `${first5}....${last5}`;
 }
 
-export default { whiteStyle, blackStyle, extractFirstAndLast5Characters };
+export default { whiteStyle, blackStyle, extractFirstAndLast5Characters, half };

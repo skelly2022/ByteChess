@@ -15,7 +15,7 @@ import "react-dropdown/style.css";
 import Loading from "src/components/Loading";
 import { useRouter } from "next/navigation";
 
-const { whiteStyle, blackStyle } = Assets;
+const { whiteStyle, blackStyle, half } = Assets;
 
 const options = ["Timed", "Unlimited"];
 const LoginModal = () => {
@@ -182,15 +182,12 @@ const LoginModal = () => {
               ></div>
             </div>
             <div className="flex h-[80px] w-[80px] items-center justify-center bg-slate-300 hover:scale-110">
-              <Image
-                src={"./images/wbk.svg"}
-                alt="hey"
-                width={60}
-                height={60}
+              <div
+                style={half}
                 onClick={() => {
-                  createGame("wb");
+                  createGame("black");
                 }}
-              />
+              ></div>
             </div>
             <div className="flex h-[60px] w-[60px] items-center justify-center bg-slate-300 hover:scale-110">
               <div

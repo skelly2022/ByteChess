@@ -6,19 +6,6 @@ import { useEffect } from "react";
 import BlockChain from "./BlockChain";
 
 const LandingPage = () => {
-  const play = usePlayModal();
-  useEffect(() => {
-    play.setOpponent({
-      id: "",
-      walletAddress: "",
-      puzzleRating: 1200,
-      bulletRating: 1200,
-      blitzRating: 1200,
-      rapidRating: 1200,
-      createdAt: "",
-      completedPuzzles: [],
-    });
-  }, []);
   return (
     <div className=" flex h-screen pt-28 text-white ">
       <div className=" flex w-screen flex-row ">
