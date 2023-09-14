@@ -36,10 +36,11 @@ model Puzzle {
 }
 
 model CustomGame {
-    id            String @id @default(auto()) @map("_id") @db.ObjectId
-    Rating        Int
-    Color         String
-    Time          String
-    Mode          String
-    walletAddress String
+    id             String @id @default(auto()) @map("_id") @db.ObjectId
+    Rating         Int
+    Color          String
+    Time           String
+    Mode           String
+    walletAddress  String
+    walletAddress2 String @default("")
 }

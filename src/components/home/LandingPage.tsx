@@ -26,7 +26,7 @@ const LandingPage = () => {
         <div className="flex h-full w-full flex-col md:w-1/2 ">
           <PlayVsPlay />
         </div>
-        <div className="hidden h-full w-full flex-col md:flex md:w-1/2 ">
+        <div className="hidden ">
           <BlockChain />
         </div>
       </div>

@@ -21,18 +21,15 @@ const PuzzlesMain = () => {
     async onSuccess(result) {
       setPuzzleData(result);
       setLoading(true);
-
       const solutionMoves = result?.Moves.split(" ");
       setMoveArray(solutionMoves);
     },
-    async onError(result) {
-      console.log(result);
-    },
+    async onError(result) {},
   });
 
   const onFalse = api.puzzles.onFail.useMutation({
     async onSuccess(data) {
-      puzzle.setPuzzleMoves([]);
+      puzzle.setMoves([]);
       puzzle.setPuzzleFens([]);
       user.setUser(data);
       getPuzzle.mutateAsync({ address: publicKey.toBase58(), id: "" });
@@ -40,8 +37,7 @@ const PuzzlesMain = () => {
   });
   const onCorrect = api.puzzles.onSuccess.useMutation({
     async onSuccess(data) {
-      console.log(data);
-      puzzle.setPuzzleMoves([]);
+      puzzle.setMoves([]);
       puzzle.setPuzzleFens([]);
       user.setUser(data);
       getPuzzle.mutateAsync({ address: publicKey.toBase58(), id: "" });
@@ -63,7 +59,6 @@ const PuzzlesMain = () => {
   };
 
   const inCorrect = () => {
-    console.log(puzzle.ran);
     if (user.user.puzzleCount === 5 && puzzle.ranked === true) {
       toast.error("Must submit rating to chain!");
       puzzle.setSign("show");
@@ -77,6 +72,7 @@ const PuzzlesMain = () => {
     }
   };
   const changeMode = () => {
+    puzzle.setMoves([]);
     getPuzzle.mutateAsync({
       address: publicKey.toBase58(),
       id: puzzleData?.PuzzleId,
@@ -84,7 +80,6 @@ const PuzzlesMain = () => {
   };
   useEffect(() => {
     // const data = { address: publicKey.toBase58() };
-    console.log(publicKey);
     if (publicKey !== null) {
       getPuzzle.mutateAsync({
         address: publicKey.toBase58(),

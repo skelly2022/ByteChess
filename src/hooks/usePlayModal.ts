@@ -1,6 +1,10 @@
 import { create } from "zustand";
 
 interface PlayModalStore {
+  moves: any;
+  index: any;
+  setIndex: (index: any) => void;
+  setMoves: (move: any) => void;
   side: string;
   setSide: (side: string) => void;
   time: any;
@@ -22,9 +26,14 @@ interface PlayModalStore {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
+  resetState: () => void;
 }
 
 const usePlayModal = create<PlayModalStore>((set) => ({
+  index: 0,
+  setIndex: (index: number) => set({ index: index }),
+  moves: [],
+  setMoves: (move: string) => set({ moves: move }),
   side: "",
   setSide: (side: string) => set({ side: side }),
   time: "",
@@ -36,7 +45,7 @@ const usePlayModal = create<PlayModalStore>((set) => ({
   increment: "",
   setIncrement: (seconds: string) => set({ increment: seconds }),
   fens: ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"],
-  setFens: (fens: any) => set({ fens: fens }),
+  setFens: (fens: any) => set({ fens: fens, index: fens.length - 1 }),
   opponent: {
     id: "",
     walletAddress: "",
@@ -57,6 +66,29 @@ const usePlayModal = create<PlayModalStore>((set) => ({
   onClose: () => {
     set({ isOpen: false });
   },
+  resetState: () =>
+    set({
+      index: 0,
+      moves: [],
+      side: "",
+      time: "",
+      opponentTime: "",
+      minutes: "",
+      increment: "",
+      fens: ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"],
+      opponent: {
+        id: "",
+        walletAddress: "",
+        puzzleRating: 1200,
+        bulletRating: 1200,
+        blitzRating: 1200,
+        rapidRating: 1200,
+        createdAt: "",
+        completedPuzzles: [],
+      },
+      myTimer: false,
+      opponentTimer: false,
+    }),
 }));
 
 export default usePlayModal;

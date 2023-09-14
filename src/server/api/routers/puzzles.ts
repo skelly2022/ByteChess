@@ -75,9 +75,7 @@ export const puzzleRouter = createTRPCRouter({
           walletAddress: input.address,
         },
       });
-      console.log(input);
       if (user.completedPuzzles.includes(input.puzzleID)) {
-        console.log("Puzzle already completed");
         return; // Puzzle already completed, return without updating
       }
       if (!user) {
@@ -142,7 +140,6 @@ export const puzzleRouter = createTRPCRouter({
         },
       });
       if (user.completedPuzzles.includes(input.puzzleID)) {
-        console.log("Puzzle already completed");
         return; // Puzzle already completed, return without updating
       }
       if (!user) {
@@ -182,7 +179,7 @@ export const puzzleRouter = createTRPCRouter({
         return await prisma.user.update({
           where: { walletAddress: input.address },
           data: {
-            puzzleRatingChain: newPlayerRating, // Update the puzzleRating with the new rating
+            puzzleRating: newPlayerRating, // Update the puzzleRating with the new rating
             completedPuzzles: [...user.completedPuzzles, input.puzzleID],
             puzzleCount: user.puzzleCount, // Add the puzzle ID as a string to the completedPuzzles array
           },

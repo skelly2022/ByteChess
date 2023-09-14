@@ -17,6 +17,7 @@ import socket from "~/helpers/socket";
 
 interface LiveGameProps {
   boardOrientation: any;
+  connected: boolean;
 }
 const breakpoints = {
   small: 576,
@@ -24,17 +25,16 @@ const breakpoints = {
   large: 992,
   extraLarge: 1200,
 };
-const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation }) => {
+const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   const play = usePlayModal();
   const router = useRouter();
   const { playID } = router.query;
-
   const [turn, setTurn] = useState("");
   const [windowWidth, setWindowWidth] = useState(null);
   const [boardWrapper, setBoardWrapper] = useState({
     width: `80.33vh`,
   });
-  const [game, setGame] = useState(new Chess(play.fens[0]));
+  const [game, setGame] = useState(new Chess());
   function onDrop(sourceSquare: string, targetSquare: string) {
     let data = {
       from: sourceSquare,
@@ -45,45 +45,51 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation }) => {
     if (moveMade) {
       const fens = play.fens;
       play.setFens([...fens, moveMade.fen]);
-      setGame(new Chess(moveMade.fen));
+
+      const newGame = new Chess(moveMade.fen);
+      setGame(newGame);
+      const moves = play.moves;
+      play.setMoves([...moves, moveMade.fullMove.san]);
       socket.emit("makeMove", { roomId: playID, fen: moveMade });
-      play.setOpponentTimer(true);
+      if (newGame.moveNumber() !== 1) {
+        play.setOpponentTimer(true);
+      }
       play.setMyTimer(false);
     } else {
       return false;
     }
   }
+  useEffect(() => {
+    setGame(new Chess(play.fens[play.index]));
+  }, [play.index]);
+  useEffect(() => {
+    socket.on("moveMade", (data) => {
+      const fens = play.fens;
+      const moves = play.moves;
+      play.setMoves([...moves, data.fullMove.san]);
+      play.setFens([...fens, data.fen]);
+      const newGame = new Chess(data.fen);
+      setGame(new Chess(data.fen));
+      if (newGame.moveNumber() !== 1) {
+        play.setMyTimer(true);
+        play.setOpponentTimer(false);
+      }
+    });
+  }, [play.fens]);
+
   const updateWindowWidth = () => {
     setWindowWidth(window.innerWidth);
   };
   useEffect(() => {
-    socket.on("moveMade", (data) => {
-      console.log(data);
-      play.setMyTimer(true);
-      play.setOpponentTimer(false);
-      const fens = play.fens;
-      play.setFens([...fens, data.fen]);
-      setGame(new Chess(data.fen));
-    });
-  }, [play.time]);
-
-  useEffect(() => {
-    // Check if window is defined (to avoid SSR issues)
     if (typeof window !== "undefined") {
-      // Add event listener only on the client side
       window.addEventListener("resize", updateWindowWidth);
-
-      // Initial width setup
       setWindowWidth(window.innerWidth);
-
-      // Clean up the event listener when the component unmounts
       return () => {
         window.removeEventListener("resize", updateWindowWidth);
       };
     }
   }, []);
   useEffect(() => {
-    // Update boardWrapper based on the windowWidth
     if (windowWidth !== null) {
       if (windowWidth < breakpoints.medium) {
         setBoardWrapper({ width: `100vw` });
@@ -97,6 +103,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation }) => {
     <div style={boardWrapper}>
       <Chessboard
         id="BasicBoard"
+        showBoardNotation={true}
         boardOrientation={boardOrientation}
         isDraggablePiece={({ piece }) => piece[0] === boardOrientation[0]}
         onPieceDrop={onDrop}

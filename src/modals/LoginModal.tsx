@@ -16,7 +16,6 @@ const LoginModal = () => {
 
   const newUser = api.example.createUser.useMutation({
     async onSuccess(data) {
-      console.log(data);
       user.setUser(data);
     },
   });

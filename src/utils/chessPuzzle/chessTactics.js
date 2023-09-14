@@ -8,7 +8,6 @@ export function getPossibleMoves(fen, square) {
     square: square,
     verbose: true,
   });
-  console.log("hey");
 
   return moves;
 }
@@ -52,6 +51,8 @@ export function makeMove(fen, move) {
 }
 
 export function validateMoveOnClick(fen, move, solution) {
+  const chess = new Chess(fen);
+
   if (solution.length === 0) {
     return null;
   }
@@ -67,10 +68,12 @@ export function validateMoveOnClick(fen, move, solution) {
   ) {
     const fenParts = next.moves.before.split(" ");
     const moveNumber = fenParts[5];
+    const fullMove = chess.move(move);
+
     return {
       fen: next.fen,
       solution: solution.slice(1),
-      lastMove: next.moves.san,
+      lastMove: fullMove,
       lastMoveNumber: moveNumber,
       lastMoveColor: next.moves.color,
     };

@@ -76,42 +76,12 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
           address: publicKey.toBase58(),
           rating: result.puzzleRatingChain,
         });
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     },
     async onError(result) {},
   });
 
-  useEffect(() => {
-    const moveArray = [];
-    puzzle.puzzleMoves.forEach((move) => {
-      const { moveNumber, color, move: moveText } = move;
-      // Find or create a move entry for the current moveNumber
-      let moveEntry = moveArray.find(
-        (entry) => entry.moveNumber === moveNumber,
-      );
-      if (!moveEntry) {
-        moveEntry = { moveNumber, w: "", b: "" };
-        moveArray.push(moveEntry);
-      }
-
-      // Populate the move entry based on the color
-      if (color === "w") {
-        moveEntry.w = moveText;
-      } else if (color === "b") {
-        moveEntry.b = moveText;
-      }
-      if (moveArray[moveArray.length - 1].b !== "") {
-        const nextMoveNumber = parseInt(moveNumber) + 1;
-        setCurrentMove(nextMoveNumber.toString());
-        moveArray.push({ moveNumber: nextMoveNumber.toString(), w: "", b: "" });
-      } else {
-        setCurrentMove(moveNumber.toString());
-      }
-      setMoves(moveArray);
-    });
-  }, [puzzle]);
+  useEffect(() => {}, [puzzle.moves]);
 
   useEffect(() => {
     const puzzleFens = puzzle.puzzleFens;
@@ -119,7 +89,6 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
     //@ts-ignore
     const length = puzzleFens.length;
     const index = puzzleFens.indexOf(currentFen);
-    console.log(puzzle.ranked);
     const downHandler = ({ key }: { key: string }) => {
       if (key === "ArrowLeft") {
         if (index > 0) {
@@ -138,7 +107,6 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
     };
   }, [puzzle.puzzleFen, puzzle.puzzleFens]);
   useEffect(() => {
-    console.log(puzzle.sign);
     if (puzzle.sign === "show") {
       handleClickInitialize();
     }
@@ -214,34 +182,7 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
             </div>
           </div>
           <table className="hidden w-full border bg-white md:block">
-            <tbody>
-              {Array.from(movesNow.entries()).map(
-                ([moveEntry, moves], index) => (
-                  <tr key={moves.b}>
-                    <td className="w-[50px] bg-gray-200 px-2 py-2 text-center">
-                      {moves.moveNumber}
-                    </td>
-                    <td
-                      className={`w-[100px] px-2 py-2 ${
-                        puzzle.side === "white" &&
-                        currentMove === moves.moveNumber
-                          ? ""
-                          : ""
-                      } `}
-                    >
-                      {moves.w}
-                    </td>
-                    <td
-                      className={`w-[100px] px-2 py-2 ${
-                        moves.b === "1" ? "bg-black" : ""
-                      }`}
-                    >
-                      {moves.b}
-                    </td>
-                  </tr>
-                ),
-              )}
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
       </div>

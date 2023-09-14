@@ -25,7 +25,6 @@ export const exampleRouter = createTRPCRouter({
   getUser: publicProcedure
     .input(z.object({ address: z.string() }))
     .mutation(async ({ input }) => {
-      console.log(input);
       const user = await prisma.user.findFirst({
         where: {
           walletAddress: input.address,

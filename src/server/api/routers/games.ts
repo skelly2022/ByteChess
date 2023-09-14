@@ -34,6 +34,23 @@ export const gamesRouter = createTRPCRouter({
       }
       return game;
     }),
+
+  updatePlayerJoin: publicProcedure
+    .input(
+      z.object({
+        address: z.string(),
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const userUpdated = await prisma.customGame.update({
+        where: { id: input.id },
+        data: {
+          walletAddress2: input.address,
+        },
+      });
+      return userUpdated;
+    }),
   newGame: publicProcedure
     .input(
       z.object({
@@ -44,7 +61,6 @@ export const gamesRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      console.log(input);
       const user = await prisma.user.findFirst({
         where: {
           walletAddress: input.address,
@@ -53,10 +69,10 @@ export const gamesRouter = createTRPCRouter({
       if (!user) {
         throw new Error("User not found");
       }
-      console.log(user);
       return prisma.customGame.create({
         data: {
           walletAddress: input.address,
+          walletAddress2: "",
           Mode: input.mode,
           Time: input.time,
           Color: input.color,

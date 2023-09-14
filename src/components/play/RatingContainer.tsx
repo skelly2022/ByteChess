@@ -21,7 +21,6 @@ const RatingContainer: React.FC<RatingContainerProps> = ({
   const user = useUserStore();
   const play = usePlayModal();
   const time = categorizeChessGame(play.minutes + " + " + play.increment);
-  console.log(play.opponent.walletAddress);
   return (
     <div className="flex h-12 w-full items-center justify-between bg-slate-50 p-3 ">
       <div className="flex items-center gap-3">

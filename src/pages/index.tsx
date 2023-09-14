@@ -4,8 +4,14 @@ import ToasterProvider from "src/providers/ToasterProvider";
 import LoginModal from "src/modals/LoginModal";
 import LandingPage from "src/components/home/LandingPage";
 import PlayFriend from "src/modals/PlayFriend";
+import { useEffect } from "react";
+import usePlayModal from "~/hooks/usePlayModal";
 
 export default function Home() {
+  const play = usePlayModal();
+  useEffect(() => {
+    play.resetState();
+  }, []);
   return (
     <>
       <ClientOnly>

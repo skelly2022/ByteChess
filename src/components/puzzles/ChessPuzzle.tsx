@@ -49,7 +49,6 @@ const Board: React.FC<PuzzleProps> = ({
       square: targetSquare,
       verbose: true,
     });
-    console.log(moves);
     const newSquares = {};
     moves.map((move) => {
       newSquares[move.to] = {
@@ -73,7 +72,6 @@ const Board: React.FC<PuzzleProps> = ({
         to: targetSquare,
         promotion: "q",
       };
-      console.log(data);
       const next = validateMoveOnClick(game.fen(), data, solutionMoves);
       if (next) {
         setGame(new Chess(next.fen));
@@ -97,21 +95,18 @@ const Board: React.FC<PuzzleProps> = ({
               puzzleFens.push(autoNext.fen);
               puzzle.setPuzzleFens(puzzleFens);
               setSolution(autoNext.solution);
-              const movesMade = puzzle.puzzleMoves;
+              const movesMade = puzzle.moves;
               const move = {
                 moveNumber: autoNext.lastMoveNumber,
                 color: autoNext.lastMoveColor,
                 move: autoNext.lastMove,
               };
-              movesMade.push(move);
-              puzzle.setPuzzleMoves(movesMade);
+              puzzle.setMoves([...puzzle.moves, move.move]);
             }, 500);
           }
         } else {
-          console.log("puzzle done");
         }
       } else {
-        console.log(false);
       }
 
       setPieceSquare("");
@@ -128,14 +123,15 @@ const Board: React.FC<PuzzleProps> = ({
     if (next) {
       setGame(new Chess(next.fen));
       setSolution(next.solution);
-      const movesMade = puzzle.puzzleMoves;
       const move = {
         moveNumber: next.lastMoveNumber,
         color: next.lastMoveColor,
         move: next.lastMove,
       };
-      movesMade.push(move);
-      puzzle.setPuzzleMoves(movesMade);
+      const moves = puzzle.moves;
+      puzzle.setMoves([...moves, next.lastMove.san]);
+      moves.push(next.lastMove.san);
+
       if (next.solution.length > 0) {
         const autoNext = validateMoveOnClick(
           next.fen,
@@ -146,13 +142,10 @@ const Board: React.FC<PuzzleProps> = ({
           setTimeout(() => {
             setGame(new Chess(autoNext.fen));
             setSolution(autoNext.solution);
-            const move = {
-              moveNumber: autoNext.lastMoveNumber,
-              color: autoNext.lastMoveColor,
-              move: autoNext.lastMove,
-            };
-            movesMade.push(move);
-            puzzle.setPuzzleMoves(movesMade);
+            puzzle.setMoves([...moves, autoNext.lastMove.san]);
+
+            // movesMade.push(move);
+            // puzzle.setMoves(movesMade);
           }, 500);
         }
       } else {
@@ -186,19 +179,19 @@ const Board: React.FC<PuzzleProps> = ({
         if (next) {
           setGame(new Chess(next.fen));
           setSolution(next.solution);
-          const movesMade = puzzle.puzzleMoves;
+          const movesMade = puzzle.moves;
           const move = {
             moveNumber: next.lastMoveNumber,
             color: next.lastMoveColor,
             move: next.lastMove,
           };
-          movesMade.push(move);
           puzzleFens.push(next.fen);
           const side = getSideToPlayFromFen(next.fen);
           puzzle.setSide(side);
-          console.log(side);
           puzzle.setPuzzle(next.fen);
-          puzzle.setPuzzleMoves(movesMade);
+          const moves = puzzle.moves;
+
+          puzzle.setMoves([...moves, next.lastMove.san]);
         }
       }, 700);
     }
@@ -234,8 +227,8 @@ const Board: React.FC<PuzzleProps> = ({
         position={game.fen()}
         boardOrientation={getSideToPlayFromFen(fen) === "w" ? "black" : "white"}
         onPieceDrop={onSquareDrop}
-        onPieceDragBegin={onSquareClick}
-        onSquareClick={onSquareClick}
+        // onPieceDragBegin={onSquareClick}
+        // onSquareClick={onSquareClick}
         // onMouseOverSquare={onMouseOverSquare}
         // onMouseOutSquare={onMouseOutSquare}
         customBoardStyle={{

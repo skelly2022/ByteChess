@@ -23,7 +23,6 @@ const dataOptions = [
 const PlayVsPlay = () => {
   const play = usePlayModal();
   const { data } = api.games.getAllGames.useQuery();
-  console.log(data);
   const router = useRouter();
   return (
     <div>

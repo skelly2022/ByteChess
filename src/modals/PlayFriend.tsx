@@ -80,7 +80,6 @@ const LoginModal = () => {
         time: count.toString() + " + " + incrementCount.toString(),
         color: getRandomColor(color),
       };
-      console.log(data);
       newGame.mutateAsync(data);
     }
   }
@@ -91,7 +90,6 @@ const LoginModal = () => {
   useEffect(() => {
     //@ts-ignore
     if (user.user.walletAddress === "" && play.isOpen === true) {
-      console.log("hey");
       play.onClose();
       login.onOpen();
     }

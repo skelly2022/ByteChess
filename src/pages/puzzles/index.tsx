@@ -4,12 +4,19 @@ import ClientOnly from "src/components/ClientOnly";
 import Navbar from "src/components/navbar/Navbar";
 import PuzzlesMain from "src/components/puzzles/PuzzlesMain";
 import ToasterProvider from "src/providers/ToasterProvider";
+import usePuzzleStore from "~/hooks/usePuzzleStore";
 
 type Page = {
   Page: string;
 };
 
 const Home: React.FC<Page> = ({ Page }) => {
+  const puzzle = usePuzzleStore();
+  useEffect(() => {
+    puzzle.setPuzzleFens([]);
+    puzzle.setMoves([]);
+    puzzle.setRanked(false);
+  }, []);
   return (
     <>
       <ClientOnly>

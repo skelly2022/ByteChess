@@ -11,7 +11,6 @@ const BlockChain = () => {
   useEffect(() => {
     if (publicKey !== null) {
       fetchData(publicKey);
-      console.log(typeof publicKey);
     }
   }, [publicKey]);
 
@@ -24,13 +23,11 @@ const BlockChain = () => {
       )[0];
     try {
       const account = await program.account.newAccount.fetch(ChessProgramPDA());
-      console.log(account.data.toString());
       //   setGameDataAccount(account)
     } catch (error) {
       console.log(`Error fetching GameDataAccount state: ${error}`);
     }
   };
-
   async function handleClickInitialize() {
     if (publicKey) {
       const data = new BN(1200);
@@ -57,7 +54,6 @@ const BlockChain = () => {
         lastValidBlockHeight,
         signature: txSig,
       });
-      console.log(x);
     } else {
     }
   }
