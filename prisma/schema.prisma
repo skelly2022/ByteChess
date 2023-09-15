@@ -21,6 +21,7 @@ model User {
     createdAt         DateTime @default(now())
     puzzleCount       Int      @default(0)
     completedPuzzles  String[]
+    ratedAccount      Boolean  @default(false)
 }
 
 model Puzzle {

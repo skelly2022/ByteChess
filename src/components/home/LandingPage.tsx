@@ -8,12 +8,11 @@ import BlockChain from "./BlockChain";
 const LandingPage = () => {
   return (
     <div className=" flex h-screen pt-28 text-white ">
-      <div className=" flex w-screen flex-row ">
-        <div className="hidden w-1/4 lg:flex "></div>
+      <div className=" flex w-screen flex-row justify-evenly ">
         <div className="flex h-full w-full flex-col md:w-1/2 ">
           <PlayVsPlay />
         </div>
-        <div className="hidden ">
+        <div className="hidden md:flex md:w-1/3 ">
           <BlockChain />
         </div>
       </div>

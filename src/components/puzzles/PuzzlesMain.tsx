@@ -6,17 +6,23 @@ import { api } from "src/utils/api";
 import usePuzzleStore from "src/hooks/usePuzzleStore";
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { AccountInfo, PublicKey, SystemProgram } from "@solana/web3.js";
 import { toast } from "react-hot-toast";
-import { getAssets } from "~/hooks/useAssetsStore";
-import { program } from "~/anchor/setup";
+import { program, connection } from "../../anchor/setup";
+
+import { BN } from "@coral-xyz/anchor";
 
 const PuzzlesMain = () => {
   const puzzle = usePuzzleStore();
   const user = useUserStore();
-  const { publicKey } = useWallet();
+  const { publicKey, sendTransaction } = useWallet();
   const [puzzleData, setPuzzleData] = useState(null);
   const [loading, setLoading] = useState(puzzle.loading);
   const [moveArray, setMoveArray] = useState<string[]>([]);
+  const [checked, setChecked] = useState(false);
+  const updateUser = api.example.updateUser.useMutation({
+    onSuccess(data, variables, context) {},
+  });
   const getPuzzle = api.puzzles.getRandomPuzzle.useMutation({
     async onSuccess(result) {
       setPuzzleData(result);
@@ -71,12 +77,51 @@ const PuzzlesMain = () => {
       });
     }
   };
-  const changeMode = () => {
-    puzzle.setMoves([]);
-    getPuzzle.mutateAsync({
-      address: publicKey.toBase58(),
-      id: puzzleData?.PuzzleId,
-    });
+  const changeMode = async () => {
+    if (user.user.ratedAccount) {
+      puzzle.setMoves([]);
+      puzzle.setRanked(!puzzle.ranked);
+      setChecked(!checked);
+      getPuzzle.mutateAsync({
+        address: publicKey.toBase58(),
+        id: puzzleData?.PuzzleId,
+      });
+    } else {
+      if (publicKey) {
+        try {
+          const data = new BN(1200);
+          setChecked(false);
+
+          const [globalLevel1GameDataAccount, bump] =
+            PublicKey.findProgramAddressSync(
+              [Buffer.from("level1", "utf8"), publicKey.toBuffer()],
+              program.programId,
+            );
+          const transaction = await program.methods
+            .initialize(data)
+            .accounts({
+              newAccount: globalLevel1GameDataAccount,
+              signer: publicKey,
+              systemProgram: SystemProgram.programId,
+            })
+            .transaction();
+          const txSig = await sendTransaction(transaction, connection);
+
+          const { blockhash, lastValidBlockHeight } =
+            await connection.getLatestBlockhash();
+
+          const x = await connection.confirmTransaction({
+            blockhash,
+            lastValidBlockHeight,
+            signature: txSig,
+          });
+          updateUser.mutateAsync({ address: publicKey.toBase58() });
+        } catch (error) {
+          toast.error("Must create on chain account");
+        }
+      } else {
+      }
+    }
   };
   useEffect(() => {
     // const data = { address: publicKey.toBase58() };
@@ -106,6 +151,7 @@ const PuzzlesMain = () => {
               fen={puzzleData?.FEN}
               solution={moveArray}
               changeMode={changeMode}
+              checked={checked}
             />
           </div>
         </>

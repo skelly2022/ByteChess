@@ -14,6 +14,7 @@ import { program, connection } from "../../anchor/setup";
 import { deserialize } from "v8";
 import { api } from "src/utils/api";
 import { BN } from "@coral-xyz/anchor";
+import { toast } from "react-hot-toast";
 
 const { whiteStyle, blackStyle } = Assets;
 
@@ -25,11 +26,13 @@ interface PuzzleDashProps {
   fen?: string;
   solution?: Array<String>;
   changeMode: () => void;
+  checked: boolean;
 }
 
 const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
   rating,
   solution,
+  checked,
   fen,
   changeMode,
 }) => {
@@ -44,6 +47,7 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
   const updateChainRating = api.puzzles.updateRatingChain.useMutation({
     async onSuccess(result) {
       user.setUser(result);
+      toast.success("Rating Updated");
     },
   });
 
@@ -55,7 +59,7 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
           [Buffer.from("level1", "utf8"), publicKey.toBuffer()],
           program.programId,
         );
-      const data = new BN(result.puzzleRating);
+      const data = new BN(result.puzzleRatingChain);
 
       const transaction = await program.methods
         .updateRating(data)
@@ -76,10 +80,15 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
           address: publicKey.toBase58(),
           rating: result.puzzleRatingChain,
         });
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     },
     async onError(result) {},
   });
+  async function handleClickInitialize() {
+    updateRating.mutateAsync({ address: publicKey.toBase58() });
+  }
 
   useEffect(() => {}, [puzzle.moves]);
 
@@ -112,9 +121,7 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
     }
     puzzle.setSign("");
   }, [puzzle.sign]);
-  async function handleClickInitialize() {
-    updateRating.mutateAsync({ address: publicKey.toBase58() });
-  }
+
   return (
     <div className="flex h-full w-full flex-col ">
       <div className="md: flex h-auto flex-wrap  justify-center gap-3 md:flex-col  md:flex-nowrap md:justify-between">
@@ -134,7 +141,7 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
             )}
           </div>
         </div>
-        <div className="flex h-20 w-[45%] items-center justify-evenly rounded-sm  bg-white shadow md:w-full">
+        <div className="flex h-20 w-[50%] items-center justify-center gap-2 rounded-sm  bg-white shadow md:w-full">
           <div className="flex items-center">
             <label
               className="pr-[15px] text-[15px]  text-black"
@@ -147,8 +154,8 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
              cursor-default rounded-full text-black shadow-[0_2px_10px] outline-none 
              data-[state=checked]:bg-success"
               id="airplane-mode"
+              checked={checked}
               onClick={() => {
-                puzzle.setRanked(!puzzle.ranked);
                 changeMode();
               }}
             >
@@ -159,17 +166,21 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
               />
             </Switch.Root>
           </div>
-          {puzzle.ranked && <div className="">{user.user.puzzleCount}/5</div>}
-          <button
-            className="bg-success "
-            onClick={() => {
-              handleClickInitialize();
-            }}
-          >
-            UR
-          </button>
+          {puzzle.ranked && (
+            <div className="">
+              {user.user.puzzleCount}/5{" "}
+              <button
+                className="bg-success "
+                onClick={() => {
+                  handleClickInitialize();
+                }}
+              >
+                UR
+              </button>
+            </div>
+          )}
         </div>
-        <div className=" h-20 w-[45%] bg-white shadow md:h-1/2 md:w-full">
+        <div className=" h-20 w-[45%] rounded-sm bg-white md:h-1/2 md:w-full">
           <div className=" flex h-full w-full flex-col items-center justify-center ">
             <h1> Puzzle Rating: {rating}</h1>
             <div className="flex items-center">

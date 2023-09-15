@@ -1,11 +1,11 @@
 import { create } from "zustand";
 
-interface LoginModalStore {
+interface userModalStore {
   user: {};
   setUser: (puzzle: any) => void;
 }
 
-const useLoginModal = create<LoginModalStore>((set) => ({
+const useUserModal = create<userModalStore>((set) => ({
   user: {
     id: "",
     walletAddress: "",
@@ -15,10 +15,11 @@ const useLoginModal = create<LoginModalStore>((set) => ({
     rapidRating: 1200,
     createdAt: "",
     completedPuzzles: [],
+    ratedAccount: false,
   },
   setUser: (user: any) => {
     set({ user: user });
   },
 }));
 
-export default useLoginModal;
+export default useUserModal;

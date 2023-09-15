@@ -172,7 +172,7 @@ export const puzzleRouter = createTRPCRouter({
       } else {
         rating = user.puzzleRating;
         const puzzleDifficulty = parseInt(input.puzzleRating); // The puzzle's difficulty
-        const newPlayerRating = calculateLossRatingChange(
+        const newPlayerRating = calculateWinRatingChange(
           rating,
           puzzleDifficulty,
         );
