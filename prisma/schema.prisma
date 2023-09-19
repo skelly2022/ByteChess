@@ -44,4 +44,5 @@ model CustomGame {
     Mode           String
     walletAddress  String
     walletAddress2 String @default("")
+    FEN            String @default("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 }

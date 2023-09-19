@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useEffect, useState } from "react";
 
 import LiveGame from "./LiveGame";
@@ -10,7 +9,9 @@ import Timer from "./Timer";
 import usePlayModal from "~/hooks/usePlayModal";
 import joinGameLogic from "~/helpers/joinGameLogic";
 import socket from "~/helpers/socket";
-
+import { AiOutlineClose } from "react-icons/ai";
+import { BsFlag } from "react-icons/bs";
+import ActionContainer from "./ActionContainer";
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 const { extractFirstAndLast5Characters } = Assets;
 
@@ -39,6 +40,9 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
         </div>
         <div className="w-full md:hidden">
           <RatingContainer type="me" />
+        </div>
+        <div className="w-full md:hidden">
+          <ActionContainer />
         </div>
       </div>
       <div className=" hidden h-full w-1/4 flex-col gap-2  md:flex md:justify-start ">

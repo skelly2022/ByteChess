@@ -12,12 +12,16 @@ import useUserStore from "~/hooks/useUserStore";
 import socket from "~/helpers/socket";
 import usePlayModal from "~/hooks/usePlayModal";
 import { toast } from "react-hot-toast";
+import Loading from "~/components/Loading";
+import { useSession } from "next-auth/react";
 
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 
 const Home = () => {
   const router = useRouter();
   const user = useUserStore();
+  const [loading, setLoading] = useState(true);
+  const session = useSession();
 
   const play = usePlayModal();
   const [boardOrientation, setBoardOrientation] = useState("black");
@@ -25,6 +29,15 @@ const Home = () => {
   const [gameID, setGameID] = useState("");
   const { playID } = router.query;
   const { publicKey } = useWallet();
+  const getUser = api.example.getUser.useMutation({
+    onSuccess(data) {
+      console.log(data);
+      user.setUser(data);
+      setTimeout(() => {
+        setLoading(false);
+      }, 400);
+    },
+  });
   const getGame = api.games.getGame.useMutation({
     async onSuccess(userData) {
       setGameID(userData.id);
@@ -99,7 +112,14 @@ const Home = () => {
       play.setOpponentTime(data);
     });
   }, [socket]);
-
+  useEffect(() => {
+    console.log(session);
+    if (session.status === "authenticated") {
+      getUser.mutateAsync({ address: session.data.user.name });
+    } else {
+      // loginModal.onOpen();
+    }
+  }, [session]);
   useEffect(() => {
     if (publicKey !== null && playID !== undefined) {
       setConnected(false);
@@ -116,10 +136,14 @@ const Home = () => {
         <Navbar />
       </ClientOnly>
       <main className="min-w-screen  flex min-h-screen bg-blue pt-28">
-        <LiveGameContainer
-          boardOrientation={boardOrientation}
-          connected={connected}
-        />
+        {loading ? (
+          <Loading />
+        ) : (
+          <LiveGameContainer
+            boardOrientation={boardOrientation}
+            connected={connected}
+          />
+        )}
       </main>
     </>
   );

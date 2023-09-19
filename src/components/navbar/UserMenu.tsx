@@ -11,6 +11,7 @@ import { toast } from "react-hot-toast";
 import { api } from "src/utils/api";
 import useUserStore from "src/hooks/useUserStore";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { signOut, useSession } from "next-auth/react";
 
 interface UserMenuProps {}
 
@@ -23,21 +24,33 @@ const UserMenu: React.FC<UserMenuProps> = () => {
   const [hamOpen, setHamOpen] = useState(false);
 
   const { select, wallets, publicKey, disconnect } = useWallet();
+  const { data: session, status } = useSession();
 
-  const newUser = api.example.createUser.useMutation({
-    async onSuccess(data) {
-      user.setUser(data);
-      if (publicKey !== null) {
-        const first5 = publicKey.toBase58().substring(0, 5);
-        const last5 = publicKey
-          .toBase58()
-          .slice(publicKey.toBase58().length - 5);
-        toast.success(`${first5}...${last5} connected`);
-        loginModal.setPk(`${first5}...${last5}`);
-        loginModal.onClose();
-      }
-    },
-  });
+  // const newUser = api.example.createUser.useMutation({
+  //   async onSuccess(data) {
+  //     user.setUser(data);
+  //     if (publicKey !== null) {
+  //       const first5 = publicKey.toBase58().substring(0, 5);
+  //       const last5 = publicKey
+  //         .toBase58()
+  //         .slice(publicKey.toBase58().length - 5);
+  //       toast.success(`${first5}...${last5} connected`);
+  //       loginModal.setPk(`${first5}...${last5}`);
+  //       loginModal.onClose();
+  //     }
+  //   },
+  // });
+  function extractFirstAndLast5Characters(inputString) {
+    if (typeof inputString !== "string" || inputString.length < 10) {
+      return null; // Return null for invalid input
+    }
+
+    const first5 = inputString.substring(0, 5);
+    const last5 = inputString.substring(inputString.length - 5);
+
+    return `${first5}....${last5}`;
+  }
+
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
   }, []);
@@ -49,6 +62,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
     router.push("/puzzles");
   };
   const connectWallet = async () => {
+    console.log("hey");
     loginModal.onOpen();
   };
   const disconnectWallet = async () => {
@@ -64,16 +78,20 @@ const UserMenu: React.FC<UserMenuProps> = () => {
       completedPuzzles: [],
     });
     loginModal.setPk("");
-    router.push("/");
-  };
-  useEffect(() => {
-    //@ts-ignore
 
-    if (publicKey !== null) {
-      const data = { address: publicKey.toBase58() };
-      newUser.mutateAsync(data);
-    }
-  }, [publicKey]);
+    signOut({ redirect: false }).then(() => {
+      router.push("/"); // Redirect to the dashboard page after signing out
+      loginModal.onClose();
+    });
+  };
+  // useEffect(() => {
+  //   //@ts-ignore
+
+  //   if (publicKey !== null) {
+  //     const data = { address: publicKey.toBase58() };
+  //     newUser.mutateAsync(data);
+  //   }
+  // }, [publicKey]);
 
   return (
     <div className="relative">
@@ -96,12 +114,12 @@ const UserMenu: React.FC<UserMenuProps> = () => {
           >
             Leaderboard
           </div>
-          {publicKey ? (
+          {session ? (
             <div
               className="cursor-pointer rounded-full bg-white px-4 py-2 text-sm"
               onClick={toggleOpen}
             >
-              {loginModal.pk}
+              {extractFirstAndLast5Characters(session.user.name)}
             </div>
           ) : (
             <div
@@ -125,8 +143,9 @@ const UserMenu: React.FC<UserMenuProps> = () => {
               {/* <MenuItem onClick={login} label="Login" /> */}
               <MenuItem
                 onClick={() => {
-                  disconnect(), toggleOpen();
                   disconnectWallet();
+                  toggleOpen();
+                  disconnect();
                 }}
                 label="Disconnect"
               />

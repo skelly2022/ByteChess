@@ -3,17 +3,20 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "src/server/api/trpc";
 import { prisma } from "src/server/db";
 
-function calculateLossRatingChange(playerRating, puzzleDifficulty) {
-  const sensitivity = 0.1; // You can adjust this as needed
-  const ratingChange = -sensitivity * (playerRating - puzzleDifficulty);
-  const newPlayerRating = playerRating - ratingChange;
-  return Math.floor(newPlayerRating);
-}
-function calculateWinRatingChange(playerRating, puzzleDifficulty) {
-  const sensitivity = 0.1; // You can adjust this as needed
-  const ratingChange = sensitivity * (puzzleDifficulty - playerRating);
-  const newPlayerRating = playerRating + ratingChange;
-  return Math.floor(newPlayerRating);
+function calculateEloChange(winnerRating, loserRating) {
+  const kFactor = 32; // You can adjust this as needed
+  const expectedWinnerScore =
+    1 / (1 + Math.pow(10, (loserRating - winnerRating) / 400));
+  const expectedLoserScore =
+    1 / (1 + Math.pow(10, (winnerRating - loserRating) / 400));
+
+  const winnerNewRating = winnerRating + kFactor * (1 - expectedWinnerScore);
+  const loserNewRating = loserRating + kFactor * (0 - expectedLoserScore);
+
+  return {
+    winnerNewRating: Math.round(winnerNewRating),
+    loserNewRating: Math.round(loserNewRating),
+  };
 }
 
 export const gamesRouter = createTRPCRouter({
@@ -79,6 +82,71 @@ export const gamesRouter = createTRPCRouter({
           Rating: user.blitzRating,
         },
       });
+    }),
+  updateGameFen: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        fen: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      console.log(input);
+      // const games = await prisma.customGame.findMany({});
+      // return games;
+      const games = await prisma.customGame.update({
+        where: { id: input.id },
+        data: {
+          FEN: input.fen,
+        },
+      });
+    }),
+  updateGameWin: publicProcedure
+    .input(
+      z.object({
+        winnerAddress: z.string(),
+        loserAddress: z.string(),
+        wElo: z.number(),
+        lElo: z.number(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      console.log(input);
+      const { winnerNewRating, loserNewRating } = calculateEloChange(
+        input.wElo,
+        input.lElo,
+      );
+      const rating = await prisma.user.update({
+        where: { walletAddress: input.winnerAddress },
+        data: {
+          bulletRating: winnerNewRating,
+        },
+      });
+      const loserRating = await prisma.user.update({
+        where: { walletAddress: input.loserAddress },
+        data: {
+          bulletRating: loserNewRating,
+        },
+      });
+      return { rating: rating, loserRating: loserRating };
+    }),
+  getUsers: publicProcedure
+    .input(
+      z.object({
+        winnerAddress: z.string(),
+        loserAddress: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      console.log(input);
+
+      const rating = await prisma.user.findFirst({
+        where: { walletAddress: input.winnerAddress },
+      });
+      const loserRating = await prisma.user.findFirst({
+        where: { walletAddress: input.loserAddress },
+      });
+      return { rating: rating, loserRating: loserRating };
     }),
   getAllGames: publicProcedure.query(async () => {
     const games = await prisma.customGame.findMany({});

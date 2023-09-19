@@ -25,6 +25,7 @@ import {
 } from "~/contexts/NetworkConfigurationProvider";
 import dynamic from "next/dynamic";
 import { RPC_ENDPOINT } from "~/utils/const";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 
 const ReactUIWalletModalProviderDynamic = dynamic(
   async () =>
@@ -63,11 +64,7 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     // TODO: updates needed for updating and referencing endpoint: wallet adapter rework
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider
-        wallets={wallets}
-        onError={onError}
-        autoConnect={autoConnect}
-      >
+      <WalletProvider wallets={wallets} onError={onError} autoConnect={true}>
         <ReactUIWalletModalProviderDynamic>
           {children}
         </ReactUIWalletModalProviderDynamic>

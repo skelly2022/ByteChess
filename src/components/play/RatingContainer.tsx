@@ -7,6 +7,7 @@ import usePlayModal from "~/hooks/usePlayModal";
 
 import Assets from "~/helpers/assets";
 import joinGameLogic from "~/helpers/joinGameLogic";
+import { useSession } from "next-auth/react";
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 const { extractFirstAndLast5Characters } = Assets;
 
@@ -20,6 +21,7 @@ const RatingContainer: React.FC<RatingContainerProps> = ({
 }) => {
   const user = useUserStore();
   const play = usePlayModal();
+  const session = useSession();
   const time = categorizeChessGame(play.minutes + " + " + play.increment);
   return (
     <div className="flex h-12 w-full items-center justify-between bg-slate-50 p-3 ">
@@ -38,7 +40,7 @@ const RatingContainer: React.FC<RatingContainerProps> = ({
           <h1>Waiting for opponent...</h1>
         )}
         {type === "me" && (
-          <h1>{extractFirstAndLast5Characters(user.user.walletAddress)}</h1>
+          <h1>{extractFirstAndLast5Characters(session.data.user.name)}</h1>
         )}
 
         {time === "Bullet" && type === "opponent" && (
@@ -53,8 +55,8 @@ const RatingContainer: React.FC<RatingContainerProps> = ({
         {time === "Bullet" && type === "me" && (
           <h1>{user.user.bulletRating}</h1>
         )}
-        {time === "Blitz" && type === "me" && <h1>{user.user.bulletRating}</h1>}
-        {time === "Rapid" && type === "me" && <h1>{user.user.bulletRating}</h1>}
+        {time === "Blitz" && type === "me" && <h1>{session.data.user.name}</h1>}
+        {time === "Rapid" && type === "me" && <h1>{session.data.user.name}</h1>}
       </div>
       <Timer type={type} />
     </div>

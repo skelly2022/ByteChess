@@ -14,6 +14,7 @@ import Assets from "~/helpers/assets";
 import usePlayModal from "~/hooks/usePlayModal";
 import joinGameLogic from "~/helpers/joinGameLogic";
 import { useEffect, useState } from "react";
+import ActionContainer from "./ActionContainer";
 
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 const { extractFirstAndLast5Characters } = Assets;
@@ -136,7 +137,9 @@ const LiveGameTimer = () => {
           </table>
         </div>
       </div>
+
       <RatingContainer type="me" />
+      <ActionContainer />
     </div>
   );
 };

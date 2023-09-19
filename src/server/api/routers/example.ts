@@ -45,6 +45,7 @@ export const exampleRouter = createTRPCRouter({
       });
       return user;
     }),
+
   getAllUsers: publicProcedure.mutation(async () => {
     const users = await prisma.user.findMany({});
     console.log(users);

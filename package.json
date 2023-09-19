@@ -17,6 +17,7 @@
   "dependencies": {
     "@coral-xyz/anchor": "^0.28.1-beta.2",
     "@echecs/elo": "^1.0.2",
+    "@next-auth/prisma-adapter": "^1.0.7",
     "@noble/ed25519": "^2.0.0",
     "@prisma/client": "^5.1.1",
     "@project-serum/anchor": "^0.26.0",
@@ -43,6 +44,7 @@
     "immer": "^10.0.2",
     "lucide-react": "^0.270.0",
     "next": "^13.4.13",
+    "next-auth": "^4.22.1",
     "react": "18.2.0",
     "react-animated-numbers": "^0.16.0",
     "react-chessboard": "^4.0.1",
@@ -54,6 +56,7 @@
     "superjson": "^1.13.1",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.6",
+    "tweetnacl": "^1.0.3",
     "v8": "^0.1.0",
     "webpack": "^5.88.2",
     "zod": "^3.21.4",

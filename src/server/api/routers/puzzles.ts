@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "src/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  protectedProcedure,
+} from "src/server/api/trpc";
 import { prisma } from "src/server/db";
 import { update } from "@echecs/elo";
 import { use } from "react";
@@ -23,7 +27,7 @@ function calculateWinRatingChange(playerRating, puzzleDifficulty) {
 }
 
 export const puzzleRouter = createTRPCRouter({
-  getRandomPuzzle: publicProcedure
+  getRandomPuzzle: protectedProcedure
     .input(
       z.object({
         address: z.string(),

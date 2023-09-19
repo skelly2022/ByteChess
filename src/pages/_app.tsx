@@ -1,16 +1,23 @@
 import { type AppType } from "next/app";
 import { api } from "~/utils/api";
-
+import { type Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
 import { ContextProvider } from "../providers/ContextProvider";
 import { ContentContainer } from "~/components/ContentContainer";
 import "~/styles/globals.css";
-3;
-const MyApp: AppType = ({ Component, pageProps }) => {
+require("@solana/wallet-adapter-react-ui/styles.css");
+
+const MyApp: AppType<{ session: Session | null }> = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}) => {
   return (
     <ContextProvider>
-      <ContentContainer>
-        <Component {...pageProps} />
-      </ContentContainer>
+      <SessionProvider session={session}>
+        <ContentContainer>
+          <Component {...pageProps} />
+        </ContentContainer>
+      </SessionProvider>
     </ContextProvider>
   );
 };

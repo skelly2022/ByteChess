@@ -87,13 +87,13 @@ const LoginModal = () => {
     setSelectedOption(selected.value); // Update the selected option state
   };
 
-  useEffect(() => {
-    //@ts-ignore
-    if (user.user.walletAddress === "" && play.isOpen === true) {
-      play.onClose();
-      login.onOpen();
-    }
-  }, [play]);
+  // useEffect(() => {
+  //   //@ts-ignore
+  //   if (user.user.walletAddress === "" && play.isOpen === true) {
+  //     play.onClose();
+  //     login.onOpen();
+  //   }
+  // }, [play]);
   const bodyContent = (
     <div className="flex h-[400px] w-full flex-col items-center justify-center gap-3">
       {loading ? (
