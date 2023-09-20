@@ -25,6 +25,14 @@ const LoginModal = () => {
       user.setUser(data);
     },
   });
+  const sign = (name) => {
+    console.log(name);
+    if (wallet.connected === false) {
+      select(name);
+    } else {
+      handleSignIn();
+    }
+  };
 
   const handleSignIn = async () => {
     try {
@@ -62,6 +70,11 @@ const LoginModal = () => {
       handleSignIn();
     }
   }, [wallet.connected]);
+
+  useEffect(() => {
+    console.log(wallet.connected);
+    console.log(publicKey);
+  }, []);
   const bodyContent = (
     <div className="flex h-[100px] items-center justify-center gap-8">
       {wallets.map((wallet) => {
@@ -73,7 +86,7 @@ const LoginModal = () => {
             height={45}
             alt="wallet"
             className="cursor-pointer"
-            onClick={() => select(wallet.adapter.name)}
+            onClick={() => sign(wallet.adapter.name)}
           />
         );
       })}

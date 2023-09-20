@@ -1,14 +1,12 @@
 "use client";
 
-import { AiOutlineMenu } from "react-icons/ai";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Avatar from "../Avatar";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import MenuItem from "./MenuItem";
 import useLoginModal from "src/hooks/useLoginModal";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "react-hot-toast";
-import { api } from "src/utils/api";
 import useUserStore from "src/hooks/useUserStore";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { signOut, useSession } from "next-auth/react";

@@ -26,6 +26,7 @@ import {
 import dynamic from "next/dynamic";
 import { RPC_ENDPOINT } from "~/utils/const";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 const ReactUIWalletModalProviderDynamic = dynamic(
   async () =>
@@ -44,9 +45,10 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const wallets = useMemo(
     () => [
       new SolflareWalletAdapter(),
-      new SolletWalletAdapter({ network }),
-      new SolletExtensionWalletAdapter({ network }),
+      //  new SolletWalletAdapter({ network }),
+      // new SolletExtensionWalletAdapter({ network }),
       new TorusWalletAdapter(),
+      new PhantomWalletAdapter(),
       // new LedgerWalletAdapter(),
       // new SlopeWalletAdapter(),
     ],
