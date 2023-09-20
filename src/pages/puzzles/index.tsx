@@ -40,14 +40,14 @@ const Home: React.FC<Page> = ({ Page }) => {
     puzzle.setMoves([]);
     puzzle.setRanked(false);
   }, []);
-  // useEffect(() => {
-  //   console.log(session);
-  //   if (session.status === "authenticated") {
-  //     getUser.mutateAsync({ address: session.data.user.name });
-  //   } else {
-  //     // loginModal.onOpen();
-  //   }
-  // }, [session]);
+  useEffect(() => {
+    console.log(session);
+    if (session.status === "authenticated") {
+      getUser.mutateAsync({ address: session.data.user.name });
+    } else {
+      // loginModal.onOpen();
+    }
+  }, [session]);
   return (
     <>
       <ClientOnly>
