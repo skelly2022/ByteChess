@@ -47,7 +47,6 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   });
   const updateWin = api.games.updateGameWin.useMutation({
     async onSuccess(result) {
-      console.log(result);
       user.setUser(result.rating);
       play.setOpponent(result.loserRating);
       socket.emit("checkmate", {

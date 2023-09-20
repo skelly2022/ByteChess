@@ -19,7 +19,6 @@ const BlockChain = () => {
     },
   });
   async function onSuccessGetData(data) {
-    console.log(data);
     let accounts = [];
 
     // Use map to create an array of promises
@@ -34,7 +33,6 @@ const BlockChain = () => {
         const account = await program.account.newAccount.fetch(
           globalLevel1GameDataAccount,
         );
-        console.log(account.data.toString());
         const user = {
           address: d.walletAddress,
           rating: account.data.toString(),
@@ -47,7 +45,6 @@ const BlockChain = () => {
 
     // Wait for all promises to resolve
     await Promise.all(fetchPromises);
-    console.log(accounts);
 
     // Now you can safely log the accounts array
     setAccounts(accounts);

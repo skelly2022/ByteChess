@@ -18,6 +18,20 @@ function calculateEloChange(winnerRating, loserRating) {
     loserNewRating: Math.round(loserNewRating),
   };
 }
+function calculateEloChangeDraw(playerRating, opponentRating) {
+  const kFactor = 8; // You can adjust this as needed
+  const expectedScore =
+    1 / (1 + Math.pow(10, (opponentRating - playerRating) / 400));
+
+  const playerNewRating = playerRating + kFactor * (0.5 - expectedScore);
+  const opponentNewRating =
+    opponentRating + kFactor * (0.5 - (1 - expectedScore));
+
+  return {
+    winnerNewRating: Math.round(playerNewRating),
+    loserNewRating: Math.round(opponentNewRating),
+  };
+}
 
 export const gamesRouter = createTRPCRouter({
   getGame: publicProcedure
@@ -116,6 +130,36 @@ export const gamesRouter = createTRPCRouter({
         input.wElo,
         input.lElo,
       );
+      const rating = await prisma.user.update({
+        where: { walletAddress: input.winnerAddress },
+        data: {
+          bulletRating: winnerNewRating,
+        },
+      });
+      const loserRating = await prisma.user.update({
+        where: { walletAddress: input.loserAddress },
+        data: {
+          bulletRating: loserNewRating,
+        },
+      });
+      return { rating: rating, loserRating: loserRating };
+    }),
+  updateGameDraw: publicProcedure
+    .input(
+      z.object({
+        winnerAddress: z.string(),
+        loserAddress: z.string(),
+        wElo: z.number(),
+        lElo: z.number(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      console.log(input);
+      const { winnerNewRating, loserNewRating } = calculateEloChangeDraw(
+        input.wElo,
+        input.lElo,
+      );
+      console.log(winnerNewRating, loserNewRating);
       const rating = await prisma.user.update({
         where: { walletAddress: input.winnerAddress },
         data: {

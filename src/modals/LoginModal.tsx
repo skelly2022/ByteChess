@@ -33,7 +33,6 @@ const LoginModal = () => {
       }
 
       const csrf = await getCsrfToken();
-      console.log(csrf);
       // if (!wallet.publicKey || !csrf || !wallet.signMessage) return;
 
       const message = new SigninMessage({
@@ -59,7 +58,6 @@ const LoginModal = () => {
   };
 
   useEffect(() => {
-    console.log(status, session);
     if (wallet.connected && status === "unauthenticated") {
       handleSignIn();
     }

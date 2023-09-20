@@ -40,14 +40,14 @@ const Home: React.FC<Page> = ({ Page }) => {
     puzzle.setMoves([]);
     puzzle.setRanked(false);
   }, []);
-  useEffect(() => {
-    console.log(session);
-    if (session.status === "authenticated") {
-      getUser.mutateAsync({ address: session.data.user.name });
-    } else {
-      // loginModal.onOpen();
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   console.log(session);
+  //   if (session.status === "authenticated") {
+  //     getUser.mutateAsync({ address: session.data.user.name });
+  //   } else {
+  //     // loginModal.onOpen();
+  //   }
+  // }, [session]);
   return (
     <>
       <ClientOnly>
@@ -55,8 +55,16 @@ const Home: React.FC<Page> = ({ Page }) => {
         <Navbar />
         <LoginModal />
       </ClientOnly>
-      <main className="fixed min-h-screen bg-gray-900  pt-28 ">
-        {/* {loading ? <Loading /> : <PuzzlesMain />} */}
+      <main
+        className="fixed min-h-screen bg-gray-900  "
+        style={{
+          backgroundImage: `url(/images/1.jpg)`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+        }}
+      >
+        {loading ? <Loading /> : <PuzzlesMain />}
       </main>
     </>
   );

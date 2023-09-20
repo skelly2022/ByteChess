@@ -76,6 +76,7 @@ const Home = () => {
         userData.walletAddress2 === "" ||
         userData.walletAddress2 === publicKey.toBase58()
       ) {
+        console.log(userData);
         socket.emit("joinRoom", { roomId: userData.id });
         setBoardOrientation(getOppositeColor(userData.Color));
         const data = { address: userData.walletAddress };
@@ -135,15 +136,25 @@ const Home = () => {
         <ToasterProvider />
         <Navbar />
       </ClientOnly>
-      <main className="min-w-screen  flex min-h-screen bg-blue pt-28">
-        {loading ? (
-          <Loading />
-        ) : (
-          <LiveGameContainer
-            boardOrientation={boardOrientation}
-            connected={connected}
-          />
-        )}
+      <main
+        className="min-w-screen  flex min-h-screen "
+        style={{
+          backgroundImage: `url(/images/3.jpg)`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+        }}
+      >
+        <div className="h-full w-full pt-28">
+          {loading ? (
+            <Loading />
+          ) : (
+            <LiveGameContainer
+              boardOrientation={boardOrientation}
+              connected={connected}
+            />
+          )}
+        </div>
       </main>
     </>
   );

@@ -59,7 +59,6 @@ export const authOptions: AuthOptions = {
           const signinMessage = new SigninMessage(
             JSON.parse(credentials?.message || "{}"),
           );
-          console.log(signinMessage);
           const nextAuthUrl = new URL(process.env.NEXTAUTH_URL);
           if (signinMessage.domain !== nextAuthUrl.host) {
             return null;

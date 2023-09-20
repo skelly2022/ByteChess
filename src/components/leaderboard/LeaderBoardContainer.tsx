@@ -9,6 +9,7 @@ import { api } from "~/utils/api";
 import { useEffect, useState } from "react";
 import useUserStore from "~/hooks/useUserStore";
 import Loading from "../Loading";
+import test from "../../../public/images/test.png";
 
 const LeaderboardContainer = () => {
   const { publicKey, sendTransaction, signMessage } = useWallet();
@@ -110,8 +111,8 @@ const LeaderboardContainer = () => {
   }, [publicKey]);
 
   return (
-    <div className="m-4 flex h-full w-full flex-col  ">
-      {loading ? (
+    <div className="m-4 flex h-full w-full flex-col">
+      {/* {loading ? (
         <Loading />
       ) : (
         <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-4 ">
@@ -155,7 +156,7 @@ const LeaderboardContainer = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

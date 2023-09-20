@@ -63,6 +63,7 @@ const LoginModal = () => {
   function handleChangeSeconds(event) {
     setIncrementCount(event.target.value);
   }
+
   function createGame(color: string) {
     setLoading(true);
     if (selectedOption === "Unlimited") {
@@ -75,7 +76,7 @@ const LoginModal = () => {
       newGame.mutateAsync(data);
     } else {
       const data = {
-        address: publicKey.toBase58(),
+        address: "hey",
         mode: selectedMode,
         time: count.toString() + " + " + incrementCount.toString(),
         color: getRandomColor(color),

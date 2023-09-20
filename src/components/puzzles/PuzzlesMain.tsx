@@ -134,7 +134,7 @@ const PuzzlesMain = () => {
   }, [publicKey]);
 
   return (
-    <div className="flex h-[calc(100vh-130px)] w-screen flex-wrap justify-center gap-2 overflow-hidden pl-4 pr-4">
+    <div className="flex h-[screen] w-screen flex-wrap justify-center gap-2 overflow-hidden  pt-28">
       {loading ? (
         <>
           <div className="h-auto w-auto md:h-full ">

@@ -62,7 +62,6 @@ const UserMenu: React.FC<UserMenuProps> = () => {
     router.push("/puzzles");
   };
   const connectWallet = async () => {
-    console.log("hey");
     loginModal.onOpen();
   };
   const disconnectWallet = async () => {

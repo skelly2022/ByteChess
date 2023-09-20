@@ -12,6 +12,8 @@ import socket from "~/helpers/socket";
 import { AiOutlineClose } from "react-icons/ai";
 import { BsFlag } from "react-icons/bs";
 import ActionContainer from "./ActionContainer";
+import ChatComponent from "./ChatComponent";
+import { useRouter } from "next/router";
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 const { extractFirstAndLast5Characters } = Assets;
 
@@ -24,13 +26,51 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
   boardOrientation,
   connected,
 }) => {
+  const [chatMessages, setChatMessages] = useState([]); // State to store chat messages
+  const [newMessage, setNewMessage] = useState(""); //
+  const router = useRouter();
   const user = useUserStore();
-  const play = usePlayModal();
 
+  const { playID } = router.query;
+  const play = usePlayModal();
+  const sendChatMessage = () => {
+    console.log(newMessage);
+    if (newMessage.trim() !== "") {
+      // Emit the chat message to the server and specify the roomId
+
+      socket.emit("chatMessage", {
+        roomId: playID,
+        message: newMessage,
+        sender: "You", // Sender's name
+      });
+
+      // Add the sender's message to the local chatMessages state
+      const senderMessage = { text: newMessage, sender: "You" };
+      console.log([...chatMessages, senderMessage]);
+      setChatMessages([...chatMessages, senderMessage]); // Add the sender's message only
+
+      // Clear the input field
+      setNewMessage("");
+    }
+  };
+  useEffect(() => {
+    socket.on("chatMessageInc", (data) => {
+      console.log(data);
+      setChatMessages([
+        ...chatMessages,
+        { text: data.message, sender: "Opponent" },
+      ]);
+    });
+
+    return () => {
+      // Clean up socket event listeners
+      socket.off("chatMessageInc");
+    };
+  }, []);
   // Now, chessMoves contains the alternated moves with new rows as
 
   return (
-    <div className="flex h-[calc(1indexvh-112px)] w-screen items-center justify-center gap-2 ">
+    <div className="flex h-[calc(1indexvh-112px)] w-screen  justify-center gap-2 ">
       <div className=" flex h-full w-full flex-col  md:w-auto">
         <div className="w-full md:hidden">
           <RatingContainer type="opponent" />
@@ -49,9 +89,12 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
         <div className=" flex h-auto w-full flex-col ">
           <LiveGameScoreBoard />
         </div>
-        {/* <div className=" flex h-1/3 w-full flex-col items-center justify-center gap-2 rounded-xl bg-white ">
-          <h1 className="">Chat</h1>
-        </div> */}
+        <ChatComponent
+          chatMessages={chatMessages}
+          newMessage={newMessage}
+          onNewMessageChange={(e) => setNewMessage(e.target.value)}
+          onSendChatMessage={sendChatMessage}
+        />
       </div>
     </div>
   );
