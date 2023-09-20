@@ -140,9 +140,9 @@ const ActionContainer = () => {
     });
   }, []);
   return (
-    <div className="bg-slate-50">
+    <div className="">
       {drawRequested === false && gameResigned === false && (
-        <div className="relative flex h-16 w-full items-center justify-center gap-10  text-black">
+        <div className="relative flex h-16 w-full items-center justify-center gap-10   text-black">
           {icons.map((item, index) => (
             <div
               key={index}

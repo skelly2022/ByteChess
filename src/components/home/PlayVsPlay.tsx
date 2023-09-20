@@ -85,7 +85,7 @@ const PlayVsPlay = () => {
           className=" h-[calc(100vh-157px)] grow outline-none "
           value="tab2"
         >
-          <div className="no-scrollbar grid h-[90%] w-auto overflow-scroll p-3">
+          <div className="  grid h-[90%] w-auto p-3">
             <table className=" text-white ">
               <thead className="  ">
                 <tr className="flex h-10 w-full items-center ">

@@ -55,6 +55,8 @@ module.exports = {
         warning: "#ff9900" /* Warning */,
         error: "#ff5724" /* Error */,
         blue: "#1a202c",
+        nav: "rgba(255, 250, 237, 0.65)",
+        lightblue: "#BFD1F9",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -87,7 +87,7 @@ const LiveGameTimer = () => {
   }, [play.moves]);
 
   return (
-    <div className="flex w-full flex-col ">
+    <div className="flex h-full w-full flex-col rounded-lg bg-white ">
       <RatingContainer type="opponent" />
 
       <div className="relative flex cursor-pointer items-center justify-center gap-3 bg-slate-50 p-2 shadow">
@@ -119,7 +119,7 @@ const LiveGameTimer = () => {
           <GiHamburgerMenu size={30} />
         </div>
       </div>
-      <div className="flex h-48 items-center justify-center overflow-auto bg-white">
+      <div className="flex h-40 items-center justify-center overflow-auto bg-white">
         <div className="h-full w-full rounded-lg bg-white p-4 shadow-lg">
           <table className="w-full shadow-md">
             <tbody>
@@ -139,7 +139,6 @@ const LiveGameTimer = () => {
       </div>
 
       <RatingContainer type="me" />
-      <ActionContainer />
     </div>
   );
 };

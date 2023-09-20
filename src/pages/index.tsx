@@ -20,7 +20,7 @@ export default function Home() {
         <PlayFriend />
         <Navbar />
       </ClientOnly>
-      <main className="no-scrollbar flex min-h-screen flex-col items-center justify-center overflow-auto  bg-gray-900">
+      <main className="no-scrollbar overflow-hidden-scroll bg-lightblue flex min-h-screen flex-col items-center  justify-center overflow-auto">
         <LandingPage />
       </main>
     </>

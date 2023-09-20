@@ -70,7 +70,21 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
   // Now, chessMoves contains the alternated moves with new rows as
 
   return (
-    <div className="flex h-[calc(1indexvh-112px)] w-screen  justify-center gap-2 ">
+    <div className="flex h-[calc(100vh-112px)] w-screen items-center justify-center gap-5 p-3">
+      <div className="flex h-full w-1/4 flex-col items-center justify-evenly">
+        {" "}
+        <div className="flex h-1/6 w-full items-center justify-center rounded-lg bg-slate-50">
+          <ActionContainer />
+        </div>
+        <div className="h-2/3 w-full">
+          <ChatComponent
+            chatMessages={chatMessages}
+            newMessage={newMessage}
+            onNewMessageChange={(e) => setNewMessage(e.target.value)}
+            onSendChatMessage={sendChatMessage}
+          />
+        </div>
+      </div>
       <div className=" flex h-full w-full flex-col  md:w-auto">
         <div className="w-full md:hidden">
           <RatingContainer type="opponent" />
@@ -85,17 +99,23 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
           <ActionContainer />
         </div>
       </div>
-      <div className=" hidden h-full w-1/4 flex-col gap-2  md:flex md:justify-start ">
-        <div className=" flex h-auto w-full flex-col ">
+      <div className=" flex h-auto w-1/4 flex-col  ">
+        <LiveGameScoreBoard />
+      </div>
+      {/* <div className=" hidden h-full w-1/4 flex-col gap-2  md:flex md:justify-start ">
+        <div className=" flex h-2/3 w-full flex-col  bg-white">
+          Hey
           <LiveGameScoreBoard />
         </div>
-        <ChatComponent
-          chatMessages={chatMessages}
-          newMessage={newMessage}
-          onNewMessageChange={(e) => setNewMessage(e.target.value)}
-          onSendChatMessage={sendChatMessage}
-        />
-      </div>
+        <div className="h-1/3 w-full">
+          <ChatComponent
+            chatMessages={chatMessages}
+            newMessage={newMessage}
+            onNewMessageChange={(e) => setNewMessage(e.target.value)}
+            onSendChatMessage={sendChatMessage}
+          />
+        </div>
+      </div> */}
     </div>
   );
 };

@@ -101,7 +101,8 @@ const UserMenu: React.FC<UserMenuProps> = () => {
             onClick={() => {
               puzzles();
             }}
-            className=" cursor-pointer rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-neutral-300  md:block "
+            className=" bg-nav cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold
+             text-black transition hover:bg-neutral-300  md:block "
           >
             Puzzles
           </div>
@@ -109,13 +110,14 @@ const UserMenu: React.FC<UserMenuProps> = () => {
             onClick={() => {
               router.push("/leaderboard");
             }}
-            className=" cursor-pointer rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-neutral-300  md:block "
+            className=" bg-nav cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-black
+             transition hover:bg-neutral-300  md:block "
           >
             Leaderboard
           </div>
           {session ? (
             <div
-              className="cursor-pointer rounded-full bg-white px-4 py-2 text-sm"
+              className="bg-nav cursor-pointer rounded-lg px-4 py-2 text-sm"
               onClick={toggleOpen}
             >
               {extractFirstAndLast5Characters(session.user.name)}
@@ -125,7 +127,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
               onClick={() => {
                 connectWallet();
               }}
-              className=" cursor-pointer rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-neutral-300  md:block "
+              className=" bg-nav cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-black transition hover:bg-neutral-300  md:block "
             >
               Connect Wallet
             </div>
@@ -136,7 +138,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl bg-white text-sm shadow-md md:w-3/4">
+        <div className="bg-nav absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl text-sm shadow-md md:w-3/4">
           <div className="flex cursor-pointer flex-col text-black">
             <>
               {/* <MenuItem onClick={login} label="Login" /> */}
@@ -153,13 +155,13 @@ const UserMenu: React.FC<UserMenuProps> = () => {
         </div>
       )}
       {hamOpen && (
-        <div className="absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl bg-white text-sm shadow-md md:w-3/4">
+        <div className="bg-nav absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl text-sm shadow-md md:w-3/4">
           <div className="flex cursor-pointer flex-col text-center text-black">
             <>
               {/* <MenuItem onClick={login} label="Login" /> */}
               {publicKey ? (
                 <div
-                  className="cursor-pointer  bg-white px-4 py-3 font-semibold transition hover:bg-neutral-300"
+                  className="bg-nav  cursor-pointer px-4 py-3 font-semibold transition hover:bg-neutral-300"
                   onClick={() => {
                     disconnect(), disconnectWallet();
                     toggleHam();

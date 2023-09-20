@@ -139,7 +139,7 @@ const Home = () => {
       <main
         className="min-w-screen  flex min-h-screen "
         style={{
-          backgroundImage: `url(/images/3.jpg)`,
+          backgroundImage: `url(/images/1.png)`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center center",

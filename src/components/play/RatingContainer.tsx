@@ -24,7 +24,11 @@ const RatingContainer: React.FC<RatingContainerProps> = ({
   const session = useSession();
   const time = categorizeChessGame(play.minutes + " + " + play.increment);
   return (
-    <div className="flex h-12 w-full items-center justify-between bg-slate-50 p-3 ">
+    <div
+      className={`flex h-12 w-full items-center justify-between  ${
+        type === "opponent" ? "rounded-t-lg" : "rounded-b-lg"
+      } bg-slate-50 p-3`}
+    >
       <div className="flex items-center gap-3">
         {type === "me" && <BiSolidCircle color="green" />}
         {type === "opponent" && play.opponent.walletAddress !== "" && (

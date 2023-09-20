@@ -76,7 +76,7 @@ const LoginModal = () => {
       newGame.mutateAsync(data);
     } else {
       const data = {
-        address: "hey",
+        address: publicKey.toBase58(),
         mode: selectedMode,
         time: count.toString() + " + " + incrementCount.toString(),
         color: getRandomColor(color),

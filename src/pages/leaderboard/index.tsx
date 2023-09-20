@@ -21,15 +21,7 @@ export default function Home() {
         <PlayFriend />
         <Navbar />
       </ClientOnly>
-      <main
-        className="no-scrollbar flex min-h-screen flex-col items-center overflow-auto"
-        style={{
-          backgroundImage: `url(/images/2.jpg)`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center center",
-        }}
-      >
+      <main className="no-scrollbar flex min-h-screen flex-col items-center overflow-auto">
         <LeaderboardContainer />
       </main>
     </>
