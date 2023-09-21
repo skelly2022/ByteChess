@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 import { useRouter } from "next/router";
@@ -26,6 +26,9 @@ const breakpoints = {
   large: 992,
   extraLarge: 1200,
 };
+type ClearPremoves = {
+  clearPremoves: (clearLastPieceColour?: boolean) => void;
+};
 const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   const play = usePlayModal();
   const router = useRouter();
@@ -33,6 +36,8 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
 
   const { playID } = router.query;
   const [turn, setTurn] = useState("");
+  const chessboardRef = useRef();
+
   const [windowWidth, setWindowWidth] = useState(null);
   const [boardWrapper, setBoardWrapper] = useState({
     width: `80.33vh`,
@@ -109,6 +114,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       return false;
     }
   }
+  console.log(boardOrientation[0], boardOrientation);
   useEffect(() => {
     setGame(new Chess(play.fens[play.index]));
   }, [play.index]);
@@ -140,7 +146,9 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       user.setUser(data.loser);
     });
   }, []);
-
+  useEffect(() => {
+    chessboardRef.current?.clearPremoves();
+  }, []);
   useEffect(() => {
     setGame(new Chess(play.fen));
   }, [play.fen]);
@@ -170,11 +178,13 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
     <div style={boardWrapper}>
       <Chessboard
         id="BasicBoard"
-        showBoardNotation={true}
+        arePremovesAllowed={true}
+        // showBoardNotation={true}
         boardOrientation={boardOrientation}
         isDraggablePiece={({ piece }) => piece[0] === boardOrientation[0]}
-        onPieceDrop={onDrop}
+        // onPieceDrop={onDrop}
         position={game.fen()}
+        ref={chessboardRef}
       />
     </div>
   );

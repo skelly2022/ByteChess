@@ -20,7 +20,15 @@ export default function Home() {
         <PlayFriend />
         <Navbar />
       </ClientOnly>
-      <main className="no-scrollbar overflow-hidden-scroll bg-lightblue flex min-h-screen flex-col items-center  justify-center overflow-auto">
+      <main
+        className="no-scrollbar overflow-hidden-scroll bg-lightblue flex min-h-screen flex-col items-center  justify-center overflow-auto"
+        //       style={{
+        //   backgroundImage: `url(/images/1.png)`,
+        //   backgroundSize: "cover",
+        //   backgroundRepeat: "no-repeat",
+        //   backgroundPosition: "center center",
+        // }}
+      >
         <LandingPage />
       </main>
     </>

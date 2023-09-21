@@ -7,14 +7,14 @@ const Logo = () => {
   const router = useRouter();
 
   return (
-    <div className="relative flex h-20 flex-col items-center">
+    <div className="relative flex h-20 flex-col items-center pb-2">
       <Image
         onClick={() => router.push("/")}
         alt="Logo"
         className="cursor-pointer md:block"
-        height={100}
-        width={100}
-        src="/images/chessLogoTrans.png"
+        height={80}
+        width={80}
+        src="/images/bytechessLogo.png"
       />
       {/* <h1 className="pt-2 font-mono text-white">CHESSDAO</h1> */}
     </div>

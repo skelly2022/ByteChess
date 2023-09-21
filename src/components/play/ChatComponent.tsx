@@ -1,10 +1,14 @@
 import React, { useRef, useEffect } from "react";
+import Image from "next/image";
+import useUserModal from "~/hooks/useUserStore";
+import Assets from "~/helpers/assets";
+const { extractFirstAndLast5Characters } = Assets;
 
 interface ChatComponentProps {
   chatMessages: { text: string; sender: string }[];
   newMessage: string;
   onNewMessageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onSendChatMessage: () => void;
+  onSendChatMessage: (icon?: string) => void;
 }
 
 const ChatComponent: React.FC<ChatComponentProps> = ({
@@ -13,6 +17,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
   onNewMessageChange,
   onSendChatMessage,
 }) => {
+  const user = useUserModal();
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       // Prevent the default behavior of the "Enter" key
@@ -39,21 +44,64 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
   }, [chatMessages]);
 
   return (
-    <div className=" flex h-full w-full flex-col rounded-lg bg-gray-100 text-black">
-      <div className="overflow-hidden-scroll flex-grow space-y-2 overflow-y-auto px-3 py-2">
+    <div className=" flex  w-full flex-col">
+      <div className="overflow-hidden-scroll h-60 flex-grow space-y-2 overflow-y-auto px-3 py-2">
         {chatMessages.map((message, index) => (
           <div
             key={index}
-            className={`w-full rounded-md   ${
-              message.sender.toLowerCase() === "you" ? "bg-blue-500" : ""
+            className={`flex w-full gap-2 rounded-md ${
+              message.sender ===
+              `${extractFirstAndLast5Characters(user.user.walletAddress)}`
+                ? "bg-blue-500"
+                : ""
             }`}
           >
-            <strong>{message.sender}: </strong>
-            {message.text}
+            {message.text === "monkey" || message.text === "kekw" ? (
+              <>
+                <strong>{message.sender}: </strong>
+                <Image
+                  // onClick={() => router.push("/")}
+                  alt="Logo"
+                  className="cursor-pointer md:block"
+                  height={30}
+                  width={30}
+                  src={`/images/${message.text}.jpeg`}
+                />
+              </>
+            ) : (
+              <>
+                <strong>{message.sender}: </strong>
+                {message.text}
+              </>
+            )}
           </div>
         ))}
         {/* Create a placeholder div to scroll to */}
         <div ref={messagesContainerRef}></div>
+      </div>
+      <div className="item-center flex w-full justify-center gap-3 p-2">
+        <Image
+          // onClick={() => router.push("/")}
+          alt="Logo"
+          className="cursor-pointer md:block"
+          height={30}
+          width={30}
+          src="/images/kekw.png"
+          onClick={() => {
+            onSendChatMessage("kekw");
+          }}
+        />
+        <Image
+          // onClick={() => router.push("/")}
+          alt="Logo"
+          className="cursor-pointer md:block"
+          height={30}
+          width={30}
+          src="/images/monkey.jpeg"
+          onClick={() => {
+            onSendChatMessage("monkey");
+          }}
+        />
       </div>
       <div className="w-full pb-2 pl-2 pr-2">
         <input

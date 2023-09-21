@@ -24,7 +24,7 @@ function extractFirstAndLast5Characters(inputString) {
   const first5 = inputString.substring(0, 5);
   const last5 = inputString.substring(inputString.length - 5);
 
-  return `${first5}....${last5}`;
+  return `${first5}..${last5}`;
 }
 
 export default { whiteStyle, blackStyle, extractFirstAndLast5Characters, half };

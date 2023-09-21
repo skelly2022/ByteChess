@@ -140,9 +140,9 @@ const ActionContainer = () => {
     });
   }, []);
   return (
-    <div className="">
+    <div className="cursor-pointer">
       {drawRequested === false && gameResigned === false && (
-        <div className="relative flex h-16 w-full items-center justify-center gap-10   text-black">
+        <div className="relative flex h-12 w-full items-center justify-center gap-10   text-black">
           {icons.map((item, index) => (
             <div
               key={index}
@@ -171,7 +171,7 @@ const ActionContainer = () => {
             </div>
           ))}
           {activeIcon !== null && (
-            <div className="bg-blue-500 top-50 absolute right-0 text-center font-sans text-black">
+            <div className="bg-blue-500 top-50 absolute right-4 text-center font-sans text-black">
               <ul className="text-4xl">
                 <li
                   className="inline-block w-auto transform transition-transform hover:scale-150"

@@ -14,6 +14,7 @@ import { BsFlag } from "react-icons/bs";
 import ActionContainer from "./ActionContainer";
 import ChatComponent from "./ChatComponent";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 const { extractFirstAndLast5Characters } = Assets;
 
@@ -29,37 +30,52 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
   const [chatMessages, setChatMessages] = useState([]); // State to store chat messages
   const [newMessage, setNewMessage] = useState(""); //
   const router = useRouter();
+  const session = useSession();
   const user = useUserStore();
 
   const { playID } = router.query;
   const play = usePlayModal();
-  const sendChatMessage = () => {
-    console.log(newMessage);
-    if (newMessage.trim() !== "") {
-      // Emit the chat message to the server and specify the roomId
-
-      socket.emit("chatMessage", {
-        roomId: playID,
-        message: newMessage,
-        sender: "You", // Sender's name
-      });
-
-      // Add the sender's message to the local chatMessages state
-      const senderMessage = { text: newMessage, sender: "You" };
-      console.log([...chatMessages, senderMessage]);
-      setChatMessages([...chatMessages, senderMessage]); // Add the sender's message only
-
-      // Clear the input field
-      setNewMessage("");
+  const sendChatMessage = (icon?: string) => {
+    let chatMessage = newMessage;
+    if (icon !== undefined) {
+      chatMessage = icon;
     }
+    console.log(chatMessage);
+
+    // Emit the chat message to the server and specify the roomId
+
+    socket.emit("chatMessage", {
+      roomId: playID,
+      message: chatMessage,
+      sender: extractFirstAndLast5Characters(session.data.user.name), // Sender's name
+    });
+
+    // Add the sender's message to the local chatMessages state
+    const senderMessage = {
+      text: chatMessage,
+      sender: extractFirstAndLast5Characters(session.data.user.name),
+    };
+    console.log([...chatMessages, senderMessage]);
+    setChatMessages([...chatMessages, senderMessage]); // Add the sender's message only
+
+    // Clear the input field
+    setNewMessage("");
   };
   useEffect(() => {
     socket.on("chatMessageInc", (data) => {
-      console.log(data);
-      setChatMessages([
+      console.log(chatMessages);
+      console.log([
         ...chatMessages,
-        { text: data.message, sender: "Opponent" },
+        {
+          text: data.message,
+          sender: data.sender,
+        },
       ]);
+      const senderMessage = {
+        text: data.message,
+        sender: data.sender,
+      };
+      setChatMessages([...chatMessages, senderMessage]);
     });
 
     return () => {
@@ -71,12 +87,12 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
 
   return (
     <div className="flex h-[calc(100vh-112px)] w-screen items-center justify-center gap-5 p-3">
-      <div className="flex h-full w-1/4 flex-col items-center justify-evenly">
+      <div className="hidden h-full w-1/4 flex-col items-center justify-center lg:flex">
         {" "}
-        <div className="flex h-1/6 w-full items-center justify-center rounded-lg bg-slate-50">
+        <div className="flex h-[12%] w-full items-center justify-center rounded-t-lg bg-slate-50">
           <ActionContainer />
         </div>
-        <div className="h-2/3 w-full">
+        <div className="flex h-auto w-full rounded-b-lg border-t-2 bg-slate-50">
           <ChatComponent
             chatMessages={chatMessages}
             newMessage={newMessage}
@@ -95,11 +111,11 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
         <div className="w-full md:hidden">
           <RatingContainer type="me" />
         </div>
-        <div className="w-full md:hidden">
+        <div className="mt-4 w-full rounded-lg bg-slate-50 py-2 md:hidden">
           <ActionContainer />
         </div>
       </div>
-      <div className=" flex h-auto w-1/4 flex-col  ">
+      <div className=" hidden h-auto w-1/4 flex-col lg:flex  ">
         <LiveGameScoreBoard />
       </div>
       {/* <div className=" hidden h-full w-1/4 flex-col gap-2  md:flex md:justify-start ">

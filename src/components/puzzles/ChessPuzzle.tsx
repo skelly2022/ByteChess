@@ -26,6 +26,7 @@ const Board: React.FC<PuzzleProps> = ({
   const puzzle = usePuzzleStore();
   const [game, setGame] = useState(new Chess(fen));
   const [solutionMoves, setSolution] = useState();
+  const [sideToPlay, setSideToPlay] = useState();
   const [pieceSquare, setPieceSquare] = useState("");
   const [rightClickedSquares, setRightClickedSquares] = useState({});
   const [optionSquares, setOptionSquares] = useState({});
@@ -221,6 +222,13 @@ const Board: React.FC<PuzzleProps> = ({
       }
     }
   }, [windowWidth]);
+  useEffect(() => {
+    if (getSideToPlayFromFen(fen) === "w") {
+      setSideToPlay("b");
+    } else {
+      setSideToPlay("w");
+    }
+  }, []);
   return (
     <div style={boardWrapper}>
       <Chessboard
@@ -231,6 +239,7 @@ const Board: React.FC<PuzzleProps> = ({
         // onSquareClick={onSquareClick}
         // onMouseOverSquare={onMouseOverSquare}
         // onMouseOutSquare={onMouseOutSquare}
+        isDraggablePiece={({ piece }) => piece[0] === sideToPlay}
         customBoardStyle={{
           borderRadius: "4px",
           boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5)",
