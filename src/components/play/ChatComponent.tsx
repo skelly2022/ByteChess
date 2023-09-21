@@ -51,6 +51,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
             key={index}
             className={`flex w-full gap-2 rounded-md ${
               message.sender ===
+              //@ts-ignore
               `${extractFirstAndLast5Characters(user.user.walletAddress)}`
                 ? "bg-blue-500"
                 : ""
@@ -86,7 +87,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
           className="cursor-pointer md:block"
           height={30}
           width={30}
-          src="/images/kekw.png"
+          src="/images/kekw.jpeg"
           onClick={() => {
             onSendChatMessage("kekw");
           }}

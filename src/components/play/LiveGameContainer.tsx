@@ -75,7 +75,13 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
         text: data.message,
         sender: data.sender,
       };
-      setChatMessages([...chatMessages, senderMessage]);
+      setChatMessages((prevChatMessages) => [
+        ...prevChatMessages,
+        {
+          text: data.message,
+          sender: data.sender,
+        },
+      ]);
     });
 
     return () => {
