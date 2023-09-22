@@ -1,9 +1,6 @@
 "use client";
-import { useWallet } from "@solana/wallet-adapter-react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { toast } from "react-hot-toast";
 import ClientOnly from "src/components/ClientOnly";
 import Navbar from "src/components/navbar/Navbar";
 import PuzzlesMain from "src/components/puzzles/PuzzlesMain";
@@ -20,12 +17,9 @@ type Page = {
 };
 
 const Home: React.FC<Page> = ({ Page }) => {
-  const { publicKey } = useWallet();
   const [loading, setLoading] = useState(true);
   const puzzle = usePuzzleStore();
-  const router = useRouter();
   const user = useUserModal();
-  const loginModal = useLoginModal();
   const session = useSession();
   const getUser = api.example.getUser.useMutation({
     onSuccess(data) {
@@ -56,9 +50,9 @@ const Home: React.FC<Page> = ({ Page }) => {
         <LoginModal />
       </ClientOnly>
       <main
-        className="fixed min-h-screen bg-gray-900  "
+        className="fixed min-h-screen  "
         style={{
-          backgroundImage: `url(/images/1.jpg)`,
+          backgroundImage: `url(/images/3.jpg)`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center center",

@@ -26,28 +26,42 @@ export default function Home() {
       return update;
     });
   }
-
+  const pgnString = `
+  1. e4 e6
+  2. d3
+  `;
   function makeRandomMove() {
-    const possibleMoves = game.moves();
-
-    // exit if the game is over
-    if (game.isGameOver() || game.isDraw() || possibleMoves.length === 0)
-      return;
-
-    const randomIndex = Math.floor(Math.random() * possibleMoves.length);
-    safeGameMutate((game) => {
-      game.move(possibleMoves[randomIndex]);
-    });
+    // const possibleMoves = game.moves();
+    // // exit if the game is over
+    // if (game.isGameOver() || game.isDraw() || possibleMoves.length === 0)
+    //   return;
+    // const randomIndex = Math.floor(Math.random() * possibleMoves.length);
+    // safeGameMutate((game) => {
+    //   game.move(possibleMoves[randomIndex]);
+    // });
   }
+  useEffect(() => {
+    // Create a new Chess instance and load it with the PGN string
+    const newGame = new Chess();
+    newGame.loadPgn(pgnString);
+
+    // Set the game state to the new Chess instance
+    setGame(newGame);
+
+    // Reset the chessboard and clear premove queue if needed
+    chessboardRef.current?.clearPremoves();
+  }, [pgnString]);
 
   function onDrop(sourceSquare, targetSquare, piece) {
-    const gameCopy = { game };
+    const gameCopy = game;
     const move = gameCopy.move({
       from: sourceSquare,
       to: targetSquare,
       promotion: piece[1].toLowerCase() ?? "q",
     });
-    setGame(game);
+    console.log(gameCopy.pgn());
+
+    setGame(gameCopy);
 
     // illegal move
     if (move === null) return false;
@@ -59,6 +73,7 @@ export default function Home() {
   }
 
   const play = usePlayModal();
+
   useEffect(() => {
     play.resetState();
   }, []);

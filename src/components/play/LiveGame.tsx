@@ -26,16 +26,13 @@ const breakpoints = {
   large: 992,
   extraLarge: 1200,
 };
-type ClearPremoves = {
-  clearPremoves: (clearLastPieceColour?: boolean) => void;
-};
+
 const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   const play = usePlayModal();
   const router = useRouter();
   const user = useUserStore();
 
   const { playID } = router.query;
-  const [turn, setTurn] = useState("");
   const chessboardRef = useRef();
 
   const [windowWidth, setWindowWidth] = useState(null);
@@ -114,7 +111,6 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       return false;
     }
   }
-  console.log(boardOrientation[0], boardOrientation);
   useEffect(() => {
     setGame(new Chess(play.fens[play.index]));
   }, [play.index]);
@@ -167,7 +163,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   useEffect(() => {
     if (windowWidth !== null) {
       if (windowWidth < breakpoints.medium) {
-        setBoardWrapper({ width: `100vw` });
+        setBoardWrapper({ width: `96.7vw` });
       } else {
         setBoardWrapper({ width: `80.33vh` });
       }

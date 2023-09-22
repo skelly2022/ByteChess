@@ -3,6 +3,7 @@ import Image from "next/image";
 import useUserModal from "~/hooks/useUserStore";
 import Assets from "~/helpers/assets";
 const { extractFirstAndLast5Characters } = Assets;
+import { useMediaQuery } from "react-responsive";
 
 interface ChatComponentProps {
   chatMessages: { text: string; sender: string }[];
@@ -18,33 +19,40 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
   onSendChatMessage,
 }) => {
   const user = useUserModal();
+  const chatContainerRef = useRef<HTMLDivElement | null>(null); // Reference to the chat component
+  const isLargeScreen = useMediaQuery({ minWidth: 992 });
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      // Prevent the default behavior of the "Enter" key
       event.preventDefault();
-
-      // Trigger the send action when "Enter" is pressed
       onSendChatMessage();
     }
   };
+  const handleContainerClick = () => {
+    if (!isLargeScreen) {
+      // console.log("hey"); // Log "hey" on non-large screens when chat container is clicked
+    }
+  };
 
-  // Create a ref for the messages container
-  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
-
-  // Function to scroll to the bottom of the messages container
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-
-  // Scroll to the bottom whenever chatMessages change
   useEffect(() => {
     scrollToBottom();
   }, [chatMessages]);
 
   return (
-    <div className=" flex  w-full flex-col">
+    <div
+      className={`flex w-full flex-col ${
+        isLargeScreen
+          ? ""
+          : "fixed bottom-28 right-[10%] h-auto w-[80%] bg-gray-500"
+      } z-50 rounded-lg bg-white`}
+      ref={chatContainerRef} // Set the reference to the chat component
+      id="chat-container"
+    >
       <div className="overflow-hidden-scroll h-60 flex-grow space-y-2 overflow-y-auto px-3 py-2">
         {chatMessages.map((message, index) => (
           <div

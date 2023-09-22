@@ -14,7 +14,7 @@ const Logo = () => {
         className="cursor-pointer md:block"
         height={80}
         width={80}
-        src="/images/bytechessLogo.png"
+        src="/images/bytechess3.png"
       />
       {/* <h1 className="pt-2 font-mono text-white">CHESSDAO</h1> */}
     </div>

@@ -147,7 +147,7 @@ const Home = () => {
           backgroundPosition: "center center",
         }}
       >
-        <div className="h-full w-full pt-28">
+        <div className="no-scrollbar h-full w-full overflow-auto pt-28">
           {loading ? (
             <Loading />
           ) : (

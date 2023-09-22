@@ -216,17 +216,18 @@ const Board: React.FC<PuzzleProps> = ({
     // Update boardWrapper based on the windowWidth
     if (windowWidth !== null) {
       if (windowWidth < breakpoints.medium) {
-        setBoardWrapper({ width: `100vw` });
+        setBoardWrapper({ width: `97vw` });
       } else {
         setBoardWrapper({ width: `80.33vh` });
       }
     }
   }, [windowWidth]);
   useEffect(() => {
+    console.log(sideToPlay);
     if (getSideToPlayFromFen(fen) === "w") {
-      setSideToPlay("b");
-    } else {
       setSideToPlay("w");
+    } else {
+      setSideToPlay("b");
     }
   }, []);
   return (

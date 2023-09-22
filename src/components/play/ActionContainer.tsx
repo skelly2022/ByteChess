@@ -8,32 +8,8 @@ import socket from "~/helpers/socket";
 import { api } from "~/utils/api";
 import useUserModal from "~/hooks/useUserStore";
 import usePlayModal from "~/hooks/usePlayModal";
-const icons = [
-  {
-    icon: <AiOutlineClose size={30} className="cursor-pointer text-black" />,
-    text: "Close button clicked.",
-    component: null,
-  },
-  {
-    icon: <h1 className="text-4xl">½</h1>,
-    text: (
-      <div className="flex h-full w-full scale-150 rounded-md  px-2">
-        <h1>Draw Offer Sent..</h1>
-      </div>
-    ),
-    component: null,
-  },
-  {
-    icon: <BsFlag size={25} className="cursor-pointer text-black" />,
-    text: <></>,
-    component: (
-      <div className="flex-col">
-        <button>Send Rematch Offer</button>
-        <button>Find New Opponent</button>
-      </div>
-    ),
-  },
-];
+import styles from "../styles/Animations.module.css";
+
 const ActionContainer = () => {
   const router = useRouter();
   const { playID } = router.query;
@@ -45,7 +21,49 @@ const ActionContainer = () => {
   const [activeIcon, setActiveIcon] = useState(null);
   const [drawRequested, setDrawRequested] = useState(false);
   const [gameResigned, setGameResigned] = useState(false);
-
+  const icons = [
+    {
+      icon: (
+        <AiOutlineClose
+          size={30}
+          className={`mt-2 cursor-pointer text-black`}
+        />
+      ),
+      text: "Close button clicked.",
+    },
+    {
+      icon: <h1 className="text-4xl">½</h1>,
+      text: (
+        <div className="flex h-full w-full scale-150 items-center rounded-md px-2">
+          <h1>Draw Offer Sent</h1>
+          <svg
+            className="ml-1 mt-[1px]  h-3 w-3 animate-spin text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="gray"
+              stroke-width="2"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="gray"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>{" "}
+        </div>
+      ),
+    },
+    {
+      icon: <BsFlag size={25} className="mt-2 cursor-pointer text-black" />,
+      text: <></>,
+    },
+  ];
   const updateWin = api.games.updateGameWin.useMutation({
     async onSuccess(result) {
       console.log(result);
@@ -140,25 +158,25 @@ const ActionContainer = () => {
     });
   }, []);
   return (
-    <div className="cursor-pointer">
+    <div className="relative w-full cursor-pointer">
       {drawRequested === false && gameResigned === false && (
-        <div className="relative flex h-12 w-full items-center justify-center gap-10   text-black">
+        <div className=" flex h-12 w-full items-center justify-center gap-10  text-black">
           {icons.map((item, index) => (
             <div
               key={index}
               className={`${
                 activeIcon !== null && activeIcon !== index
                   ? "hidden"
-                  : "bg-blue-500 gap-w flex pb-1 text-center font-sans text-black focus:scale-150 "
+                  : "flex w-auto items-center justify-center  px-2   text-center text-black shadow transition-transform active:scale-y-75"
               } ${
                 activeIcon === index
                   ? showClose || showHalf || showFlag
-                    ? ""
-                    : ""
-                  : ""
+                    ? "m-2 h-full w-full bg-white"
+                    : "rounded-sm bg-error  "
+                  : "bg-white"
               }`}
             >
-              <ul className="pr-3 text-sm">
+              <ul className=" ">
                 <li
                   className={`inline-block w-auto transform transition-transform  ${
                     activeIcon === index ? " " : ""
@@ -171,15 +189,15 @@ const ActionContainer = () => {
             </div>
           ))}
           {activeIcon !== null && (
-            <div className="bg-blue-500 top-50 absolute right-4 text-center font-sans text-black">
+            <div className="bg-blue-500 top-50 absolute right-3 text-center  text-black">
               <ul className="text-4xl">
                 <li
                   className="inline-block w-auto transform transition-transform hover:scale-150"
                   onClick={() => resetActiveIcon()}
                 >
                   <AiOutlineClose
-                    size={30}
-                    className="cursor-pointer text-black"
+                    size={25}
+                    className="mt-1 cursor-pointer text-black"
                   />
                 </li>
               </ul>
@@ -200,8 +218,12 @@ const ActionContainer = () => {
       )}
       {gameResigned === true && (
         <div className="flex h-16 w-full flex-col items-center justify-center gap-2 text-black">
-          <h3 className=" w-full text-center">Find New Opponent</h3>
-          <h3 className="w-full text-center">Rematch</h3>
+          <h3 className=" w-1/2 bg-white py-1 text-center shadow transition-transform active:scale-y-75">
+            Find New Opponent
+          </h3>
+          <h3 className=" w-1/2 bg-white py-[2px] text-center shadow transition-transform active:scale-y-75">
+            Rematch
+          </h3>
         </div>
       )}
     </div>

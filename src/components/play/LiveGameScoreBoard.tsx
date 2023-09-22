@@ -90,7 +90,10 @@ const LiveGameTimer = () => {
     <div className="flex h-full w-full flex-col rounded-lg bg-white ">
       <RatingContainer type="opponent" />
 
-      <div className="relative flex cursor-pointer items-center justify-center gap-3 bg-slate-50 p-2 shadow">
+      <div
+        className="relative flex cursor-pointer items-center justify-center
+       gap-3 bg-slate-100 p-2 shadow"
+      >
         <AiFillFastBackward
           size={30}
           onClick={() => {

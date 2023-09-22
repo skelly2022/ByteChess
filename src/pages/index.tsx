@@ -21,13 +21,14 @@ export default function Home() {
         <Navbar />
       </ClientOnly>
       <main
-        className="no-scrollbar overflow-hidden-scroll bg-lightblue flex min-h-screen flex-col items-center  justify-center overflow-auto"
-        //       style={{
-        //   backgroundImage: `url(/images/1.png)`,
-        //   backgroundSize: "cover",
-        //   backgroundRepeat: "no-repeat",
-        //   backgroundPosition: "center center",
-        // }}
+        className="no-scrollbar  bg-lightblue flex min-h-screen 
+        flex-col items-center  justify-center overflow-auto"
+        style={{
+          backgroundImage: `url(/images/2.jpg)`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+        }}
       >
         <LandingPage />
       </main>

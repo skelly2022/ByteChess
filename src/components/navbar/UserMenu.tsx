@@ -153,7 +153,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
         </div>
       )}
       {hamOpen && (
-        <div className="bg-nav absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl text-sm shadow-md md:w-3/4">
+        <div className=" absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl bg-white text-sm shadow-md md:hidden md:w-3/4">
           <div className="flex cursor-pointer flex-col text-center text-black">
             <>
               {/* <MenuItem onClick={login} label="Login" /> */}

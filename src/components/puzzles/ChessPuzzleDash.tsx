@@ -124,8 +124,8 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
 
   return (
     <div className="flex h-full w-full flex-col ">
-      <div className="md: flex h-auto flex-wrap  justify-center gap-3 md:flex-col  md:flex-nowrap md:justify-between">
-        <div className=" flex h-auto w-full flex-col bg-white shadow ">
+      <div className="md: md:justify-betweem flex h-auto  flex-wrap justify-center gap-3  md:flex-col md:flex-nowrap md:items-center">
+        <div className=" flex h-auto w-1/2 flex-col rounded-lg bg-white shadow md:w-full ">
           <div className=" flex h-full w-full transform flex-col items-center justify-center">
             {!puzzle.ranked && (
               <>
@@ -141,46 +141,8 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
             )}
           </div>
         </div>
-        <div className="flex h-20 w-[50%] items-center justify-center gap-2 rounded-sm  bg-white shadow md:w-full">
-          <div className="flex items-center">
-            <label
-              className="pr-[15px] text-[15px]  text-black"
-              htmlFor="airplane-mode"
-            >
-              Ranked
-            </label>
-            <Switch.Root
-              className="relative h-[25px] w-[42px]
-             cursor-default rounded-full text-black shadow-[0_2px_10px] outline-none 
-             data-[state=checked]:bg-success"
-              id="airplane-mode"
-              checked={checked}
-              onClick={() => {
-                changeMode();
-              }}
-            >
-              <Switch.Thumb
-                className="shadow-blackA7 block h-[21px] w-[21px] 
-            translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform
-             duration-100 will-change-transform data-[state=checked]:translate-x-[19px]"
-              />
-            </Switch.Root>
-          </div>
-          {puzzle.ranked && (
-            <div className="">
-              {user.user.puzzleCount}/5{" "}
-              <button
-                className="bg-success "
-                onClick={() => {
-                  handleClickInitialize();
-                }}
-              >
-                UR
-              </button>
-            </div>
-          )}
-        </div>
-        <div className=" h-20 w-[45%] rounded-sm bg-white md:h-1/2 md:w-full">
+
+        <div className=" h-20 w-[45%] rounded-lg bg-white md:h-1/2 md:w-full">
           <div className=" flex h-full w-full flex-col items-center justify-center ">
             <h1> Puzzle Rating: {rating}</h1>
             <div className="flex items-center">
@@ -192,9 +154,51 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
               </div>
             </div>
           </div>
-          <table className="hidden w-full border bg-white md:block">
+          {/* <table className="hidden w-full border bg-white md:block">
             <tbody></tbody>
-          </table>
+          </table> */}
+        </div>
+        <div className="flex h-20 w-[80%] items-center justify-center gap-2 rounded-lg  bg-white shadow md:w-full">
+          {" "}
+          <div className="flex w-full items-center justify-evenly rounded-sm bg-slate-100 px-3 py-2 shadow">
+            <div className="flex items-center ">
+              <label
+                className="pr-[15px] text-[15px]  text-black"
+                htmlFor="airplane-mode"
+              >
+                Ranked
+              </label>
+              <Switch.Root
+                className="relative h-[25px] w-[42px]
+             cursor-default rounded-full text-black shadow-[0_2px_10px] outline-none 
+             data-[state=checked]:bg-success"
+                id="airplane-mode"
+                checked={checked}
+                onClick={() => {
+                  changeMode();
+                }}
+              >
+                <Switch.Thumb
+                  className="shadow-blackA7 block h-[21px] w-[21px] 
+            translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform
+             duration-100 will-change-transform data-[state=checked]:translate-x-[19px]"
+                />
+              </Switch.Root>
+            </div>
+            {puzzle.ranked && (
+              <div className="">
+                {user.user.puzzleCount}/5{" "}
+                <button
+                  className="rounded-sm bg-success px-1 py-2 transition-transform active:scale-y-75 "
+                  onClick={() => {
+                    handleClickInitialize();
+                  }}
+                >
+                  Update Rating
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
