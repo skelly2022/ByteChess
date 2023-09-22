@@ -174,11 +174,10 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
     <div style={boardWrapper}>
       <Chessboard
         id="BasicBoard"
-        arePremovesAllowed={true}
-        // showBoardNotation={true}
+        showBoardNotation={true}
         boardOrientation={boardOrientation}
         isDraggablePiece={({ piece }) => piece[0] === boardOrientation[0]}
-        // onPieceDrop={onDrop}
+        onPieceDrop={onDrop}
         position={game.fen()}
         ref={chessboardRef}
       />
