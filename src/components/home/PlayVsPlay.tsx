@@ -27,22 +27,22 @@ const PlayVsPlay = () => {
   return (
     <div>
       <Tabs.Root
-        className="flex h-full w-full flex-col text-black "
+        className="text-green flex h-full w-full flex-col "
         defaultValue="tab1"
       >
-        <Tabs.List className="flex border-b">
+        <Tabs.List className="text-yellow flex border-b">
           <Tabs.Trigger
-            className=" flex h-[45px] flex-1
+            className=" flex h-[45px] flex-1 
             cursor-default select-none items-center justify-center px-5 text-[15px] leading-none
-             text-white outline-none first:rounded-tl-md last:rounded-tr-md
+              outline-none first:rounded-tl-md last:rounded-tr-md
               data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current data-[state=active]:focus:relative "
             value="tab1"
           >
             Quick Pairing
           </Tabs.Trigger>
           <Tabs.Trigger
-            className="flex h-[45px] flex-1 cursor-default select-none items-center  justify-center
-            px-5 text-[15px] leading-none text-white outline-none
+            className=" flex h-[45px] flex-1 cursor-default select-none  items-center
+            justify-center px-5 text-[15px] leading-none outline-none
             first:rounded-tl-md last:rounded-tr-md data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0]
             data-[state=active]:shadow-current data-[state=active]:focus:relative"
             value="tab2"
@@ -59,8 +59,8 @@ const PlayVsPlay = () => {
               <div
                 key={item.dataId}
                 data-id={item.dataId}
-                className=" flex flex-col items-center justify-center rounded-sm
-                  bg-background hover:bg-foreground hover:text-white"
+                className=" bg-yellow hover:bg-green hover:text-yellow flex flex-col
+                  items-center justify-center rounded-sm"
               >
                 <div className="clock">{item.clock}</div>
                 <div className="perf">{item.perf}</div>
@@ -68,11 +68,11 @@ const PlayVsPlay = () => {
             ))}
           </div>
           <div className="flex h-[10%] w-full grow flex-row justify-center gap-2 ">
-            <button className="h-10 w-48 rounded  bg-white px-2 py-1 font-bold text-black ">
+            <button className="bg-yellow text-green h-10  w-48 rounded px-2 py-1 font-bold">
               Play with a friend
             </button>
             <button
-              className="h-10 w-48 rounded  bg-white px-2 py-1 font-bold text-black "
+              className="bg-yellow text-green h-10  w-48 rounded px-2 py-1 font-bold "
               onClick={() => {
                 play.onOpen();
               }}
@@ -140,11 +140,11 @@ const PlayVsPlay = () => {
             </table>
           </div>
           <div className="flex h-[10%] w-full grow flex-row justify-center gap-2 ">
-            <button className="h-10 w-48 rounded  bg-white px-2 py-1 font-bold text-black ">
+            <button className="bg-yellow text-green h-10  w-48 rounded px-2 py-1 font-bold">
               Play with a friend
             </button>
             <button
-              className="h-10 w-48 rounded  bg-white px-2 py-1 font-bold text-black "
+              className="bg-yellow text-green h-10  w-48 rounded px-2 py-1 font-bold "
               onClick={() => {
                 play.onOpen();
               }}

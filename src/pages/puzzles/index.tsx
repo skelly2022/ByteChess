@@ -50,13 +50,13 @@ const Home: React.FC<Page> = ({ Page }) => {
         <LoginModal />
       </ClientOnly>
       <main
-        className="fixed min-h-screen  "
-        style={{
-          backgroundImage: `url(/images/3.jpg)`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center center",
-        }}
+        className="bg-green fixed  min-h-screen   "
+        // style={{
+        //   backgroundImage: `url(/images/3.jpg)`,
+        //   backgroundSize: "cover",
+        //   backgroundRepeat: "no-repeat",
+        //   backgroundPosition: "center center",
+        // }}
       >
         {loading ? <Loading /> : <PuzzlesMain />}
       </main>

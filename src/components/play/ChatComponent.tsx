@@ -47,9 +47,9 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
     <div
       className={`flex w-full flex-col ${
         isLargeScreen
-          ? ""
-          : "fixed bottom-28 right-[10%] h-auto w-[80%] bg-gray-500"
-      } z-50 rounded-lg bg-white`}
+          ? "h-[90%]"
+          : "fixed bottom-60 right-[10%] h-[50%] w-[70%] bg-white"
+      } z-50 h-[90%] rounded-lg`}
       ref={chatContainerRef} // Set the reference to the chat component
       id="chat-container"
     >
@@ -119,7 +119,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
           value={newMessage}
           onChange={onNewMessageChange}
           onKeyPress={handleKeyPress}
-          className="w-full rounded-lg border px-3 py-2"
+          className="bg-yellow w-full rounded-lg  px-3 py-2 "
         />
       </div>
     </div>

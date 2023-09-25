@@ -99,8 +99,8 @@ const UserMenu: React.FC<UserMenuProps> = () => {
             onClick={() => {
               puzzles();
             }}
-            className=" bg-nav cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold
-             text-black transition hover:bg-neutral-300  md:block "
+            className=" text-yellow border-yellow cursor-pointer rounded-lg  border px-4 py-2 text-sm font-semibold
+              transition md:block "
           >
             Puzzles
           </div>
@@ -108,14 +108,17 @@ const UserMenu: React.FC<UserMenuProps> = () => {
             onClick={() => {
               router.push("/leaderboard");
             }}
-            className=" bg-nav cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-black
-             transition hover:bg-neutral-300  md:block "
+            className=" text-yellow border-yellow cursor-pointer  rounded-lg border 
+            px-4 py-2 text-sm font-semibold 
+             transition   md:block "
           >
             Leaderboard
           </div>
           {session ? (
             <div
-              className="bg-nav cursor-pointer rounded-lg px-4 py-2 text-sm"
+              className="text-yellow border-yellow cursor-pointer 
+              rounded-lg border px-4 
+              py-2 text-sm font-semibold transition   md:block "
               onClick={toggleOpen}
             >
               {extractFirstAndLast5Characters(session.user.name)}
@@ -125,14 +128,16 @@ const UserMenu: React.FC<UserMenuProps> = () => {
               onClick={() => {
                 connectWallet();
               }}
-              className=" bg-nav cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-black transition hover:bg-neutral-300  md:block "
+              className=" text-yellow border-yellow cursor-pointer 
+              rounded-lg border px-4 
+              py-2 text-sm font-semibold transition   md:block "
             >
               Connect Wallet
             </div>
           )}
         </div>
-        <div className="flex cursor-pointer md:hidden">
-          <GiHamburgerMenu size={30} color="white" onClick={toggleHam} />
+        <div className="flex cursor-pointer md:hidden ">
+          <GiHamburgerMenu size={30} color="" onClick={toggleHam} />
         </div>
       </div>
       {isOpen && (

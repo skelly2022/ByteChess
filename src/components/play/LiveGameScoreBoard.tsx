@@ -87,12 +87,12 @@ const LiveGameTimer = () => {
   }, [play.moves]);
 
   return (
-    <div className="flex h-full w-full flex-col rounded-lg bg-white ">
+    <div className="text-yellow border-yellow relative flex h-full w-full flex-col rounded-lg border">
       <RatingContainer type="opponent" />
 
       <div
-        className="relative flex cursor-pointer items-center justify-center
-       gap-3 bg-slate-100 p-2 shadow"
+        className="bg-yellow relative flex cursor-pointer items-center
+       justify-center gap-3 p-2 text-black shadow"
       >
         <AiFillFastBackward
           size={30}
@@ -122,18 +122,24 @@ const LiveGameTimer = () => {
           <GiHamburgerMenu size={30} />
         </div>
       </div>
-      <div className="flex h-40 items-center justify-center overflow-auto bg-white">
-        <div className="h-full w-full rounded-lg bg-white p-4 shadow-lg">
-          <table className="w-full shadow-md">
+      <div className="flex h-auto items-center justify-center overflow-auto">
+        <div className="h-full w-full rounded-lg  p-4 shadow-lg">
+          <table className="no-scrollbar w-full overflow-auto text-black shadow-md">
             <tbody>
               {chessMoves.map((turn) => (
                 <tr
                   className="text-center"
                   key={turn.moveNumber + turn.whiteMove}
                 >
-                  <td className="w-4 border px-4 py-2">{turn.moveNumber}</td>
-                  <td className="w-12 border px-4 py-2">{turn.whiteMove}</td>
-                  <td className="w-12 border px-4 py-2">{turn.blackMove}</td>
+                  <td className="bg-yellow w-4 border border-black px-4 py-2">
+                    {turn.moveNumber}
+                  </td>
+                  <td className="bg-yellow w-4 border border-black px-4 py-2">
+                    {turn.whiteMove}
+                  </td>
+                  <td className="bg-yellow w-4 border border-black px-4 py-2">
+                    {turn.blackMove}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -141,7 +147,10 @@ const LiveGameTimer = () => {
         </div>
       </div>
 
-      <RatingContainer type="me" />
+      <div className="absolute bottom-0 w-full">
+        {" "}
+        <RatingContainer type="me" />
+      </div>
     </div>
   );
 };

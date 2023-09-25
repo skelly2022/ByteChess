@@ -176,6 +176,12 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         id="BasicBoard"
         showBoardNotation={true}
         boardOrientation={boardOrientation}
+        customBoardStyle={{
+          borderRadius: "5px",
+          boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5 ",
+        }}
+        customDarkSquareStyle={{ backgroundColor: "#1D5951" }}
+        customLightSquareStyle={{ backgroundColor: "#FFDC26" }}
         isDraggablePiece={({ piece }) => piece[0] === boardOrientation[0]}
         onPieceDrop={onDrop}
         position={game.fen()}

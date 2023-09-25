@@ -23,22 +23,16 @@ const Timer = ({ type }: { type: string }) => {
   }, [play.opponentTime]);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-
-    const updateTimer = () => {
-      setTimeInSeconds((prevTime) => {
-        const newTime = prevTime - 0.01;
-        return newTime > 0 ? newTime : 0;
-      });
-    };
-
-    if (isRunning && timeInSeconds > 0) {
-      timer = setInterval(updateTimer, 10);
+    let interval = null;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setTimeInSeconds((prevTime) => prevTime - 0.01);
+      }, 10);
+    } else {
+      clearInterval(interval);
     }
 
-    return () => {
-      clearInterval(timer);
-    };
+    return () => clearInterval(interval);
   }, [isRunning, timeInSeconds]);
 
   useEffect(() => {

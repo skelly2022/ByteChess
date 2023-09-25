@@ -116,14 +116,17 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
   return (
     <div
       className="flex h-[calc(100vh-112px)] w-screen items-center justify-center
-     gap-5 px-2 pt-4 md:px-4 md:pt-0"
+     gap-5 px-2 pt-2 md:px-4 md:pt-4 "
     >
       <div className="hidden h-full w-1/4 flex-col items-center justify-center lg:flex">
         {" "}
-        <div className="relative flex h-[12%] w-full items-center justify-center rounded-t-lg bg-slate-100">
+        {/* <div className="relative flex h-[12%] w-full items-center justify-center rounded-t-lg bg-slate-100">
           <ActionContainer />
-        </div>
-        <div className="flex h-auto w-full rounded-b-lg border-t-2 bg-slate-50">
+        </div> */}
+        <div className="border-yellow flex h-5/6 w-full flex-col rounded-lg border">
+          <div className="text-yellow flex h-[10%] w-full items-center justify-center border-b border-black py-8 text-4xl">
+            CHAT
+          </div>
           <ChatComponent
             chatMessages={chatMessages}
             newMessage={newMessage}
@@ -133,17 +136,17 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
         </div>
       </div>
       <div className=" flex h-full w-full flex-col  items-center md:w-auto">
-        <div className="w-full rounded-t-lg bg-white md:hidden">
+        <div className="w-full rounded-t-lg  md:hidden">
           <RatingContainer type="opponent" />
         </div>
-        <div className="flex h-auto w-full   md:justify-end">
+        <div className="flex h-auto w-full   py-2 md:justify-end">
           <LiveGame boardOrientation={boardOrientation} connected={connected} />
         </div>
-        <div className="w-full rounded-b-lg bg-white md:hidden">
+        <div className="w-full rounded-b-lg  md:hidden">
           <RatingContainer type="me" />
         </div>
         <div className="mt-3 flex w-full justify-evenly ">
-          <div className="w-2/3 rounded-lg bg-slate-50 py-2 md:hidden">
+          <div className="w-2/3 rounded-lg py-2 md:hidden">
             <ActionContainer />
           </div>
           <div className="relative flex h-auto w-[20%] items-center justify-center rounded-lg py-2 md:hidden">
@@ -168,8 +171,11 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
           </div>
         </div>
       </div>
-      <div className=" hidden h-auto w-1/4 flex-col lg:flex  ">
+      <div className=" hidden h-5/6 w-1/4 flex-col lg:flex  ">
         <LiveGameScoreBoard />
+        <div className="relative flex h-[12%] w-full items-center justify-center">
+          <ActionContainer />
+        </div>
       </div>
     </div>
   );

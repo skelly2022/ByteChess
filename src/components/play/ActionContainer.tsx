@@ -173,7 +173,7 @@ const ActionContainer = () => {
                   ? showClose || showHalf || showFlag
                     ? "m-2 h-full w-full bg-white"
                     : "rounded-sm bg-error  "
-                  : "bg-white"
+                  : "border-yellow rounded-sm border-2"
               }`}
             >
               <ul className=" ">

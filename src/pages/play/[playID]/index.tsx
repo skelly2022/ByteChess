@@ -139,15 +139,15 @@ const Home = () => {
         <LoginModal />
       </ClientOnly>
       <main
-        className="min-w-screen  no-scrollbar flex min-h-screen overflow-auto"
-        style={{
-          backgroundImage: `url(/images/1.png)`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center center",
-        }}
+        className="min-w-screen   bg-green  no-scrollbar flex min-h-screen overflow-auto"
+        // style={{
+        //   backgroundImage: `url(/images/1.png)`,
+        //   backgroundSize: "cover",
+        //   backgroundRepeat: "no-repeat",
+        //   backgroundPosition: "center center",
+        // }}
       >
-        <div className="no-scrollbar h-full w-full overflow-auto pt-28">
+        <div className="no-scrollbar h-full w-full  pt-28">
           {loading ? (
             <Loading />
           ) : (
