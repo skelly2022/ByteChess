@@ -39,7 +39,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   const [boardWrapper, setBoardWrapper] = useState({
     width: `80.33vh`,
   });
-  const [game, setGame] = useState(new Chess(play.fen));
+  const [game, setGame] = useState(new Chess());
 
   const updateGame = api.games.updateGameFen.useMutation({
     async onSuccess(result) {},
@@ -96,12 +96,20 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
           lElo: play.opponent.bulletRating,
           loserAddress: play.opponent.walletAddress,
         });
-        socket.emit("makeMove", { roomId: playID, fen: moveMade });
+        socket.emit("makeMove", {
+          roomId: playID,
+          fen: moveMade,
+          time: Date.now(),
+        });
         play.setOpponentTimer(false);
         play.setMyTimer(false);
         return;
       } else {
-        socket.emit("makeMove", { roomId: playID, fen: moveMade });
+        socket.emit("makeMove", {
+          roomId: playID,
+          fen: moveMade,
+          time: Date.now(),
+        });
       }
       if (newGame.moveNumber() !== 1) {
         play.setOpponentTimer(true);
@@ -142,12 +150,10 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       user.setUser(data.loser);
     });
   }, []);
+
   useEffect(() => {
-    chessboardRef.current?.clearPremoves();
-  }, []);
-  useEffect(() => {
-    setGame(new Chess(play.fen));
-  }, [play.fen]);
+    setGame(new Chess(play.currentFen));
+  }, [play.currentFen]);
   const updateWindowWidth = () => {
     setWindowWidth(window.innerWidth);
   };

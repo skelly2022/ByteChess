@@ -1,8 +1,12 @@
+import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import socket from "~/helpers/socket";
 import usePlayModal from "~/hooks/usePlayModal";
 
 const Timer = ({ type }: { type: string }) => {
   const play = usePlayModal();
+  const router = useRouter();
+  const { playID } = router.query;
 
   const [timeInSeconds, setTimeInSeconds] = useState<number>(0);
   const [opponentTimeInSeconds, setOpponentTimeInSeconds] = useState<number>(0);
@@ -17,22 +21,22 @@ const Timer = ({ type }: { type: string }) => {
   }, [play.minutes]);
 
   useEffect(() => {
-    if (play.opponentTime !== "") {
-      setOpponentTimeInSeconds(play.opponentTime);
-    }
-  }, [play.opponentTime]);
+    let timer: NodeJS.Timeout;
 
-  useEffect(() => {
-    let interval = null;
-    if (isRunning) {
-      interval = setInterval(() => {
-        setTimeInSeconds((prevTime) => prevTime - 0.01);
-      }, 10);
-    } else {
-      clearInterval(interval);
+    const updateTimer = () => {
+      setTimeInSeconds((prevTime) => {
+        const newTime = prevTime - 0.01;
+        return newTime > 0 ? newTime : 0;
+      });
+    };
+
+    if (isRunning && timeInSeconds > 0) {
+      timer = setInterval(updateTimer, 10);
     }
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(timer);
+    };
   }, [isRunning, timeInSeconds]);
 
   useEffect(() => {
@@ -53,17 +57,36 @@ const Timer = ({ type }: { type: string }) => {
       clearInterval(opponentTimer);
     };
   }, [isORunning, opponentTimeInSeconds]);
-
+  useEffect(() => {
+    if (play.opponentTime !== "") {
+      setOpponentTimeInSeconds(play.opponentTime);
+    }
+  }, [play.opponentTime]);
+  useEffect(() => {
+    if (play.time !== "") {
+      setTimeInSeconds(play.time);
+    }
+  }, [play.time]);
   useEffect(() => {
     setIsRunning(play.myTimer);
-    if (play.myTimer === false && play.opponentTimer === true) {
-      play.setTime(timeInSeconds);
-    }
-  }, [play.myTimer, timeInSeconds]);
+  }, [play.myTimer]);
 
   useEffect(() => {
+    if (play.opponentTimer === true && timeInSeconds !== 0) {
+      const data = { time: timeInSeconds, roomId: playID };
+      socket.emit("time", data);
+    }
     setIsORunning(play.opponentTimer);
   }, [play.opponentTimer]);
+
+  useEffect(() => {
+    socket.on("updateTime", (data) => {
+      setOpponentTimeInSeconds(data);
+    });
+    socket.on("gameStarted", (roomData) => {
+      console.log(roomData);
+    });
+  }, [socket]);
 
   const formatTime = (time: number): string => {
     if (time < 60) {

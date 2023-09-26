@@ -21,6 +21,8 @@ interface PlayModalStore {
   setIncrement: (seconds: string) => void;
   opponent: any;
   setOpponent: (data: any) => void;
+  currentFen: any;
+  setCurrentFen: (fen: any) => void;
   fens: any;
   setFens: (fens: any) => void;
   isOpen: boolean;
@@ -30,6 +32,8 @@ interface PlayModalStore {
 }
 
 const usePlayModal = create<PlayModalStore>((set) => ({
+  currentFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+  setCurrentFen: (fen: any) => set({ currentFen: fen }),
   index: 0,
   setIndex: (index: number) => set({ index: index }),
   moves: [],
@@ -71,6 +75,7 @@ const usePlayModal = create<PlayModalStore>((set) => ({
       index: 0,
       moves: [],
       side: "",
+      currentFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
       time: "",
       opponentTime: "",
       minutes: "",

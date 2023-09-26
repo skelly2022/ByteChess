@@ -9,6 +9,8 @@ import usePlayModal from "~/hooks/usePlayModal";
 import LeaderboardContainer from "~/components/leaderboard/LeaderBoardContainer";
 import { Chess } from "chess.js";
 import { Chessboard, ClearPremoves } from "react-chessboard";
+import MyTimer from "~/components/play/MyTimer";
+import LBContainer from "~/components/leaderboard/LBContainer";
 const boardWrapper = {
   width: `70vw`,
   maxWidth: "70vh",
@@ -73,6 +75,7 @@ export default function Home() {
   }
 
   const play = usePlayModal();
+  const time = new Date();
 
   useEffect(() => {
     play.resetState();
@@ -85,49 +88,8 @@ export default function Home() {
         <PlayFriend />
         <Navbar />
       </ClientOnly>
-      <main className="no-scrollbar bg-lightblue flex min-h-screen flex-col items-center overflow-auto">
-        {/* <LeaderboardContainer /> */}
-        <div style={boardWrapper}>
-          <Chessboard
-            id="PremovesEnabled"
-            arePremovesAllowed={true}
-            position={game.fen()}
-            onPieceDrop={onDrop}
-            customBoardStyle={{
-              borderRadius: "4px",
-              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-            }}
-            ref={chessboardRef}
-          />
-          <button
-            onClick={() => {
-              safeGameMutate((game) => {
-                game.reset();
-              });
-              // clear premove queue
-              chessboardRef.current?.clearPremoves();
-              // stop any current timeouts
-              clearTimeout(currentTimeout);
-            }}
-          >
-            reset
-          </button>
-          <button
-            onClick={() => {
-              // undo twice to undo computer move too
-              safeGameMutate((game) => {
-                game.undo();
-                game.undo();
-              });
-              // clear premove queue
-              chessboardRef.current?.clearPremoves();
-              // stop any current timeouts
-              clearTimeout(currentTimeout);
-            }}
-          >
-            undo
-          </button>
-        </div>
+      <main className="no-scrollbar bg-green flex min-h-screen flex-col items-center overflow-auto pt-28">
+        <LBContainer />
       </main>
     </>
   );
