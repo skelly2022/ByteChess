@@ -31,8 +31,15 @@ const config = {
   },
   webpack: (config, { dev }) => {
     // Set production mode for Webpack
+    config.module.rules.push({
+      test: /\.mp3$/,
+      use: {
+        loader: "file-loader",
+      },
+    });
     if (!dev) {
       config.mode = "production";
+
       config.plugins.push(
         new DefinePlugin({
           "process.env.NODE_ENV": JSON.stringify("production"),

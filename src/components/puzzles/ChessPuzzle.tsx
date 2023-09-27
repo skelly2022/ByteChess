@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
+import moveSound from "public/static/media/move.mp3"; // Update the path as needed
+import Sound from "react-sound"; // Update the import statement
+import wrongSound from "public/static/media/illegal.mp3";
 import {
   getMoveOnClick,
   getPossibleMoves,
@@ -15,18 +18,19 @@ interface PuzzleProps {
   solution?: Array;
   correct: () => void;
   inCorrect: () => void;
+  sideToPlay: string;
 }
 
 const Board: React.FC<PuzzleProps> = ({
   fen,
   solution,
+  sideToPlay,
   correct,
   inCorrect,
 }) => {
   const puzzle = usePuzzleStore();
   const [game, setGame] = useState(new Chess(fen));
   const [solutionMoves, setSolution] = useState();
-  const [sideToPlay, setSideToPlay] = useState();
   const [pieceSquare, setPieceSquare] = useState("");
   const [rightClickedSquares, setRightClickedSquares] = useState({});
   const [optionSquares, setOptionSquares] = useState({});
@@ -34,6 +38,8 @@ const Board: React.FC<PuzzleProps> = ({
   const [boardWrapper, setBoardWrapper] = useState({
     width: `80.33vh`,
   });
+  const [playMoveSound, setPlayMoveSound] = useState(false);
+  const [playWrongMoveSound, setPlayWrongMoveSound] = useState(false);
 
   const breakpoints = {
     small: 576,
@@ -77,6 +83,7 @@ const Board: React.FC<PuzzleProps> = ({
       if (next) {
         setGame(new Chess(next.fen));
         setSolution(next.solution);
+        setPlayMoveSound(true);
 
         const move = {
           moveNumber: next.lastMoveNumber,
@@ -108,6 +115,7 @@ const Board: React.FC<PuzzleProps> = ({
         } else {
         }
       } else {
+        setPlayWrongMoveSound(true);
       }
 
       setPieceSquare("");
@@ -124,6 +132,7 @@ const Board: React.FC<PuzzleProps> = ({
     if (next) {
       setGame(new Chess(next.fen));
       setSolution(next.solution);
+      setPlayMoveSound(true);
       const move = {
         moveNumber: next.lastMoveNumber,
         color: next.lastMoveColor,
@@ -153,6 +162,7 @@ const Board: React.FC<PuzzleProps> = ({
         correct();
       }
     } else {
+      setPlayWrongMoveSound(true);
       inCorrect();
     }
   }
@@ -216,40 +226,53 @@ const Board: React.FC<PuzzleProps> = ({
     // Update boardWrapper based on the windowWidth
     if (windowWidth !== null) {
       if (windowWidth < breakpoints.medium) {
-        setBoardWrapper({ width: `97vw` });
+        setBoardWrapper({ width: `95vw` });
       } else {
         setBoardWrapper({ width: `80.33vh` });
       }
     }
   }, [windowWidth]);
-  useEffect(() => {
-    console.log(sideToPlay);
-    if (getSideToPlayFromFen(fen) === "w") {
-      setSideToPlay("w");
-    } else {
-      setSideToPlay("b");
-    }
-  }, []);
+
   return (
     <div style={boardWrapper}>
       <Chessboard
         position={game.fen()}
         boardOrientation={getSideToPlayFromFen(fen) === "w" ? "black" : "white"}
         onPieceDrop={onSquareDrop}
-        // onPieceDragBegin={onSquareClick}
-        // onSquareClick={onSquareClick}
-        // onMouseOverSquare={onMouseOverSquare}
+        onPieceDragBegin={onSquareClick}
+        onSquareClick={onSquareClick}
+        //onMouseOverSquare={onMouseOverSquare}
         // onMouseOutSquare={onMouseOutSquare}
         isDraggablePiece={({ piece }) => piece[0] === sideToPlay}
         customBoardStyle={{
           borderRadius: "4px",
           boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5)",
         }}
+        customDarkSquareStyle={{
+          backgroundColor: "#1D5951",
+          // border: ".5px solid black",
+        }}
+        customLightSquareStyle={{
+          backgroundColor: "#FFDC26",
+          // border: ".5px solid black",
+        }}
         customSquareStyles={{
           ...optionSquares,
           ...rightClickedSquares,
         }}
       />
+      {/* <Sound
+        url={moveSound}
+        playStatus={playMoveSound ? Sound.status.PLAYING : Sound.status.STOPPED}
+        onFinishedPlaying={() => setPlayMoveSound(false)}
+      />
+      <Sound
+        url={wrongSound}
+        playStatus={
+          playWrongMoveSound ? Sound.status.PLAYING : Sound.status.STOPPED
+        }
+        onFinishedPlaying={() => setPlayWrongMoveSound(false)}
+      /> */}
     </div>
   );
 };

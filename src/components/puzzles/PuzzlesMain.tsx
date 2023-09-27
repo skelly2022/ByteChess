@@ -9,7 +9,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { AccountInfo, PublicKey, SystemProgram } from "@solana/web3.js";
 import { toast } from "react-hot-toast";
 import { program, connection } from "../../anchor/setup";
-
+import { getSideToPlayFromFen } from "~/utils/chessPuzzle/chessTactics";
 import { BN } from "@coral-xyz/anchor";
 
 const PuzzlesMain = () => {
@@ -18,6 +18,8 @@ const PuzzlesMain = () => {
   const { publicKey, sendTransaction } = useWallet();
   const [puzzleData, setPuzzleData] = useState(null);
   const [loading, setLoading] = useState(puzzle.loading);
+  const [sideToPlay, setSideToPlay] = useState("");
+
   const [moveArray, setMoveArray] = useState<string[]>([]);
   const [checked, setChecked] = useState(false);
   const updateUser = api.example.updateUser.useMutation({
@@ -26,6 +28,11 @@ const PuzzlesMain = () => {
   const getPuzzle = api.puzzles.getRandomPuzzle.useMutation({
     async onSuccess(result) {
       setPuzzleData(result);
+      if (getSideToPlayFromFen(result.FEN) === "w") {
+        setSideToPlay("b");
+      } else {
+        setSideToPlay("w");
+      }
       setLoading(true);
       const solutionMoves = result?.Moves.split(" ");
       setMoveArray(solutionMoves);
@@ -134,18 +141,19 @@ const PuzzlesMain = () => {
   }, [publicKey]);
 
   return (
-    <div className="flex h-[screen] w-screen flex-wrap justify-center gap-2 overflow-hidden  pt-28">
+    <div className="flex h-screen w-screen flex-col items-center justify-center  pt-28 md:flex-row  md:gap-3">
       {loading ? (
         <>
-          <div className="h-auto w-auto  md:h-full">
+          <div className="flex h-auto w-full  justify-center  md:h-full md:w-auto">
             <ChessPuzzle
               fen={puzzleData?.FEN}
               solution={moveArray}
               correct={correct}
               inCorrect={inCorrect}
+              sideToPlay={sideToPlay}
             />
           </div>
-          <div className="h-auto w-full md:h-full md:w-1/4 ">
+          <div className="  flex h-auto w-full grow  items-center md:h-full md:w-1/3  md:grow-0">
             <ChessPuzzleDash
               rating={puzzleData?.Rating}
               fen={puzzleData?.FEN}

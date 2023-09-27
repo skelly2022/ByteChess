@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import Loading from "../Loading";
 
-const Bullet = () => {
-  const [dataBullet, setData] = useState(undefined);
+const Rapid = () => {
+  const [dataRapid, setData] = useState(undefined);
   const [loading, setLoading] = useState(true);
-  const data = api.leaderboard.getBullet.useMutation({
+  const data = api.leaderboard.getRapid.useMutation({
     onSuccess(data) {
       setData(data);
       setLoading(false);
@@ -42,7 +42,7 @@ const Bullet = () => {
             <Loading />
           ) : (
             <>
-              {dataBullet.map((player, index) => (
+              {dataRapid.map((player, index) => (
                 <tr
                   className="border-yellow flex h-16 w-full cursor-pointer border  text-black
         "
@@ -55,7 +55,7 @@ const Bullet = () => {
                     {shortenString(player.walletAddress)}
                   </td>
                   <td className="flex w-1/3 items-center justify-center">
-                    {player.bulletRating}
+                    {player.rapidRating}
                   </td>
                 </tr>
               ))}
@@ -67,4 +67,4 @@ const Bullet = () => {
   );
 };
 
-export default Bullet;
+export default Rapid;

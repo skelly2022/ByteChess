@@ -7,17 +7,9 @@ import { api } from "~/utils/api";
 
 const dataOptions = [
   { dataId: "1+0", clock: "1+0", perf: "Bullet" },
-  { dataId: "2+1", clock: "2+1", perf: "Bullet" },
-  { dataId: "3+0", clock: "3+0", perf: "Blitz" },
   { dataId: "3+2", clock: "3+2", perf: "Blitz" },
-  { dataId: "5+0", clock: "5+0", perf: "Blitz" },
-  { dataId: "5+3", clock: "5+3", perf: "Blitz" },
-  { dataId: "10+0", clock: "10+0", perf: "Rapid" },
-  { dataId: "10+5", clock: "10+5", perf: "Rapid" },
   { dataId: "15+10", clock: "15+10", perf: "Rapid" },
-  { dataId: "30+0", clock: "30+0", perf: "Classical" },
-  { dataId: "30+20", clock: "30+20", perf: "Classical" },
-  { dataId: "custom", clock: "Custom", perf: null },
+  { dataId: "∞", clock: "∞", perf: "Unlimited" },
 ];
 
 const PlayVsPlay = () => {
@@ -25,9 +17,9 @@ const PlayVsPlay = () => {
   const { data } = api.games.getAllGames.useQuery();
   const router = useRouter();
   return (
-    <div>
+    <div className="flex h-5/6 w-full items-center justify-center lg:w-1/2">
       <Tabs.Root
-        className="text-green flex h-full w-full flex-col "
+        className="text-green items-cente flex h-full w-full flex-col justify-center"
         defaultValue="tab1"
       >
         <Tabs.List className="text-yellow flex border-b">
@@ -50,11 +42,8 @@ const PlayVsPlay = () => {
             Lobby
           </Tabs.Trigger>
         </Tabs.List>
-        <Tabs.Content
-          className="h-[calc(100vh-157px)] grow outline-none "
-          value="tab1"
-        >
-          <div className="grid h-[90%] w-full grid-cols-3 gap-2  p-3">
+        <Tabs.Content className=" h-full grow outline-none " value="tab1">
+          <div className="grid h-[90%] w-full grid-cols-2 gap-2  p-3">
             {dataOptions.map((item) => (
               <div
                 key={item.dataId}
@@ -81,13 +70,10 @@ const PlayVsPlay = () => {
             </button>
           </div>
         </Tabs.Content>
-        <Tabs.Content
-          className=" h-[calc(100vh-157px)] grow outline-none "
-          value="tab2"
-        >
-          <div className="  no-scrollbar grid h-[90%] w-auto overflow-scroll p-3">
-            <table className=" text-white ">
-              <thead className="  ">
+        <Tabs.Content className=" h-full grow outline-none " value="tab2">
+          <div className="  no-scrollbar grid h-full max-h-[90%] w-full overflow-scroll   ">
+            <table className=" h-full w-full  text-white">
+              <thead className=" h-1/6 ">
                 <tr className="flex h-10 w-full items-center ">
                   <td className="flex w-1/4 items-center justify-center">
                     Color
@@ -103,12 +89,12 @@ const PlayVsPlay = () => {
                   </td>
                 </tr>
               </thead>
-              <tbody>
+              <div className="no-scrollbar h-full w-full overflow-scroll ">
                 {data !== undefined && (
                   <>
                     {data.map((game) => (
                       <tr
-                        className="mt-2 flex h-8 w-full cursor-pointer bg-slate-200 text-black
+                        className=" flex w-full cursor-pointer  text-black
                           hover:bg-slate-100"
                         key={game.id}
                         onClick={() => {
@@ -136,21 +122,8 @@ const PlayVsPlay = () => {
                     ))}
                   </>
                 )}
-              </tbody>
+              </div>
             </table>
-          </div>
-          <div className="flex h-[10%] w-full grow flex-row justify-center gap-2 ">
-            <button className="bg-yellow text-green h-10  w-48 rounded px-2 py-1 font-bold">
-              Play with a friend
-            </button>
-            <button
-              className="bg-yellow text-green h-10  w-48 rounded px-2 py-1 font-bold "
-              onClick={() => {
-                play.onOpen();
-              }}
-            >
-              Create a game
-            </button>
           </div>
         </Tabs.Content>
       </Tabs.Root>

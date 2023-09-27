@@ -123,82 +123,78 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
   }, [puzzle.sign]);
 
   return (
-    <div className="flex h-full w-full flex-col ">
-      <div className="md: md:justify-betweem flex h-auto  flex-wrap justify-center gap-3  md:flex-col md:flex-nowrap md:items-center">
-        <div className=" flex h-auto w-1/2 flex-col rounded-lg bg-white shadow md:w-full ">
-          <div className=" flex h-full w-full transform flex-col items-center justify-center">
-            {!puzzle.ranked && (
-              <>
-                <h1>Current Rating</h1>
-                <AnimatedNumber number={user.user.puzzleRating} />
-              </>
-            )}
-            {puzzle.ranked && (
-              <>
-                <h1>Current Rating</h1>
-                <AnimatedNumber number={user.user.puzzleRatingChain} />
-              </>
-            )}
-          </div>
+    <div className=" md:border-yellow  flex h-auto w-full flex-wrap gap-2   text-white md:h-[60%] md:border ">
+      <div className="  flex  h-auto w-1/2 flex-col rounded-lg   md:w-full  ">
+        <div className=" flex h-full w-full transform flex-col items-center justify-center ">
+          {!puzzle.ranked && (
+            <>
+              <h1 className="text-xl">Current Rating</h1>
+              <AnimatedNumber number={user.user.puzzleRating} />
+            </>
+          )}
+          {puzzle.ranked && (
+            <>
+              <h1 className="text-xl">Current Rating</h1>
+              <AnimatedNumber number={user.user.puzzleRatingChain} />
+            </>
+          )}
         </div>
-
-        <div className=" h-20 w-[45%] rounded-lg bg-white md:h-1/2 md:w-full">
-          <div className=" flex h-full w-full flex-col items-center justify-center ">
-            <h1> Puzzle Rating: {rating}</h1>
-            <div className="flex items-center">
-              {puzzle.side == "w" && <div style={whiteStyle}></div>}
-              {puzzle.side == "b" && <div style={blackStyle}></div>}
-              <div className="flex flex-col">
-                {" "}
-                <h1>Your turn</h1>
-              </div>
+      </div>
+      <div className="  h-auto w-[45%] rounded-lg    text-black md:w-full">
+        <div className=" flex h-full w-full flex-col items-center justify-center ">
+          <h1> Puzzle Rating: {rating}</h1>
+          <div className="flex items-center">
+            {puzzle.side == "w" && <div style={whiteStyle}></div>}
+            {puzzle.side == "b" && <div style={blackStyle}></div>}
+            <div className="flex flex-col">
+              {" "}
+              <h1>Your turn</h1>
             </div>
           </div>
-          {/* <table className="hidden w-full border bg-white md:block">
-            <tbody></tbody>
-          </table> */}
         </div>
-        <div className="flex h-20 w-[80%] items-center justify-center gap-2 rounded-lg  bg-white shadow md:w-full">
-          {" "}
-          <div className="flex w-full items-center justify-evenly rounded-sm bg-slate-100 px-3 py-2 shadow">
-            <div className="flex items-center ">
-              <label
-                className="pr-[15px] text-[15px]  text-black"
-                htmlFor="airplane-mode"
-              >
-                Ranked
-              </label>
-              <Switch.Root
-                className="relative h-[25px] w-[42px]
-             cursor-default rounded-full text-black shadow-[0_2px_10px] outline-none 
-             data-[state=checked]:bg-success"
-                id="airplane-mode"
-                checked={checked}
+      </div>
+      <div className=" flex h-auto w-full  flex-col items-center justify-center gap-2  rounded-lg   md:w-full ">
+        {" "}
+        <div className="flex w-full flex-col items-center justify-evenly gap-3 rounded-sm px-3 py-2 ">
+          <div className="flex items-center ">
+            <label className="pr-[15px] text-3xl " htmlFor="airplane-mode">
+              Ranked
+            </label>
+            <Switch.Root
+              className="relative h-[40px] w-[74px]
+           cursor-default rounded-full text-black shadow-[0_2px_10px] outline-none 
+           data-[state=checked]:bg-[#27996B]"
+              id="airplane-mode"
+              checked={checked}
+              onClick={() => {
+                changeMode();
+              }}
+            >
+              <Switch.Thumb
+                className="shadow-blackA7 bg-yellow block h-[32px] 
+                   w-[32px] translate-x-0.5   rounded-full shadow-[0_2px_2px]
+                    transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[38px]"
+              />
+            </Switch.Root>
+          </div>
+          {puzzle.ranked && (
+            <div className="flex w-full  items-center justify-center gap-3 md:flex-col">
+              <h1 className="text-yellow text-3xl">
+                {" "}
+                {user.user.puzzleCount}/5{" "}
+              </h1>
+              <h1 className=""> Update Solana Ranking</h1>
+
+              <button
+                className="rounded-2xl bg-success px-4 py-2 transition-transform active:scale-y-75 "
                 onClick={() => {
-                  changeMode();
+                  handleClickInitialize();
                 }}
               >
-                <Switch.Thumb
-                  className="shadow-blackA7 block h-[21px] w-[21px] 
-            translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform
-             duration-100 will-change-transform data-[state=checked]:translate-x-[19px]"
-                />
-              </Switch.Root>
+                Sign
+              </button>
             </div>
-            {puzzle.ranked && (
-              <div className="">
-                {user.user.puzzleCount}/5{" "}
-                <button
-                  className="rounded-sm bg-success px-1 py-2 transition-transform active:scale-y-75 "
-                  onClick={() => {
-                    handleClickInitialize();
-                  }}
-                >
-                  Update Rating
-                </button>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </div>

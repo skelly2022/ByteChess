@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 import { useRouter } from "next/router";
+import Sound from "react-sound"; // Update the import statement
 
 import {
   getMoveOnClick,
@@ -15,6 +16,8 @@ import usePlayModal from "~/hooks/usePlayModal";
 import socket from "~/helpers/socket";
 import { api } from "~/utils/api";
 import useUserStore from "~/hooks/useUserStore";
+import moveSound from "public/static/media/move.mp3"; // Update the path as needed
+import moveCheckSound from "public/static/media/move-check.mp3"; // Update the path as needed
 
 interface LiveGameProps {
   boardOrientation: any;
@@ -31,6 +34,8 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   const play = usePlayModal();
   const router = useRouter();
   const user = useUserStore();
+  const [playMoveSound, setPlayMoveSound] = useState(false);
+  const [playCheckSound, setPlayCheckSound] = useState(false);
 
   const { playID } = router.query;
   const chessboardRef = useRef();
@@ -87,7 +92,10 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       setGame(newGame);
       play.setMoves([...moves, moveMade.fullMove.san]);
       updateGame.mutateAsync({ id: playID, fen: moveMade.fen });
-
+      if (new Chess(moveMade.fen).isCheck() === true) {
+        setPlayCheckSound(true);
+        console.log(game.isCheck);
+      }
       if (new Chess(moveMade.fen).isCheckmate() === true) {
         console.log("checkmate");
         updateWin.mutateAsync({
@@ -114,6 +122,8 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       if (newGame.moveNumber() !== 1) {
         play.setOpponentTimer(true);
       }
+      setPlayMoveSound(true);
+
       play.setMyTimer(false);
     } else {
       return false;
@@ -192,6 +202,18 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         onPieceDrop={onDrop}
         position={game.fen()}
         ref={chessboardRef}
+      />
+      <Sound
+        url={moveSound}
+        playStatus={playMoveSound ? Sound.status.PLAYING : Sound.status.STOPPED}
+        onFinishedPlaying={() => setPlayMoveSound(false)}
+      />
+      <Sound
+        url={moveCheckSound}
+        playStatus={
+          playCheckSound ? Sound.status.PLAYING : Sound.status.STOPPED
+        }
+        onFinishedPlaying={() => setPlayCheckSound(false)}
       />
     </div>
   );
