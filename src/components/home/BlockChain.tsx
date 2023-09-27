@@ -3,10 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { AccountInfo, PublicKey, SystemProgram } from "@solana/web3.js";
 import { program, connection } from "../../anchor/setup";
-import { BN } from "@coral-xyz/anchor";
-import { u32, u8, struct, offset } from "@solana/buffer-layout";
-import { u64 } from "@solana/buffer-layout-utils";
-import * as borsh from "@project-serum/borsh";
 import { api } from "~/utils/api";
 
 const BlockChain = () => {

@@ -21,13 +21,13 @@ export default function Home() {
   const [currentTimeout, setCurrentTimeout] = useState<NodeJS.Timeout>();
   const chessboardRef = useRef<ClearPremoves>(null);
 
-  function safeGameMutate(modify) {
-    setGame((g) => {
-      const update = { ...g };
-      modify(update);
-      return update;
-    });
-  }
+  // function safeGameMutate(modify) {
+  //   setGame((g) => {
+  //     const update = { ...g };
+  //     modify(update);
+  //     return update;
+  //   });
+  // }
   const pgnString = `
   1. e4 e6
   2. d3
