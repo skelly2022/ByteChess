@@ -15,8 +15,6 @@ import { toast } from "react-hot-toast";
 import Loading from "~/components/Loading";
 import { useSession } from "next-auth/react";
 import LoginModal from "~/modals/LoginModal";
-import { getSideToPlayFromFen } from "~/utils/chessPuzzle/chessTactics";
-import e from "cors";
 
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 
