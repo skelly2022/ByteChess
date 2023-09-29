@@ -9,7 +9,7 @@ import usePlayModal from "~/hooks/usePlayModal";
 import { api } from "~/utils/api";
 import useUserModal from "~/hooks/useUserStore";
 import { useSession } from "next-auth/react";
-import Profile from "~/modals/profile";
+import Profile from "~/modals/Profile";
 
 export default function Home() {
   const user = useUserModal();
