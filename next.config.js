@@ -22,6 +22,9 @@ module.exports = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ["ipfs.io", "ui-avatars.com"],
+  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.(mp3)$/,

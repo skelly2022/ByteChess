@@ -20,7 +20,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
 }) => {
   const user = useUserModal();
   const chatContainerRef = useRef<HTMLDivElement | null>(null); // Reference to the chat component
-  const isLargeScreen = useMediaQuery({ minWidth: 992 });
+  const isLargeScreen = useMediaQuery({ minWidth: 1280 });
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -45,15 +45,15 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
 
   return (
     <div
-      className={`flex w-full flex-col ${
+      className={`flex w-full flex-col pt-2 ${
         isLargeScreen
           ? "h-[90%]"
-          : "fixed bottom-60 right-[10%] h-[50%] w-[70%] bg-white"
-      } z-50 h-[90%] rounded-lg`}
+          : "fixed bottom-60 right-[15%] h-[50%] w-[65%] bg-white"
+      } z-50  rounded-lg`}
       ref={chatContainerRef} // Set the reference to the chat component
       id="chat-container"
     >
-      <div className="overflow-hidden-scroll h-60 flex-grow space-y-2 overflow-y-auto px-3 py-2">
+      <div className="no-scrollbar h-60 flex-grow space-y-2 overflow-auto  px-3 py-2">
         {chatMessages.map((message, index) => (
           <div
             key={index}

@@ -4,7 +4,8 @@ import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 import { useRouter } from "next/router";
 import Sound from "react-sound"; // Update the import statement
-
+import moveSound from "public/static/media/move.mp3"; // Update the path as needed
+import moveCheckSound from "public/static/media/move-check.mp3"; // Update the path as needed
 import {
   getMoveOnClick,
   makeMove,
@@ -16,9 +17,7 @@ import usePlayModal from "~/hooks/usePlayModal";
 import socket from "~/helpers/socket";
 import { api } from "~/utils/api";
 import useUserStore from "~/hooks/useUserStore";
-import moveSound from "public/static/media/move.mp3"; // Update the path as needed
-import moveCheckSound from "public/static/media/move-check.mp3"; // Update the path as needed
-
+import useWinModal from "~/hooks/useWinModal";
 interface LiveGameProps {
   boardOrientation: any;
   connected: boolean;
@@ -36,7 +35,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   const user = useUserStore();
   const [playMoveSound, setPlayMoveSound] = useState(false);
   const [playCheckSound, setPlayCheckSound] = useState(false);
-
+  const WinModal = useWinModal();
   const { playID } = router.query;
   const chessboardRef = useRef();
 
@@ -44,7 +43,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   const [boardWrapper, setBoardWrapper] = useState({
     width: `80.33vh`,
   });
-  const [game, setGame] = useState(new Chess());
+  const [game, setGame] = useState(new Chess(play.fen));
 
   const updateGame = api.games.updateGameFen.useMutation({
     async onSuccess(result) {},
@@ -92,10 +91,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       setGame(newGame);
       play.setMoves([...moves, moveMade.fullMove.san]);
       updateGame.mutateAsync({ id: playID, fen: moveMade.fen });
-      if (new Chess(moveMade.fen).isCheck() === true) {
-        setPlayCheckSound(true);
-        console.log(game.isCheck);
-      }
+
       if (new Chess(moveMade.fen).isCheckmate() === true) {
         console.log("checkmate");
         updateWin.mutateAsync({
@@ -104,27 +100,18 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
           lElo: play.opponent.bulletRating,
           loserAddress: play.opponent.walletAddress,
         });
-        socket.emit("makeMove", {
-          roomId: playID,
-          fen: moveMade,
-          time: Date.now(),
-        });
+        socket.emit("makeMove", { roomId: playID, fen: moveMade });
         play.setOpponentTimer(false);
         play.setMyTimer(false);
         return;
       } else {
-        socket.emit("makeMove", {
-          roomId: playID,
-          fen: moveMade,
-          time: Date.now(),
-        });
+        socket.emit("makeMove", { roomId: playID, fen: moveMade });
       }
       if (newGame.moveNumber() !== 1) {
         play.setOpponentTimer(true);
       }
-      setPlayMoveSound(true);
-
       play.setMyTimer(false);
+      setPlayMoveSound(true);
     } else {
       return false;
     }
@@ -160,10 +147,12 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       user.setUser(data.loser);
     });
   }, []);
-
   useEffect(() => {
-    setGame(new Chess(play.currentFen));
-  }, [play.currentFen]);
+    chessboardRef.current?.clearPremoves();
+  }, []);
+  useEffect(() => {
+    setGame(new Chess(play.fen));
+  }, [play.fen]);
   const updateWindowWidth = () => {
     setWindowWidth(window.innerWidth);
   };
@@ -185,7 +174,14 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       }
     }
   }, [windowWidth]);
-
+  useEffect(() => {
+    if (game.isCheckmate() === true) {
+      console.log(`botato`);
+    } else {
+      console.log(`loser`);
+      WinModal.onOpen();
+    }
+  }, [game.isCheckmate()]);
   return (
     <div style={boardWrapper}>
       <Chessboard
@@ -196,8 +192,17 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
           borderRadius: "5px",
           boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5 ",
         }}
-        customDarkSquareStyle={{ backgroundColor: "#1D5951" }}
-        customLightSquareStyle={{ backgroundColor: "#FFDC26" }}
+        customDropSquareStyle={{
+          boxShadow: "inset 0 0 1px 6px rgba(255,255,255,0.75)",
+        }}
+        customDarkSquareStyle={{
+          backgroundColor: "#1D5951",
+          border: "1.5px solid black",
+        }}
+        customLightSquareStyle={{
+          backgroundColor: "#FFDC26",
+          border: "1.85px solid black",
+        }}
         isDraggablePiece={({ piece }) => piece[0] === boardOrientation[0]}
         onPieceDrop={onDrop}
         position={game.fen()}

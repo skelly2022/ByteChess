@@ -16,6 +16,8 @@ const useUserModal = create<userModalStore>((set) => ({
     createdAt: "",
     completedPuzzles: [],
     ratedAccount: false,
+    avatar:
+      "https://ipfs.io/ipfs/QmQ5TWTtXoKeupMucMUuss8pCbt3ZyyfV3frCKPjzzJXQf/35…",
   },
   setUser: (user: any) => {
     set({ user: user });

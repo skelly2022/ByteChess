@@ -15,6 +15,7 @@ import { toast } from "react-hot-toast";
 import Loading from "~/components/Loading";
 import { useSession } from "next-auth/react";
 import LoginModal from "~/modals/LoginModal";
+import ModalWin from "~/modals/ModalWin";
 
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 
@@ -201,9 +202,10 @@ const Home = () => {
         <ToasterProvider />
         <Navbar />
         <LoginModal />
+        <ModalWin />
       </ClientOnly>
       <main
-        className="min-w-screen   bg-green  no-scrollbar flex min-h-screen overflow-auto"
+        className="min-w-screen   no-scrollbar  overflow-aut flex min-h-screen bg-green "
         // style={{
         //   backgroundImage: `url(/images/1.png)`,
         //   backgroundSize: "cover",

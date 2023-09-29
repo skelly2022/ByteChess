@@ -37,7 +37,6 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
-  const messagesIcon = document.getElementById("messages-icon");
 
   const sendChatMessage = (icon?: string) => {
     let chatMessage = newMessage;
@@ -88,37 +87,12 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
     };
   }, []);
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (isChatOpen) {
-      // Check if the click occurred outside of the chat container
-      const chatContainer = document.getElementById("chat-container");
-      const messagesIcon = document.getElementById("messages-icon");
-
-      if (
-        chatContainer &&
-        !chatContainer.contains(event.target as Node) &&
-        messagesIcon &&
-        !messagesIcon.contains(event.target as Node)
-      ) {
-        toggleChat(); // Close the chat box
-      }
-    }
-  };
-  useEffect(() => {
-    document.addEventListener("click", handleOutsideClick);
-
-    // Remove the event listener when the component unmounts
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, [isChatOpen]);
-
   return (
     <div
-      className="flex h-[calc(100vh-112px)] w-screen items-center justify-center
-     gap-5 px-2 pt-2 md:px-4 md:pt-4 "
+      className="flex h-[calc(100vh-112px)] w-screen items-center justify-center gap-5
+     overflow-hidden px-2 pt-2 md:px-4 md:pt-4 "
     >
-      <div className="hidden h-full w-1/4 flex-col items-center justify-center lg:flex">
+      <div className="hidden h-full w-1/4 flex-col items-center justify-center xl:flex">
         {" "}
         {/* <div className="relative flex h-[12%] w-full items-center justify-center rounded-t-lg bg-slate-100">
           <ActionContainer />
@@ -139,26 +113,17 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
         <div className="w-full rounded-t-lg  md:hidden">
           <RatingContainer type="opponent" />
         </div>
-        <div className="flex h-auto w-full   py-2 md:justify-end">
+        <div className="flex h-auto w-full justify-center  py-2 md:justify-end">
           <LiveGame boardOrientation={boardOrientation} connected={connected} />
         </div>
         <div className="w-full rounded-b-lg  md:hidden">
           <RatingContainer type="me" />
         </div>
         <div className="mt-3 flex w-full justify-evenly ">
-          <div className="w-2/3 rounded-lg py-2 md:hidden">
+          <div className="w-full rounded-lg py-2 md:hidden">
             <ActionContainer />
           </div>
-          <div className="relative flex h-auto w-[20%] items-center justify-center rounded-lg py-2 md:hidden">
-            <BsFillChatDotsFill
-              size={50}
-              color="white"
-              onClick={toggleChat}
-              id="messages-icon"
-              className={`${
-                isChatOpen ? "bg-gray-800 text-white" : ""
-              } cursor-pointer rounded-full p-2 transition-colors duration-300 ease-in-out`}
-            />
+          <div className="relative flex h-full w-full items-center justify-center rounded-lg py-2 xl:hidden">
             {isChatOpen && (
               <ChatComponent
                 chatMessages={chatMessages}
@@ -171,11 +136,23 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
           </div>
         </div>
       </div>
-      <div className=" hidden h-5/6 w-1/4 flex-col lg:flex  ">
+      <div className=" hidden h-5/6 flex-col md:flex  lg:w-1/3  ">
         <LiveGameScoreBoard />
         <div className="relative flex h-[12%] w-full items-center justify-center">
           <ActionContainer />
         </div>
+      </div>
+      <div className="absolute bottom-5 right-5 z-50 cursor-pointer lg:right-20 xl:hidden">
+        {" "}
+        <BsFillChatDotsFill
+          size={50}
+          color="white"
+          onClick={toggleChat}
+          id="messages-icon"
+          className={`${
+            isChatOpen ? "cursor-pointer bg-gray-800 text-white" : ""
+          } cursor-pointer rounded-full p-2 transition-colors duration-300 ease-in-out`}
+        />
       </div>
     </div>
   );

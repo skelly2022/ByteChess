@@ -69,3 +69,6 @@
     box-shadow: 10014px 0 0 -5px;
   }
 }
+.rdp-day_selected {
+  background-color: gray;
+}

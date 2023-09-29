@@ -1,5 +1,5 @@
 "use client";
-
+//@ts-nocheck
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 import useUserStore from "src/hooks/useUserStore";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { signOut, useSession } from "next-auth/react";
+import useProfileModal from "~/hooks/useProfileModal";
 
 interface UserMenuProps {}
 
@@ -17,6 +18,9 @@ const UserMenu: React.FC<UserMenuProps> = () => {
   const user = useUserStore();
   const loginModal = useLoginModal();
   const router = useRouter();
+  const profileModal = useProfileModal();
+
+  const [profile, showProfile] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
   const [hamOpen, setHamOpen] = useState(false);
@@ -24,20 +28,6 @@ const UserMenu: React.FC<UserMenuProps> = () => {
   const { select, wallets, publicKey, disconnect } = useWallet();
   const { data: session, status } = useSession();
 
-  // const newUser = api.example.createUser.useMutation({
-  //   async onSuccess(data) {
-  //     user.setUser(data);
-  //     if (publicKey !== null) {
-  //       const first5 = publicKey.toBase58().substring(0, 5);
-  //       const last5 = publicKey
-  //         .toBase58()
-  //         .slice(publicKey.toBase58().length - 5);
-  //       toast.success(`${first5}...${last5} connected`);
-  //       loginModal.setPk(`${first5}...${last5}`);
-  //       loginModal.onClose();
-  //     }
-  //   },
-  // });
   function extractFirstAndLast5Characters(inputString) {
     if (typeof inputString !== "string" || inputString.length < 10) {
       return null; // Return null for invalid input
@@ -58,6 +48,9 @@ const UserMenu: React.FC<UserMenuProps> = () => {
 
   const puzzles = () => {
     router.push("/puzzles");
+  };
+  const tournaments = () => {
+    router.push("/tournaments");
   };
   const connectWallet = async () => {
     loginModal.onOpen();
@@ -81,44 +74,69 @@ const UserMenu: React.FC<UserMenuProps> = () => {
       loginModal.onClose();
     });
   };
-  // useEffect(() => {
-  //   //@ts-ignore
-
-  //   if (publicKey !== null) {
-  //     const data = { address: publicKey.toBase58() };
-  //     newUser.mutateAsync(data);
-  //   }
-  // }, [publicKey]);
-
+  const OpenProfile = async () => {
+    profileModal.onOpen();
+  };
+  useEffect(() => {
+    console.log(session);
+    // if (session.status === "authenticated") {
+    //   showProfile(true);
+    //   console.log(session);
+    //   console.log(session.data.user.name);
+    // } else {
+    //   showProfile(false);
+    // }
+  }, [session]);
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
         <div className="hidden items-center gap-3 md:flex">
-          {" "}
+          <div
+            onClick={() => {
+              tournaments();
+            }}
+            className=" cursor-pointer rounded-lg border border-yellow  px-4 py-2 text-sm font-semibold text-yellow
+              transition md:block "
+          >
+            Tournaments
+          </div>
           <div
             onClick={() => {
               puzzles();
             }}
-            className=" text-yellow border-yellow cursor-pointer rounded-lg  border px-4 py-2 text-sm font-semibold
+            className=" cursor-pointer rounded-lg border border-yellow  px-4 py-2 text-sm font-semibold text-yellow
               transition md:block "
           >
             Puzzles
           </div>
+          {session ? (
+            <div
+              onClick={() => {
+                OpenProfile();
+              }}
+              className=" cursor-pointer rounded-lg border border-yellow  px-4 py-2 text-sm font-semibold text-yellow
+              transition md:block "
+            >
+              Profile
+            </div>
+          ) : (
+            <></>
+          )}
           <div
             onClick={() => {
               router.push("/leaderboard");
             }}
-            className=" text-yellow border-yellow cursor-pointer  rounded-lg border 
-            px-4 py-2 text-sm font-semibold 
+            className=" cursor-pointer rounded-lg border  border-yellow px-4 
+            py-2 text-sm font-semibold text-yellow 
              transition   md:block "
           >
             Leaderboard
           </div>
           {session ? (
             <div
-              className="text-yellow border-yellow cursor-pointer 
-              rounded-lg border px-4 
-              py-2 text-sm font-semibold transition   md:block "
+              className="cursor-pointer rounded-lg border 
+              border-yellow px-4 py-2 
+              text-sm font-semibold text-yellow transition   md:block "
               onClick={toggleOpen}
             >
               {extractFirstAndLast5Characters(session.user.name)}
@@ -128,9 +146,9 @@ const UserMenu: React.FC<UserMenuProps> = () => {
               onClick={() => {
                 connectWallet();
               }}
-              className=" text-yellow border-yellow cursor-pointer 
-              rounded-lg border px-4 
-              py-2 text-sm font-semibold transition   md:block "
+              className=" cursor-pointer rounded-lg border 
+              border-yellow px-4 py-2 
+              text-sm font-semibold text-yellow transition   md:block "
             >
               Connect Wallet
             </div>
@@ -141,7 +159,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="bg-nav absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl text-sm shadow-md md:w-3/4">
+        <div className="absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl bg-nav text-sm shadow-md md:w-3/4">
           <div className="flex cursor-pointer flex-col text-black">
             <>
               {/* <MenuItem onClick={login} label="Login" /> */}
@@ -164,7 +182,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
               {/* <MenuItem onClick={login} label="Login" /> */}
               {publicKey ? (
                 <div
-                  className="bg-nav  cursor-pointer px-4 py-3 font-semibold transition hover:bg-neutral-300"
+                  className="cursor-pointer  bg-nav px-4 py-3 font-semibold transition hover:bg-neutral-300"
                   onClick={() => {
                     disconnect(), disconnectWallet();
                     toggleHam();
@@ -188,6 +206,13 @@ const UserMenu: React.FC<UserMenuProps> = () => {
                   toggleHam();
                 }}
                 label="Puzzles"
+              />
+              <MenuItem
+                onClick={() => {
+                  router.push("/tournaments");
+                  toggleHam();
+                }}
+                label="Tournaments"
               />
               <MenuItem
                 onClick={() => {

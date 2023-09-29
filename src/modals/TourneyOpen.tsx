@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import Button from "~/components/Button";
 
 interface ModalProps {
   isOpen?: boolean;
@@ -85,7 +86,31 @@ const Modal: React.FC<ModalProps> = ({
               <div className="relative flex-auto p-6">{body}</div>
               {/* Footer */}
 
-              <div className="flex flex-col gap-2 p-6">{footer}</div>
+              <div className="flex flex-col gap-2 p-6">
+                <div className="flex flex-col gap-2 p-2">
+                  <div
+                    className={`flex w-full items-center justify-between gap-4 ${
+                      secondaryAction && secondaryActionLabel
+                        ? "flex-row"
+                        : "flex-row-reverse"
+                    }`}
+                  >
+                    {secondaryAction && secondaryActionLabel && (
+                      <Button
+                        outline
+                        disabled={disabled}
+                        label={secondaryActionLabel}
+                        onClick={handleSecondaryAction}
+                      />
+                    )}
+                    <Button
+                      disabled={disabled}
+                      label={actionLabel}
+                      onClick={handleSubmit}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

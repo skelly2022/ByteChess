@@ -15,7 +15,7 @@ interface ModalProps {
   secondaryActionLabel?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({
+const ModalGame: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
@@ -61,8 +61,8 @@ const Modal: React.FC<ModalProps> = ({
   }
   return (
     <>
-      <div className="no-scrollbar fixed inset-0 z-50 flex h-full items-center justify-center overflow-y-auto overflow-x-hidden bg-green/60 outline-none focus:outline-none ">
-        <div className=" relative mx-auto my-6 w-full   md:h-auto md:w-3/6 lg:h-auto lg:w-2/3 ">
+      <div className="no-scrollbar fixed inset-0  z-[9999] flex h-full items-center justify-center overflow-y-auto overflow-x-hidden bg-green/60 outline-none focus:outline-none">
+        <div className=" relative mx-auto my-6 w-full   md:h-auto md:w-3/6 lg:h-auto lg:w-1/3 ">
           <div
             className={`translate h-full duration-300 ${
               showModal ? "translate-y-0" : "translate-y-full"
@@ -71,7 +71,7 @@ const Modal: React.FC<ModalProps> = ({
             <div className="translate relative flex h-full w-full flex-col rounded-lg  border-4 border-yellow bg-green text-white shadow-lg outline-none focus:outline-none md:h-auto lg:h-auto">
               {/* Header */}
 
-              <div className="flex items-center justify-center rounded-t  p-6">
+              <div className="flex items-center justify-center rounded-t  p-3">
                 <button
                   className="absolute left-9 border-0 p-1 transition hover:opacity-70"
                   onClick={handleClose}
@@ -85,7 +85,7 @@ const Modal: React.FC<ModalProps> = ({
               <div className="relative flex-auto p-6">{body}</div>
               {/* Footer */}
 
-              <div className="flex flex-col gap-2 p-6">{footer}</div>
+              <div className="flex flex-col gap-2 p-3">{footer}</div>
             </div>
           </div>
         </div>
@@ -94,4 +94,4 @@ const Modal: React.FC<ModalProps> = ({
   );
 };
 
-export default Modal;
+export default ModalGame;

@@ -87,7 +87,7 @@ const LiveGameTimer = () => {
   }, [play.moves]);
 
   return (
-    <div className="text-yellow border-yellow relative flex h-full w-full flex-col rounded-lg border">
+    <div className="text-yellow border-yellow relative flex h-3/4 w-full flex-col rounded-lg border">
       <RatingContainer type="opponent" />
 
       <div
@@ -122,28 +122,23 @@ const LiveGameTimer = () => {
           <GiHamburgerMenu size={30} />
         </div>
       </div>
-      <div className="flex h-auto items-center justify-center overflow-auto">
-        <div className="h-full w-full rounded-lg  p-4 shadow-lg">
-          <table className="no-scrollbar w-full overflow-auto text-black shadow-md">
-            <tbody>
-              {chessMoves.map((turn) => (
-                <tr
-                  className="text-center"
-                  key={turn.moveNumber + turn.whiteMove}
-                >
-                  <td className="bg-yellow w-4 border border-black px-4 py-2">
-                    {turn.moveNumber}
-                  </td>
-                  <td className="bg-yellow w-4 border border-black px-4 py-2">
-                    {turn.whiteMove}
-                  </td>
-                  <td className="bg-yellow w-4 border border-black px-4 py-2">
-                    {turn.blackMove}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="no-scrollbar flex h-[60%] w-full items-center justify-center overflow-auto ">
+        <div className="h-full w-full">
+          <div className=" h-full w-full p-3 text-black shadow-md">
+            {chessMoves.map((turn) => (
+              <div className="flex w-full justify-center ">
+                <div className="bg-yellow flex w-[30%] items-center justify-center border border-black px-4 py-2">
+                  {turn.moveNumber}
+                </div>
+                <div className="bg-yellow flex w-[30%] items-center justify-center border border-black px-4 py-2">
+                  {turn.whiteMove}
+                </div>
+                <div className="bg-yellow flex w-[30%] items-center justify-center border border-black px-4 py-2">
+                  {turn.blackMove}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
