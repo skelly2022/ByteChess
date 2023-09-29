@@ -180,7 +180,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
           <div className="flex cursor-pointer flex-col text-center text-black">
             <>
               {/* <MenuItem onClick={login} label="Login" /> */}
-              {publicKey ? (
+              {session ? (
                 <div
                   className="cursor-pointer  bg-nav px-4 py-3 font-semibold transition hover:bg-neutral-300"
                   onClick={() => {
@@ -199,7 +199,16 @@ const UserMenu: React.FC<UserMenuProps> = () => {
                   label="Connect Wallet"
                 />
               )}
-
+              {session ? (
+                <MenuItem
+                  onClick={() => {
+                    OpenProfile();
+                  }}
+                  label="Profile"
+                />
+              ) : (
+                <></>
+              )}
               <MenuItem
                 onClick={() => {
                   router.push("/puzzles");
