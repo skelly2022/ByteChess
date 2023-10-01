@@ -45,19 +45,17 @@ const EventCalendar = () => {
     console.log(duration);
     switch (duration) {
       case "30 Minutes":
-        return "200px";
+        return "min-w-[400px]";
       case "60 Minutes":
-        console.log("hey");
-        console.log("400px");
-        return "400px";
+        return "min-w-[400px]";
       case "90 Minutes":
-        return "600px";
-      case "120 Minutes":
-        console.log("hey2");
+        console.log("600px");
 
-        return "800px";
+        return "min-w-[600px]";
+      case "120 Minutes":
+        return "min-w-[800px]";
       default:
-        return "200"; // Default to 200px if the duration doesn't match any of the cases
+        return "min-w-[200px]";
     }
   };
 
@@ -127,12 +125,30 @@ const EventCalendar = () => {
                   <div className="flex flex-col ">
                     {eventsForTimeSlot.map((event) => (
                       <div
-                        key={event.id}
-                        className={`min-w-[${getMinWidth(
+                        className={`flex items-center justify-center  rounded-xl p-2 ${getMinWidth(
                           event.duration, // Use the duration of each individual event
-                        )}] m-2 bg-green `}
+                        )}  bg-green `}
                       >
-                        {event.name}
+                        <div key={event.id} className="flex items-center gap-3">
+                          <div
+                            className="relative cursor-pointer rounded pr-4 md:block"
+                            style={{
+                              backgroundImage: `url(${event.image})`,
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                              width: "50px",
+                              height: "50px",
+                            }}
+                          ></div>
+                          <div className="flex flex-col">
+                            {" "}
+                            <h1 className="text-2xl font-bold">
+                              {" "}
+                              {event.name}
+                            </h1>
+                            <h1> {event.type} Event</h1>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>

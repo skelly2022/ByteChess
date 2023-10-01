@@ -11,6 +11,7 @@ export const tournamentRouter = createTRPCRouter({
         type: z.string(),
         date: z.date(),
         duration: z.string(),
+        image: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
@@ -20,6 +21,7 @@ export const tournamentRouter = createTRPCRouter({
           type: input.type,
           date: input.date,
           duration: input.duration,
+          image: input.image,
         },
       });
       const allTournaments = await prisma.tournament.findMany();

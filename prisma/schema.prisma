@@ -55,6 +55,7 @@ model Tournament {
     type     String
     date     DateTime
     duration String
+    image    String
 }
 
 model Profile {

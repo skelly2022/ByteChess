@@ -85,7 +85,7 @@ const CreateTourney = () => {
           <div
             className="relative cursor-pointer rounded md:block"
             style={{
-              backgroundImage: `url(${user.user.avatar})`,
+              backgroundImage: `url(${tournament.image})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               width: "200px",

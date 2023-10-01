@@ -9,6 +9,7 @@ import useUserModal from "~/hooks/useUserStore";
 import { AiTwotoneEdit } from "react-icons/ai";
 import { api } from "~/utils/api";
 import Draggable from "../Drag";
+import Loading from "~/components/Loading";
 
 const { extractFirstAndLast5Characters } = assets;
 
@@ -22,28 +23,49 @@ const dataOptions = [
 const GameType = () => {
   const session = useSession();
   const user = useUserModal();
+  const tournament = useTournamentModal();
   const [myImages, setMyImages] = useState([]);
+  const [selectedGame, setSelectedGame] = useState("");
+  const [selectedImage, setSelectedImage] = useState(user.user.avatar);
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   const data = api.example.getAllNfts.useMutation({
     async onSuccess(data) {
       console.log(data);
       setMyImages(data);
+      setTimeout(() => {
+        setImagesLoaded(true);
+      }, 5000);
     },
   });
-  const tournament = useTournamentModal();
-  const [selectedGame, setSelectedGame] = useState("");
-  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+
   const openEditPopup = () => {
-    data.mutateAsync({ address: session.data.user.name });
+    console.log(myImages);
+    if (myImages.length === 0) {
+      data.mutateAsync({ address: session.data.user.name });
+      console.log("gey");
+    } else {
+    }
     setIsEditPopupOpen(true);
   };
 
   const closeEditPopup = () => {
     setIsEditPopupOpen(false);
   };
+
+  const selectImage = (image: any) => {
+    setSelectedImage(image);
+    setIsEditPopupOpen(false);
+  };
+
   useEffect(() => {
     setSelectedGame(tournament.type);
   }, [tournament.type]);
+
+  useEffect(() => {
+    tournament.setTournamentImage(selectedImage);
+  }, [selectedImage]);
 
   // Calculate the number of columns for the image grid
   const numImages = myImages.length;
@@ -55,7 +77,7 @@ const GameType = () => {
     gridTemplateColumns: `repeat(${numColumns}, 1fr)`, // Dynamic number of columns
     gridTemplateRows: "repeat(3, 1fr)", // 2 rows
     gap: "10px", // Adjust as needed
-    overflowX: "auto", // Enable horizontal overflow
+    overflow: "auto", // Enable horizontal overflow
   };
 
   return (
@@ -65,7 +87,7 @@ const GameType = () => {
           <div
             className="relative cursor-pointer rounded md:block"
             style={{
-              backgroundImage: `url(${user.user.avatar})`,
+              backgroundImage: `url(${selectedImage})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               width: "200px",
@@ -82,40 +104,45 @@ const GameType = () => {
           </div>
           {isEditPopupOpen && (
             <div className="absolute left-1/2 top-1/2 h-full w-5/6 -translate-x-1/2 -translate-y-1/2 transform rounded-lg bg-green p-4 shadow-lg">
-              <div className="relative flex h-full w-full flex-col items-center">
-                <h1 className="pb-5 text-3xl">Choose Image</h1>
-                <div className="flex h-full w-[90%] justify-center">
-                  <Draggable>
-                    <div
-                      className="no-scrollbar h-full"
-                      style={gridContainerStyle}
-                    >
-                      {myImages.map((imageObj, index) => (
-                        <div
-                          key={index}
-                          className="relative h-[100px] w-[100px]"
-                        >
-                          <img
-                            src={imageObj.image}
-                            alt={`Tournament Image ${index + 1}`}
-                            className="h-full w-full rounded-lg object-cover"
-                            onError={() => {
-                              // Remove the broken image from the list
-                              const updatedImages = [...myImages];
-                              updatedImages.splice(index, 1);
-                              setMyImages(updatedImages);
-                            }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </Draggable>
+              {!imagesLoaded ? (
+                <div className="absolute inset-0 flex h-full w-full items-center justify-center bg-gray-200">
+                  <Loading />
                 </div>
-
-                <button className="mt-3 items-end rounded-xl bg-yellow px-3 py-2">
-                  Choose Image
-                </button>
-              </div>
+              ) : (
+                <div className="relative flex h-full w-full flex-col items-center">
+                  <h1 className="pb-5 text-3xl">Choose Image</h1>
+                  <div className="flex h-full w-[90%] justify-center">
+                    <Draggable>
+                      <div
+                        className="no-scrollbar h-full"
+                        style={gridContainerStyle}
+                      >
+                        {myImages.map((imageObj, index) => (
+                          <div
+                            key={index}
+                            className="relative h-[100px] w-[100px]"
+                          >
+                            <img
+                              src={imageObj.image}
+                              alt={`Tournament Image ${index + 1}`}
+                              className="h-full w-full rounded-lg object-cover"
+                              onClick={() => {
+                                selectImage(imageObj.image);
+                              }}
+                              onError={() => {
+                                // Remove the broken image from the list
+                                const updatedImages = [...myImages];
+                                updatedImages.splice(index, 1);
+                                setMyImages(updatedImages);
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </Draggable>
+                  </div>
+                </div>
+              )}
               <button
                 className="absolute right-3 top-2 text-2xl"
                 onClick={closeEditPopup}

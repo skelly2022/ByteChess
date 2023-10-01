@@ -65,7 +65,9 @@ const TournamentModal = () => {
       name: tournament.name,
       type: tournament.type,
       duration: tournament.duration,
+      image: tournament.image,
     });
+    tournament.onClose();
   };
 
   const actionLabel = useMemo(() => {
