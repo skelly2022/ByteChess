@@ -18,7 +18,9 @@ const TournamentModal = () => {
   const [title, setTitle] = useState("Create a Tournament");
   const [isLoading, setIsLoading] = useState(false);
   const newTournament = api.tournament.newTournament.useMutation({
-    async onSuccess(data) {},
+    async onSuccess(data) {
+      tournament.setTournaments(data);
+    },
   });
   const {
     register,

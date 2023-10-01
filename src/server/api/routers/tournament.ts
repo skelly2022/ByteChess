@@ -22,6 +22,8 @@ export const tournamentRouter = createTRPCRouter({
           duration: input.duration,
         },
       });
+      const allTournaments = await prisma.tournament.findMany();
+      return allTournaments;
     }),
   getAllTournaments: publicProcedure.mutation(async () => {
     // Use Prisma to fetch all tournaments

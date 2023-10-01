@@ -42,17 +42,22 @@ const EventCalendar = () => {
   };
 
   const getMinWidth = (duration) => {
+    console.log(duration);
     switch (duration) {
       case "30 Minutes":
-        return 200;
+        return "200px";
       case "60 Minutes":
-        return 400;
+        console.log("hey");
+        console.log("400px");
+        return "400px";
       case "90 Minutes":
-        return 600;
+        return "600px";
       case "120 Minutes":
-        return 800;
+        console.log("hey2");
+
+        return "800px";
       default:
-        return 200; // Default to 200px if the duration doesn't match any of the cases
+        return "200"; // Default to 200px if the duration doesn't match any of the cases
     }
   };
 
@@ -105,11 +110,11 @@ const EventCalendar = () => {
                 timeSlotDate.getMinutes() === eventStartTime.getMinutes()
               );
             });
-
+            console.log(eventsForTimeSlot);
             return (
               <div
                 key={timeSlotDate.toISOString()}
-                className="flex h-full w-[200px] min-w-[200px] flex-col py-2 text-center font-semibold"
+                className="flex h-full w-[200px] min-w-[200px] flex-col  py-2 text-center font-semibold"
               >
                 <div className="h-12" style={{ maxWidth: "200px" }}>
                   {timeSlotDate.toLocaleTimeString("en-US", {
@@ -119,13 +124,13 @@ const EventCalendar = () => {
                 </div>
                 {/* Render the events for this time slot */}
                 {eventsForTimeSlot.length > 0 && (
-                  <div className="flex flex-col">
+                  <div className="flex flex-col ">
                     {eventsForTimeSlot.map((event) => (
                       <div
                         key={event.id}
                         className={`min-w-[${getMinWidth(
                           event.duration, // Use the duration of each individual event
-                        )}px] bg-white`}
+                        )}] m-2 bg-green `}
                       >
                         {event.name}
                       </div>
