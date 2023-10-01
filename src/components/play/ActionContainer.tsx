@@ -9,6 +9,9 @@ import { api } from "~/utils/api";
 import useUserModal from "~/hooks/useUserStore";
 import usePlayModal from "~/hooks/usePlayModal";
 import styles from "../styles/Animations.module.css";
+import useWinModal from "~/hooks/InGameModals/useWinModal";
+import useLossModal from "~/hooks/InGameModals/useLossModal";
+import useDrawModal from "~/hooks/InGameModals/useDrawModal";
 
 const ActionContainer = () => {
   const router = useRouter();
@@ -21,6 +24,10 @@ const ActionContainer = () => {
   const [activeIcon, setActiveIcon] = useState(null);
   const [drawRequested, setDrawRequested] = useState(false);
   const [gameResigned, setGameResigned] = useState(false);
+  const WinModal = useWinModal();
+  const LossModal = useLossModal();
+  const DrawModal = useDrawModal();
+
   const icons = [
     {
       icon: (
@@ -81,6 +88,7 @@ const ActionContainer = () => {
       console.log(result);
       user.setUser(result.loserRating);
       play.setOpponent(result.rating);
+      DrawModal.onOpen();
       socket.emit("drawAccept", {
         roomId: playID,
         loser: result.loserRating,
@@ -105,6 +113,7 @@ const ActionContainer = () => {
           lElo: user.user.bulletRating,
           loserAddress: user.user.walletAddress,
         });
+        LossModal.onOpen();
       }
     }
   };
@@ -132,6 +141,7 @@ const ActionContainer = () => {
       lElo: user.user.bulletRating,
       loserAddress: user.user.walletAddress,
     });
+    DrawModal.onOpen();
   };
   useEffect(() => {
     socket.on("drawRequested", (data) => {
@@ -144,6 +154,7 @@ const ActionContainer = () => {
     socket.on("gameResigned", (data) => {
       resetActiveIcon();
       setGameResigned(true);
+      WinModal.onOpen();
     });
     socket.on("checkmated", (data) => {
       play.setOpponent(data.loser);
@@ -152,6 +163,7 @@ const ActionContainer = () => {
     socket.on("drawAccepted", (data) => {
       resetActiveIcon();
       console.log(data);
+      DrawModal.onOpen();
       setGameResigned(true);
       play.setOpponent(data.loser);
       user.setUser(data.winner);
@@ -173,7 +185,7 @@ const ActionContainer = () => {
                   ? showClose || showHalf || showFlag
                     ? "m-2 h-full w-full bg-white"
                     : "rounded-sm bg-error  "
-                  : "border-yellow rounded-sm border-2"
+                  : "rounded-sm border-2 border-yellow"
               }`}
             >
               <ul className=" ">
@@ -217,11 +229,11 @@ const ActionContainer = () => {
         </div>
       )}
       {gameResigned === true && (
-        <div className="flex h-16 w-full flex-col items-center justify-center gap-2 text-black">
-          <h3 className=" w-1/2 bg-white py-1 text-center shadow transition-transform active:scale-y-75">
+        <div className="flex h-16 w-full flex-col items-center justify-center gap-2 pt-0 text-black sm:pt-4">
+          <h3 className=" w-1/2 bg-yellow py-1 text-center shadow transition-transform active:scale-y-75">
             Find New Opponent
           </h3>
-          <h3 className=" w-1/2 bg-white py-[2px] text-center shadow transition-transform active:scale-y-75">
+          <h3 className=" w-1/2 bg-yellow py-[2px] text-center shadow transition-transform active:scale-y-75">
             Rematch
           </h3>
         </div>

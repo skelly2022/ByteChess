@@ -9,7 +9,8 @@ import usePlayModal from "~/hooks/usePlayModal";
 import { api } from "~/utils/api";
 import useUserModal from "~/hooks/useUserStore";
 import { useSession } from "next-auth/react";
-import Profile from "~/modals/Profile";
+import UserProfile from "~/modals/UserProfile";
+import socket from "~/helpers/socket";
 
 export default function Home() {
   const user = useUserModal();
@@ -19,6 +20,7 @@ export default function Home() {
     onSuccess(data) {
       console.log(data);
       user.setUser(data);
+      socket.emit("userConnected", data.id);
     },
   });
 
@@ -40,7 +42,7 @@ export default function Home() {
         <LoginModal />
         <PlayFriend />
         <Navbar />
-        <Profile />
+        <UserProfile />
       </ClientOnly>
       <main
         className="no-scrollbar  flex min-h-screen flex-col 

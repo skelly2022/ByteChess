@@ -8,8 +8,8 @@ import useUserModal from "~/hooks/useUserStore";
 import axios from "axios"; // Import the axios library
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import useLoginModal from "~/hooks/useLoginModal";
-import ModalGame from "~/modals/ModalGame";
-import useWinModal from "~/hooks/useWinModal";
+import ModalGame from "~/modals/InGameModals/ModalGame";
+import useWinModal from "~/hooks/InGameModals/useWinModal";
 import { Console } from "console";
 
 const UserWin = () => {
@@ -17,12 +17,16 @@ const UserWin = () => {
   const user = useUserModal();
 
   const bodyContent = (
-    <div className="flex flex-col justify-center gap-5 p-1 align-middle text-xl font-bold">
-      <h1>Congratulations</h1>
-      <h1>You wWOON</h1>
-      <h1>Your New Rank {user.user.rank}</h1>
-      <h1>You beat {user.user.name}</h1>
-      <div className="grid gap-4 p-1">
+    <div className="flex flex-col items-center justify-center gap-8 rounded-lg p-4 text-white shadow-lg">
+      <h1 className="text-4xl font-bold">Congratulations</h1>
+      <h2 className="text-2xl font-bold">
+        Your New Rank: {user.user.bulletRating}
+      </h2>
+      <div className="mt-4 grid grid-cols-2 gap-4">
+        <button className="bg-yellow px-6 py-3 text-green">Rematch </button>
+        <button className="bg-yellow px-6 py-3 text-green">New Opponent</button>
+      </div>
+      <div className="mt-4 grid grid-cols-1 gap-4">
         <button className="bg-yellow px-6 py-3 text-green">
           Mint your Game
         </button>

@@ -5,6 +5,7 @@ import { Chessboard } from "react-chessboard";
 import useTournamentModal from "~/hooks/useTournamentModal";
 import { format } from "date-fns";
 import useUserModal from "~/hooks/useUserStore";
+
 const breakpoints = {
   small: 576,
   medium: 768,
@@ -27,6 +28,21 @@ const CreateTourney = () => {
   const updateWindowWidth = () => {
     setWindowWidth(window.innerWidth);
   };
+  const formatTimeWithUserTimezone = (timeOption) => {
+    const [hour, minute] = timeOption.split(":");
+    const date = new Date();
+    date.setHours(parseInt(hour, 10));
+    date.setMinutes(parseInt(minute, 10));
+
+    const options = {
+      hour: "numeric",
+      minute: "numeric",
+    };
+
+    const formattedTime = date.toLocaleTimeString("en-US", options);
+    return formattedTime;
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.addEventListener("resize", updateWindowWidth);
@@ -47,14 +63,24 @@ const CreateTourney = () => {
       }
     }
   }, [windowWidth]);
+  const pictureDivStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)", // Center the div horizontally and vertically
+    zIndex: 20,
+  };
   return (
-    <div className="items  h-full w-full">
+    <div className="  h-full w-full">
       <div className="flex h-full w-full items-center justify-center">
         <div style={boardWrapper} className="relative">
           <Chessboard />
         </div>
       </div>
-      <div className="absolute left-[8.3%] top-[8.3%]  z-20 flex h-5/6 w-5/6 items-center justify-center rounded-xl bg-white bg-opacity-[.93] text-center font-semibold text-black">
+      <div
+        className="absolute  left-[0%] top-[10%] z-20  flex h-5/6 w-5/6 items-center justify-center rounded-xl bg-white bg-opacity-[.93] text-center font-semibold text-black md:left-[25%]"
+        style={pictureDivStyle} // Apply the style here
+      >
         <div className="flex h-full w-1/3 items-center justify-center">
           <div
             className="relative cursor-pointer rounded md:block"
@@ -67,11 +93,9 @@ const CreateTourney = () => {
             }}
           ></div>
         </div>
+
         <div className="flex h-full w-1/2 flex-col  justify-end p-4 text-black ">
           <div className="mb-4 w-full">
-            <label className="mb-1 block w-full text-sm font-medium">
-              Tournament Name:
-            </label>
             <div className=" rounded bg-gray-200 px-4 py-2 font-extrabold">
               {selectedName}
             </div>
@@ -85,13 +109,14 @@ const CreateTourney = () => {
           <div className="mb-4">
             <label className="mb-1 block text-sm font-medium">Date:</label>
             <div className=" rounded bg-gray-200 px-4 py-2 font-extrabold">
-              {selectedDate}
+              {format(selectedDate, "PP")}
             </div>
           </div>
           <div className="mb-4">
             <label className="mb-1 block text-sm font-medium">Time:</label>
             <div className=" rounded bg-gray-200 px-4 py-2 font-extrabold">
-              {selectedTime} EST
+              {formatTimeWithUserTimezone(selectedTime)}
+              {/* Default to UTC */}
             </div>
           </div>
           <div className="mb-6">
@@ -100,9 +125,6 @@ const CreateTourney = () => {
               {selectedDuration}
             </div>
           </div>
-          {/* <button className="bg-green hover:bg-green-dark oppacity-100 rounded px-6 py-2 text-white transition duration-300">
-            Post on Twitter
-          </button> */}
         </div>
       </div>
     </div>

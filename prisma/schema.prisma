@@ -21,6 +21,9 @@ model User {
     ratedAccount      Boolean  @default(false)
     name              String   @default("USER")
     avatar            String   @default("https://ipfs.io/ipfs/QmQ5TWTtXoKeupMucMUuss8pCbt3ZyyfV3frCKPjzzJXQf/3597.png")
+    wins              Int      @default(0)
+    draws             Int      @default(0)
+    losses            Int      @default(0)
 }
 
 model Puzzle {
@@ -44,6 +47,14 @@ model CustomGame {
     walletAddress  String
     walletAddress2 String @default("")
     FEN            String @default("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+}
+
+model Tournament {
+    id       String   @id @default(auto()) @map("_id") @db.ObjectId
+    name     String
+    type     String
+    date     DateTime
+    duration String
 }
 
 model Profile {

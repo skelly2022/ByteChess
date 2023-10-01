@@ -153,7 +153,9 @@ const GameType = () => {
               key={item.dataId}
               data-id={item.dataId}
               className={`flex flex-col items-center justify-center rounded-sm ${
-                selectedGame === item.perf ? "bg-green" : "bg-yellow"
+                selectedGame === item.perf
+                  ? "border border-yellow bg-green"
+                  : "bg-yellow"
               }`}
               onClick={() => {
                 tournament.setType(item.perf);

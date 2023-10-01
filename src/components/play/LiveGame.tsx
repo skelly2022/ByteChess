@@ -17,7 +17,8 @@ import usePlayModal from "~/hooks/usePlayModal";
 import socket from "~/helpers/socket";
 import { api } from "~/utils/api";
 import useUserStore from "~/hooks/useUserStore";
-import useWinModal from "~/hooks/useWinModal";
+import useWinModal from "~/hooks/InGameModals/useWinModal";
+import useLossModal from "~/hooks/InGameModals/useLossModal";
 interface LiveGameProps {
   boardOrientation: any;
   connected: boolean;
@@ -33,17 +34,19 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   const play = usePlayModal();
   const router = useRouter();
   const user = useUserStore();
+  const WinModal = useWinModal();
+  const LossModal = useLossModal();
+  const chessboardRef = useRef();
+  const [game, setGame] = useState(new Chess(play.fen));
+  const { playID } = router.query;
+
   const [playMoveSound, setPlayMoveSound] = useState(false);
   const [playCheckSound, setPlayCheckSound] = useState(false);
-  const WinModal = useWinModal();
-  const { playID } = router.query;
-  const chessboardRef = useRef();
 
   const [windowWidth, setWindowWidth] = useState(null);
   const [boardWrapper, setBoardWrapper] = useState({
     width: `80.33vh`,
   });
-  const [game, setGame] = useState(new Chess(play.fen));
 
   const updateGame = api.games.updateGameFen.useMutation({
     async onSuccess(result) {},
@@ -55,6 +58,8 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
     async onSuccess(result) {
       user.setUser(result.rating);
       play.setOpponent(result.loserRating);
+      WinModal.onOpen();
+
       socket.emit("checkmate", {
         roomId: playID,
         loser: result.loserRating,
@@ -137,12 +142,13 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         play.setMyTimer(false);
         play.setOpponentTimer(false);
         console.log("checkmated");
-
+        LossModal.onClose();
         // Delay execution by 1 second
       }
     });
     socket.on("checkmated", (data) => {
       console.log(data);
+      LossModal.onOpen();
       play.setOpponent(data.winner);
       user.setUser(data.loser);
     });
@@ -168,20 +174,15 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   useEffect(() => {
     if (windowWidth !== null) {
       if (windowWidth < breakpoints.medium) {
-        setBoardWrapper({ width: `96.7vw` });
+        setBoardWrapper({ width: `94.7vw` });
+      } else if (windowWidth < breakpoints.large) {
+        setBoardWrapper({ width: `75.33vh` });
       } else {
         setBoardWrapper({ width: `80.33vh` });
       }
     }
   }, [windowWidth]);
-  useEffect(() => {
-    if (game.isCheckmate() === true) {
-      console.log(`botato`);
-    } else {
-      console.log(`loser`);
-      WinModal.onOpen();
-    }
-  }, [game.isCheckmate()]);
+
   return (
     <div style={boardWrapper}>
       <Chessboard

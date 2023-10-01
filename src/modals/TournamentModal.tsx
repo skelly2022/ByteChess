@@ -1,16 +1,12 @@
 "use client";
-
 import useTournamentModal from "~/hooks/useTournamentModal";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-
-import Modal from "./Modal";
-import { IoMdClose } from "react-icons/io";
-
 import { useEffect, useMemo, useState } from "react";
 import GameType from "~/components/tournaments/CreateTourney/GameType";
 import TourneyTime from "~/components/tournaments/CreateTourney/TournyTime";
 import CreateTourney from "~/components/tournaments/CreateTourney/CreateTourney";
 import TourneyOpen from "./TourneyOpen";
+import { api } from "~/utils/api";
 enum STEPS {
   GAME = 0,
   DATE = 1,
@@ -21,7 +17,9 @@ const TournamentModal = () => {
   const [step, setStep] = useState(STEPS.GAME);
   const [title, setTitle] = useState("Create a Tournament");
   const [isLoading, setIsLoading] = useState(false);
-
+  const newTournament = api.tournament.newTournament.useMutation({
+    async onSuccess(data) {},
+  });
   const {
     register,
     handleSubmit,
@@ -45,21 +43,27 @@ const TournamentModal = () => {
     if (step !== STEPS.CREATE) {
       return onNext();
     }
-    // setIsLoading(true);
-    // axios.post('/api/listings', data)
-    // .then(() => {
-    //   toast.success('Listing created!');
-    //   router.refresh();
-    //   reset();
-    //   setStep(STEPS.LOCATION)
-    //   tournament.onClose();
-    // })
-    // .catch(() => {
-    //   toast.error('Something went wrong.');
-    // })
-    // .finally(() => {
-    //   setIsLoading(false);
-    // })
+    console.log("create");
+    const selectedDate = tournament.date; // This should be a Date object
+    const selectedTime = tournament.startTime; // Example selected time in HH:mm format
+    const [hours, minutes] = selectedTime.split(":");
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth();
+    const day = selectedDate.getDate();
+
+    //@ts-ignore
+
+    const combinedDateTime = new Date(year, month, day, hours, minutes);
+    console.log(combinedDateTime);
+    console.log(tournament.name);
+    console.log(tournament.duration);
+    console.log(tournament.type);
+    newTournament.mutateAsync({
+      date: combinedDateTime,
+      name: tournament.name,
+      type: tournament.type,
+      duration: tournament.duration,
+    });
   };
 
   const actionLabel = useMemo(() => {
@@ -96,10 +100,7 @@ const TournamentModal = () => {
   }
   if (step === STEPS.CREATE) {
     bodyContent = (
-      <div
-        className="flex max-h-[30vh] flex-col lg:max-h-[70vh] 
-      "
-      >
+      <div className="flex h-full flex-col gap-8 p-1">
         <CreateTourney />
       </div>
     );

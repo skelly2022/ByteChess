@@ -1,13 +1,15 @@
 import { create } from "zustand";
 
 interface tournamentModalStore {
+  tournaments: any;
+  setTournaments: (tournaments: any) => void;
   name: string;
   setName: (name: string) => void;
   type: string;
   setType: (type: string) => void;
   duration: string;
   setDuration: (duration: string) => void;
-  date: string;
+  date: any;
   setDate: (date: any) => void;
   startTime: string;
   setStartTime: (time: string) => void;
@@ -19,6 +21,10 @@ interface tournamentModalStore {
 }
 
 const useTournamentModal = create<tournamentModalStore>((set) => ({
+  tournaments: [],
+  setTournaments: (tournaments: any) => {
+    set({ tournaments: tournaments });
+  },
   name: "",
   setName: (name: string) => {
     set({ name: name });
@@ -31,7 +37,7 @@ const useTournamentModal = create<tournamentModalStore>((set) => ({
   setDuration: (duration: string) => {
     set({ duration: duration });
   },
-  date: "",
+  date: new Date(),
   setDate: (date: any) => {
     set({ date: date });
   },

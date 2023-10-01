@@ -15,7 +15,9 @@ import { toast } from "react-hot-toast";
 import Loading from "~/components/Loading";
 import { useSession } from "next-auth/react";
 import LoginModal from "~/modals/LoginModal";
-import ModalWin from "~/modals/ModalWin";
+import ModalWin from "~/modals/InGameModals/ModalWin";
+import ModalDraw from "~/modals/InGameModals/ModalDraw";
+import ModalLoss from "~/modals/InGameModals/ModalLoss";
 
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 
@@ -203,6 +205,8 @@ const Home = () => {
         <Navbar />
         <LoginModal />
         <ModalWin />
+        <ModalLoss />
+        <ModalDraw />
       </ClientOnly>
       <main
         className="min-w-screen   no-scrollbar  overflow-aut flex min-h-screen bg-green "

@@ -97,8 +97,8 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
         {/* <div className="relative flex h-[12%] w-full items-center justify-center rounded-t-lg bg-slate-100">
           <ActionContainer />
         </div> */}
-        <div className="border-yellow flex h-5/6 w-full flex-col rounded-lg border">
-          <div className="text-yellow flex h-[10%] w-full items-center justify-center border-b border-black py-8 text-4xl">
+        <div className="flex h-5/6 w-full flex-col rounded-lg border border-yellow">
+          <div className="flex h-[10%] w-full items-center justify-center border-b border-black py-8 text-4xl text-yellow">
             CHAT
           </div>
           <ChatComponent
@@ -113,7 +113,7 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
         <div className="w-full rounded-t-lg  md:hidden">
           <RatingContainer type="opponent" />
         </div>
-        <div className="flex h-auto w-full justify-center  py-2 md:justify-end">
+        <div className="flex h-auto w-full items-center justify-center py-2 pr-4 md:justify-end">
           <LiveGame boardOrientation={boardOrientation} connected={connected} />
         </div>
         <div className="w-full rounded-b-lg  md:hidden">
@@ -123,7 +123,7 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
           <div className="w-full rounded-lg py-2 md:hidden">
             <ActionContainer />
           </div>
-          <div className="relative flex h-full w-full items-center justify-center rounded-lg py-2 xl:hidden">
+          <div className="relative flex h-full w-1/2 items-center justify-center rounded-lg py-2 xl:hidden">
             {isChatOpen && (
               <ChatComponent
                 chatMessages={chatMessages}
@@ -142,7 +142,7 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
           <ActionContainer />
         </div>
       </div>
-      <div className="absolute bottom-5 right-5 z-50 cursor-pointer lg:right-20 xl:hidden">
+      <div className="absolute bottom-24 right-5 z-50 cursor-pointer md:bottom-5 lg:right-20 xl:hidden">
         {" "}
         <BsFillChatDotsFill
           size={50}

@@ -136,10 +136,15 @@ export const gamesRouter = createTRPCRouter({
           bulletRating: winnerNewRating,
         },
       });
+      const loseUser = await prisma.user.findFirst({
+        where: { walletAddress: input.loserAddress },
+      });
       const loserRating = await prisma.user.update({
         where: { walletAddress: input.loserAddress },
         data: {
           bulletRating: loserNewRating,
+
+          // losse,
         },
       });
       return { rating: rating, loserRating: loserRating };
