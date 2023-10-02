@@ -96,7 +96,6 @@ const ActionContainer = () => {
       });
     },
   });
-
   const handleIconClick = (index) => {
     setActiveIcon(index);
     if (activeIcon === index) {
@@ -183,7 +182,7 @@ const ActionContainer = () => {
               } ${
                 activeIcon === index
                   ? showClose || showHalf || showFlag
-                    ? "m-2 h-full w-full bg-white"
+                    ? "m-2 h-full w-full bg-green"
                     : "rounded-sm bg-error  "
                   : "rounded-sm border-2 border-yellow"
               }`}

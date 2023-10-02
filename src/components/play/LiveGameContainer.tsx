@@ -110,18 +110,30 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
         </div>
       </div>
       <div className=" flex h-full w-full flex-col  items-center md:w-auto">
-        <div className="w-full rounded-t-lg  md:hidden">
+        <div className="w-full rounded-t-lg  font-bold md:hidden">
           <RatingContainer type="opponent" />
         </div>
         <div className="flex h-auto w-full items-center justify-center py-2 pr-4 md:justify-end">
           <LiveGame boardOrientation={boardOrientation} connected={connected} />
         </div>
-        <div className="w-full rounded-b-lg  md:hidden">
+        <div className="w-full rounded-b-lg  pt-2 font-bold md:hidden">
           <RatingContainer type="me" />
         </div>
-        <div className="mt-3 flex w-full justify-evenly ">
-          <div className="w-full rounded-lg py-2 md:hidden">
+        <div className="relative mt-3 flex w-full justify-evenly bg-yellow shadow-xl md:bg-green">
+          <div className=" w-full rounded-lg py-2 font-bold md:hidden">
             <ActionContainer />
+            <div className="absolute bottom-[10%] right-0 z-50 cursor-pointer md:bottom-5 lg:right-20 xl:hidden">
+              {" "}
+              <BsFillChatDotsFill
+                size={50}
+                color="white"
+                onClick={toggleChat}
+                id="messages-icon"
+                className={`${
+                  isChatOpen ? "cursor-pointer bg-gray-800 text-white" : ""
+                } cursor-pointer rounded-full p-2 transition-colors duration-300 ease-in-out`}
+              />
+            </div>
           </div>
           <div className="relative flex h-full w-1/2 items-center justify-center rounded-lg py-2 xl:hidden">
             {isChatOpen && (
@@ -136,13 +148,10 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
           </div>
         </div>
       </div>
-      <div className=" hidden h-5/6 flex-col md:flex  lg:w-1/3  ">
-        <LiveGameScoreBoard />
-        <div className="relative flex h-[12%] w-full items-center justify-center">
-          <ActionContainer />
-        </div>
-      </div>
-      <div className="absolute bottom-24 right-5 z-50 cursor-pointer md:bottom-5 lg:right-20 xl:hidden">
+      <div
+        className="absolute bottom-[10%] right-0 z-50 hidden cursor-pointer md:bottom-5 
+      md:block lg:right-20 xl:hidden"
+      >
         {" "}
         <BsFillChatDotsFill
           size={50}
@@ -153,6 +162,12 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
             isChatOpen ? "cursor-pointer bg-gray-800 text-white" : ""
           } cursor-pointer rounded-full p-2 transition-colors duration-300 ease-in-out`}
         />
+      </div>
+      <div className=" hidden h-5/6 flex-col md:flex  lg:w-1/3  ">
+        <LiveGameScoreBoard />
+        <div className="relative flex h-[12%] w-full items-center justify-center">
+          <ActionContainer />
+        </div>
       </div>
     </div>
   );

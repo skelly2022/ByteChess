@@ -26,10 +26,56 @@ const EventCalendar = () => {
   }
 
   // Define some sample events
-  const [events, setEvents] = useState([]);
-  useEffect(() => {
-    setEvents(tournament.tournaments);
-  }, [tournament.tournaments]);
+  const [events, setEvents] = useState([
+    {
+      id: "6519d899d6645fd95d7da1a6",
+      name: "Bodoggos",
+      type: "Bullet",
+      date: "2023-10-01T23:00:00.000Z",
+      duration: "90 Minutes",
+      image:
+        "https://ipfs.io/ipfs/QmQ5TWTtXoKeupMucMUuss8pCbt3ZyyfV3frCKPjzzJXQf/3597.png",
+      startTime: "2023-10-01T23:00:00.000Z",
+      endTime: "2023-10-02T00:30:00.000Z",
+    },
+    {
+      id: "6519e17cb8ae66bdba4b0509",
+      name: "Stoned Apes",
+      type: "Blitz",
+      date: "2023-10-02T03:00:00.000Z",
+      duration: "120 Minutes",
+      image:
+        "https://testlaunchmynft.mypinata.cloud/ipfs/QmeahPKMcFzAhCqmYvYivNvjtvzUjm2VMSLpZ9LcSWbkag/209.png",
+      startTime: "2023-10-02T03:00:00.000Z",
+      endTime: "2023-10-02T05:00:00.000Z",
+    },
+    {
+      id: "6519e2fb88f372175d4ec2d5",
+      name: "g",
+      type: "Bullet",
+      date: "2023-10-02T04:30:00.000Z",
+      duration: "60 Minutes",
+      image:
+        "https://ipfs.io/ipfs/QmQ5TWTtXoKeupMucMUuss8pCbt3ZyyfV3frCKPjzzJXQf/3597.png",
+      startTime: "2023-10-02T04:30:00.000Z",
+      endTime: "2023-10-02T05:30:00.000Z",
+    },
+  ]);
+  // useEffect(() => {
+  //   const initialEvents = tournament.tournaments;
+  //   const events = initialEvents.map((event) => {
+  //     const eventStartTime = new Date(event.date);
+  //     const durationInMinutes = parseInt(event.duration.split(" ")[0]);
+  //     const eventEndTime = new Date(
+  //       eventStartTime.getTime() + durationInMinutes * 60 * 1000,
+  //     );
+  //     return { ...event, startTime: eventStartTime, endTime: eventEndTime };
+  //   });
+  //   console.log(events);
+  //   setEvents(events);
+
+  //   console.log(tournament.tournaments);
+  // }, [tournament.tournaments]);
 
   const handleDateChange = (direction) => {
     const newDate = new Date(currentDate);
@@ -42,15 +88,12 @@ const EventCalendar = () => {
   };
 
   const getMinWidth = (duration) => {
-    console.log(duration);
     switch (duration) {
       case "30 Minutes":
         return "min-w-[400px]";
       case "60 Minutes":
         return "min-w-[400px]";
       case "90 Minutes":
-        console.log("600px");
-
         return "min-w-[600px]";
       case "120 Minutes":
         return "min-w-[800px]";
@@ -58,10 +101,75 @@ const EventCalendar = () => {
         return "min-w-[200px]";
     }
   };
+  const [usedEvents, setUsedEvents] = useState([]);
+
+  const renderEvent = (event) => {
+    const isEventUsed = usedEvents.includes(event.id);
+    console.log(isEventUsed);
+    // Add the event's ID to the usedEvents array
+    return isEventUsed ? (
+      <div
+        className={`w-200
+      z-10 flex items-center justify-center bg-green p-2 `}
+        key={event.id}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="relative cursor-pointer rounded pr-4 md:block"
+            style={{
+              backgroundImage: `url(${event.image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              width: "50px",
+              height: "50px",
+            }}
+          ></div>
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-bold"> {event.name}</h1>
+            <h1> {event.type} Event</h1>
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div
+        className={`w-200}
+        z-10 flex items-center justify-center bg-green p-2 `}
+        key={event.id}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="relative cursor-pointer rounded pr-4 md:block"
+            style={{
+              backgroundImage: `url(${event.image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              width: "50px",
+              height: "50px",
+            }}
+          ></div>
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-bold"> {event.name}</h1>
+            <h1> {event.type} Event</h1>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Update the usedEvents state when the component mounts
+  useEffect(() => {
+    const newUsedEvents = [];
+    events.forEach((event) => {
+      if (!usedEvents.includes(event.id)) {
+        newUsedEvents.push(event.id);
+      }
+    });
+    setUsedEvents((prevUsedEvents) => [...prevUsedEvents, ...newUsedEvents]);
+  }, []);
 
   return (
     <div className="no-scrollbar h-[calc(100vh-150px)] w-full items-center justify-center overflow-x-auto px-2 py-3">
-      <div className="mb-4 flex w-full items-center justify-center">
+      <div className="mb-4 flex w-full flex-col items-center justify-center">
         <div className="relative flex w-full items-center justify-center space-x-2">
           <button onClick={() => handleDateChange("prev")}>
             <AiOutlineArrowLeft size={30} />
@@ -78,11 +186,17 @@ const EventCalendar = () => {
           </button>
           <button
             onClick={tournament.onOpen}
-            className="absolute right-0 cursor-pointer rounded bg-yellow px-3 py-2 shadow transition-transform active:scale-y-75"
+            className="absolute right-0 hidden cursor-pointer rounded bg-yellow px-3 py-2 shadow transition-transform active:scale-y-75 sm:block"
           >
             Create Tournament
           </button>
         </div>
+        <button
+          onClick={tournament.onOpen}
+          className="right-0 flex cursor-pointer rounded bg-yellow px-3 py-2 shadow transition-transform active:scale-y-75 sm:hidden"
+        >
+          Create Tournament
+        </button>
       </div>
       <Draggable>
         <div className="no-scrollbar relative m-3 flex h-[90%] w-full overflow-auto rounded-xl bg-yellow shadow">
@@ -94,25 +208,26 @@ const EventCalendar = () => {
               return null;
             }
 
-            // Filter events for this time slot
-            const eventsForTimeSlot = events.filter((event) => {
-              const eventStartTime = new Date(event.date);
-              eventStartTime.setSeconds(0); // Set seconds to 0 for precise comparison
+            let eventsToRender = [];
 
-              // Check if the time slot falls within the event's start time
-              return (
-                timeSlotDate.getFullYear() === eventStartTime.getFullYear() &&
-                timeSlotDate.getMonth() === eventStartTime.getMonth() &&
-                timeSlotDate.getDate() === eventStartTime.getDate() &&
-                timeSlotDate.getHours() === eventStartTime.getHours() &&
-                timeSlotDate.getMinutes() === eventStartTime.getMinutes()
-              );
+            // Filter events for this time slot
+            events.forEach((event) => {
+              const eventStartTime = new Date(event.startTime);
+              const eventEndTime = new Date(event.endTime);
+
+              // Check if the time slot falls within the event's duration
+              if (
+                timeSlotDate >= eventStartTime &&
+                timeSlotDate < eventEndTime
+              ) {
+                eventsToRender.push(event);
+              }
             });
-            console.log(eventsForTimeSlot);
+
             return (
               <div
                 key={timeSlotDate.toISOString()}
-                className="flex h-full w-[200px] min-w-[200px] flex-col  py-2 text-center font-semibold"
+                className={`flex h-full w-[200px] min-w-[200px] flex-col  py-2 text-center font-semibold`}
               >
                 <div className="h-12" style={{ maxWidth: "200px" }}>
                   {timeSlotDate.toLocaleTimeString("en-US", {
@@ -121,35 +236,10 @@ const EventCalendar = () => {
                   })}
                 </div>
                 {/* Render the events for this time slot */}
-                {eventsForTimeSlot.length > 0 && (
+                {eventsToRender.length > 0 && (
                   <div className="flex flex-col ">
-                    {eventsForTimeSlot.map((event) => (
-                      <div
-                        className={`flex items-center justify-center  rounded-xl p-2 ${getMinWidth(
-                          event.duration, // Use the duration of each individual event
-                        )}  bg-green `}
-                      >
-                        <div key={event.id} className="flex items-center gap-3">
-                          <div
-                            className="relative cursor-pointer rounded pr-4 md:block"
-                            style={{
-                              backgroundImage: `url(${event.image})`,
-                              backgroundSize: "cover",
-                              backgroundPosition: "center",
-                              width: "50px",
-                              height: "50px",
-                            }}
-                          ></div>
-                          <div className="flex flex-col">
-                            {" "}
-                            <h1 className="text-2xl font-bold">
-                              {" "}
-                              {event.name}
-                            </h1>
-                            <h1> {event.type} Event</h1>
-                          </div>
-                        </div>
-                      </div>
+                    {eventsToRender.map((event) => (
+                      <>{renderEvent(event)}</>
                     ))}
                   </div>
                 )}

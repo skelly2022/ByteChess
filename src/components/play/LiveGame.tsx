@@ -37,11 +37,16 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   const WinModal = useWinModal();
   const LossModal = useLossModal();
   const chessboardRef = useRef();
-  const [game, setGame] = useState(new Chess(play.fen));
   const { playID } = router.query;
-
   const [playMoveSound, setPlayMoveSound] = useState(false);
   const [playCheckSound, setPlayCheckSound] = useState(false);
+
+  // Game Logic
+  const [game, setGame] = useState(new Chess(play.fen));
+  const [preMoveSquares, setPreMoveSquares] = useState({});
+  const [rightClickedSquares, setRightClickedSquares] = useState({});
+  const [moveSquares, setMoveSquares] = useState({});
+  const [optionSquares, setOptionSquares] = useState({});
 
   const [windowWidth, setWindowWidth] = useState(null);
   const [boardWrapper, setBoardWrapper] = useState({
@@ -81,22 +86,81 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
     },
   });
 
-  function onDrop(sourceSquare: string, targetSquare: string) {
+  /// move option logic
+  function onSquareClick(square) {
+    setPreMoveSquares({});
+  }
+  function getMoveOptions(square) {
+    const moves = game.moves({
+      square,
+      verbose: true,
+    });
+    if (moves.length === 0) {
+      setOptionSquares({});
+      return false;
+    }
+
+    const newSquares = {};
+    moves.map((move) => {
+      newSquares[move.to] = {
+        background:
+          game.get(move.to) &&
+          game.get(move.to).color !== game.get(square).color
+            ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
+            : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
+        borderRadius: "50%",
+      };
+      return move;
+    });
+    newSquares[square] = {
+      background: "rgba(255, 255, 0, 0.4)",
+    };
+    setOptionSquares(newSquares);
+    return true;
+  }
+
+  function onMouseOverSquare(square) {
+    getMoveOptions(square);
+  }
+  function onMouseOutSquare() {
+    if (Object.keys(optionSquares).length !== 0) setOptionSquares({});
+  }
+  function onDrop(sourceSquare: string, targetSquare: string, turn?: any) {
+    if (
+      game.turn() !== boardOrientation[0] &&
+      preMoveSquares !==
+        {
+          [sourceSquare]: { backgroundColor: "rgba(186, 41, 41, 0.8)" },
+          [targetSquare]: { backgroundColor: "rgba(186, 41, 41, 0.8)" },
+        }
+    ) {
+      setPreMoveSquares({
+        [sourceSquare]: { backgroundColor: "rgba(186, 41, 41, 0.8)" },
+        [targetSquare]: { backgroundColor: "rgba(186, 41, 41, 0.8)" },
+      });
+      console.log("hey");
+      return;
+    }
     let data = {
       from: sourceSquare,
       to: targetSquare,
       promotion: "q",
     };
-    const moveMade = makeMove(game.fen(), data);
+    const moveMade = makeMove(game.pgn(), data);
     if (moveMade) {
+      setMoveSquares({
+        [sourceSquare]: { backgroundColor: "rgba(161, 160, 166, 0.8)" },
+        [targetSquare]: { backgroundColor: "rgba(161, 160, 166, 0.8)" },
+      });
       const fens = play.fens;
       const moves = play.moves;
       play.setFens([...fens, moveMade.fen]);
-      const newGame = new Chess(moveMade.fen);
+      const newGame = new Chess();
+      newGame.loadPgn(moveMade.pgn);
       setGame(newGame);
       play.setMoves([...moves, moveMade.fullMove.san]);
       updateGame.mutateAsync({ id: playID, fen: moveMade.fen });
-
+      setPreMoveSquares({});
       if (new Chess(moveMade.fen).isCheckmate() === true) {
         console.log("checkmate");
         updateWin.mutateAsync({
@@ -118,32 +182,93 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       play.setMyTimer(false);
       setPlayMoveSound(true);
     } else {
+      console.log("falsemove");
       return false;
     }
   }
+  useEffect(() => {
+    console.log(preMoveSquares);
+  }, [preMoveSquares]);
   useEffect(() => {
     setGame(new Chess(play.fens[play.index]));
   }, [play.index]);
   useEffect(() => {
     socket.on("moveMade", (data) => {
+      setMoveSquares({
+        [data.fullMove.from]: { backgroundColor: "rgba(161, 160, 166, 0.8)" },
+        [data.fullMove.to]: { backgroundColor: "rgba(161, 160, 166, 0.8)" },
+      });
       const fens = play.fens;
       const moves = play.moves;
       play.setMoves([...moves, data.fullMove.san]);
       play.setFens([...fens, data.fen]);
-      const newGame = new Chess(data.fen);
-      setGame(new Chess(data.fen));
+      const newGame = new Chess();
+      newGame.loadPgn(data.pgn);
+      setGame(newGame);
 
       if (newGame.moveNumber() !== 1) {
         play.setMyTimer(true);
         play.setOpponentTimer(false);
       }
-
       if (new Chess(data.fen).isCheckmate() === true) {
         play.setMyTimer(false);
         play.setOpponentTimer(false);
         console.log("checkmated");
         LossModal.onClose();
         // Delay execution by 1 second
+      }
+      if (preMoveSquares != {}) {
+        console.log(preMoveSquares);
+
+        const keys = Object.keys(preMoveSquares);
+        const sourceSquare = keys[0];
+        const targetSquare = keys[1];
+        let data = {
+          from: sourceSquare,
+          to: targetSquare,
+          promotion: "q",
+        };
+        const moveMade = makeMove(newGame.pgn(), data);
+        if (moveMade) {
+          setMoveSquares({
+            [sourceSquare]: { backgroundColor: "rgba(161, 160, 166, 0.8)" },
+            [targetSquare]: { backgroundColor: "rgba(161, 160, 166, 0.8)" },
+          });
+          const fens = play.fens;
+          const moves = play.moves;
+          play.setFens([...fens, moveMade.fen]);
+          const newGamePre = new Chess();
+          newGamePre.loadPgn(moveMade.pgn);
+          setGame(newGamePre);
+          play.setMoves([...moves, moveMade.fullMove.san]);
+          updateGame.mutateAsync({ id: playID, fen: moveMade.fen });
+          setPreMoveSquares({});
+          if (new Chess(moveMade.fen).isCheckmate() === true) {
+            console.log("checkmate");
+            updateWin.mutateAsync({
+              winnerAddress: user.user.walletAddress,
+              wElo: user.user.bulletRating,
+              lElo: play.opponent.bulletRating,
+              loserAddress: play.opponent.walletAddress,
+            });
+            socket.emit("makeMove", { roomId: playID, fen: moveMade });
+            play.setOpponentTimer(false);
+            play.setMyTimer(false);
+            return;
+          } else {
+            socket.emit("makeMove", { roomId: playID, fen: moveMade });
+          }
+          if (newGame.moveNumber() !== 1) {
+            play.setOpponentTimer(true);
+          }
+          play.setMyTimer(false);
+          setPlayMoveSound(true);
+        } else {
+          console.log("falsemove");
+          setPreMoveSquares({});
+
+          return false;
+        }
       }
     });
     socket.on("checkmated", (data) => {
@@ -152,7 +277,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       play.setOpponent(data.winner);
       user.setUser(data.loser);
     });
-  }, []);
+  }, [preMoveSquares]);
   useEffect(() => {
     chessboardRef.current?.clearPremoves();
   }, []);
@@ -204,8 +329,18 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
           backgroundColor: "#FFDC26",
           border: "1.85px solid black",
         }}
+        customSquareStyles={{
+          ...moveSquares,
+          ...optionSquares,
+          ...rightClickedSquares,
+          ...preMoveSquares,
+        }}
         isDraggablePiece={({ piece }) => piece[0] === boardOrientation[0]}
+        onSquareClick={onSquareClick}
+        onMouseOverSquare={onMouseOverSquare}
+        onMouseOutSquare={onMouseOutSquare}
         onPieceDrop={onDrop}
+        arePremovesAllowed={true}
         position={game.fen()}
         ref={chessboardRef}
       />

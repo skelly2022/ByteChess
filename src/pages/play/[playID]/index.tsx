@@ -71,6 +71,9 @@ const Home = () => {
           return;
         } else {
           play.setCurrentFen(data.fen);
+          if (data.lastMoveColor === null) {
+            return;
+          }
           console.log(data.lastMoveColor[0] === userData.Color[0]);
           if (data.lastMoveColor[0] === userData.Color[0]) {
             play.setOpponentTimer(true);

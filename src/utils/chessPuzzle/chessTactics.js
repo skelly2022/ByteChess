@@ -40,13 +40,14 @@ export function moveOnCLick(fen, move) {
   }
 }
 
-export function makeMove(fen, move) {
-  const chess = new Chess(fen);
+export function makeMove(pgn, move) {
+  const chess = new Chess();
+  chess.loadPgn(pgn);
   try {
     const fullMove = chess.move(move);
-    return fullMove ? { fullMove, fen: chess.fen() } : null;
+    return fullMove ? { fullMove, fen: chess.fen(), pgn: chess.pgn() } : null;
   } catch (error) {
-    return null;
+    return false;
   }
 }
 

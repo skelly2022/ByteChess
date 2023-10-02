@@ -48,7 +48,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
       className={`flex w-full flex-col pt-2 ${
         isLargeScreen
           ? "h-[90%]"
-          : "fixed bottom-60 right-[15%] h-[50%] w-[70%] bg-white"
+          : "fixed bottom-60 right-[15%] h-[50%] w-[65%] bg-white"
       } z-50  rounded-lg`}
       ref={chatContainerRef} // Set the reference to the chat component
       id="chat-container"

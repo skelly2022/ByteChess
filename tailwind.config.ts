@@ -50,6 +50,8 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        offBlack: "#161616",
+
         info: "#2094f3" /* Info */,
         success: "#629a23" /* Success */,
         warning: "#ff9900" /* Warning */,
