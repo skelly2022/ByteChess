@@ -59,8 +59,8 @@ const RatingContainer: React.FC<RatingContainerProps> = ({
         {time === "Bullet" && type === "me" && (
           <h1>{user.user.bulletRating}</h1>
         )}
-        {time === "Blitz" && type === "me" && <h1>{session.data.user.name}</h1>}
-        {time === "Rapid" && type === "me" && <h1>{session.data.user.name}</h1>}
+        {time === "Blitz" && type === "me" && <h1>{user.user.bulletRating}</h1>}
+        {time === "Rapid" && type === "me" && <h1>{user.user.bulletRating}</h1>}
       </div>
       <Timer type={type} />
     </div>

@@ -11,11 +11,14 @@ import useLoginModal from "~/hooks/useLoginModal";
 import ModalGame from "~/modals/InGameModals/ModalGame";
 import useWinModal from "~/hooks/InGameModals/useWinModal";
 import { Console } from "console";
+import useTournamentModal from "~/hooks/useTournamentModal";
 
 const UserWin = () => {
   const WinModal = useWinModal();
   const user = useUserModal();
-
+  const tournamentStore = useTournamentModal();
+  const router = useRouter();
+  const handleClick = () => {};
   const bodyContent = (
     <div className="flex flex-col items-center justify-center gap-8 rounded-lg p-4 text-white shadow-lg">
       <h1 className="text-4xl font-bold">Congratulations</h1>
@@ -31,6 +34,17 @@ const UserWin = () => {
           Mint your Game
         </button>
         <button className="bg-yellow px-6 py-3 text-green">Tweet It</button>
+        {tournamentStore.tournamentID !== "" && (
+          <button
+            className="bg-yellow px-6 py-3 text-green"
+            onClick={() => {
+              router.push(`/tournaments/${tournamentStore.tournamentID}`);
+              WinModal.onClose();
+            }}
+          >
+            Return to Tournament{" "}
+          </button>
+        )}
       </div>
     </div>
   );

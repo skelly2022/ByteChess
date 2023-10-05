@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import Draggable from "./Drag";
 import useTournamentModal from "~/hooks/useTournamentModal";
+import { useRouter } from "next/router";
 
 const EventCalendar = () => {
   const tournament = useTournamentModal();
   const [currentDate, setCurrentDate] = useState(new Date()); // Initialize with the current date
   const now = new Date(); // Get the current time
-
+  const router = useRouter();
   // EXAMPLE OF DATE OBJECT
   const startTime = new Date(currentDate);
   startTime.setHours(0, 0, 0, 0); // Set to 00:00:00
@@ -26,56 +27,23 @@ const EventCalendar = () => {
   }
 
   // Define some sample events
-  const [events, setEvents] = useState([
-    {
-      id: "6519d899d6645fd95d7da1a6",
-      name: "Bodoggos",
-      type: "Bullet",
-      date: "2023-10-01T23:00:00.000Z",
-      duration: "90 Minutes",
-      image:
-        "https://ipfs.io/ipfs/QmQ5TWTtXoKeupMucMUuss8pCbt3ZyyfV3frCKPjzzJXQf/3597.png",
-      startTime: "2023-10-01T23:00:00.000Z",
-      endTime: "2023-10-02T00:30:00.000Z",
-    },
-    {
-      id: "6519e17cb8ae66bdba4b0509",
-      name: "Stoned Apes",
-      type: "Blitz",
-      date: "2023-10-02T03:00:00.000Z",
-      duration: "120 Minutes",
-      image:
-        "https://testlaunchmynft.mypinata.cloud/ipfs/QmeahPKMcFzAhCqmYvYivNvjtvzUjm2VMSLpZ9LcSWbkag/209.png",
-      startTime: "2023-10-02T03:00:00.000Z",
-      endTime: "2023-10-02T05:00:00.000Z",
-    },
-    {
-      id: "6519e2fb88f372175d4ec2d5",
-      name: "g",
-      type: "Bullet",
-      date: "2023-10-02T04:30:00.000Z",
-      duration: "60 Minutes",
-      image:
-        "https://ipfs.io/ipfs/QmQ5TWTtXoKeupMucMUuss8pCbt3ZyyfV3frCKPjzzJXQf/3597.png",
-      startTime: "2023-10-02T04:30:00.000Z",
-      endTime: "2023-10-02T05:30:00.000Z",
-    },
-  ]);
-  // useEffect(() => {
-  //   const initialEvents = tournament.tournaments;
-  //   const events = initialEvents.map((event) => {
-  //     const eventStartTime = new Date(event.date);
-  //     const durationInMinutes = parseInt(event.duration.split(" ")[0]);
-  //     const eventEndTime = new Date(
-  //       eventStartTime.getTime() + durationInMinutes * 60 * 1000,
-  //     );
-  //     return { ...event, startTime: eventStartTime, endTime: eventEndTime };
-  //   });
-  //   console.log(events);
-  //   setEvents(events);
+  const [events, setEvents] = useState([]);
 
-  //   console.log(tournament.tournaments);
-  // }, [tournament.tournaments]);
+  useEffect(() => {
+    const initialEvents = tournament.tournaments;
+    const events = initialEvents.map((event) => {
+      const eventStartTime = new Date(event.date);
+      const durationInMinutes = parseInt(event.duration.split(" ")[0]);
+      const eventEndTime = new Date(
+        eventStartTime.getTime() + durationInMinutes * 60 * 1000,
+      );
+      return { ...event, startTime: eventStartTime, endTime: eventEndTime };
+    });
+    console.log(events);
+    setEvents(events);
+
+    console.log(tournament.tournaments);
+  }, [tournament.tournaments]);
 
   const handleDateChange = (direction) => {
     const newDate = new Date(currentDate);
@@ -115,7 +83,8 @@ const EventCalendar = () => {
       >
         <div className="flex items-center gap-3">
           <div
-            className="relative cursor-pointer rounded pr-4 md:block"
+            className="relative cursor-pointer rounded pr-4 md:block
+            "
             style={{
               backgroundImage: `url(${event.image})`,
               backgroundSize: "cover",
@@ -239,7 +208,13 @@ const EventCalendar = () => {
                 {eventsToRender.length > 0 && (
                   <div className="flex flex-col ">
                     {eventsToRender.map((event) => (
-                      <>{renderEvent(event)}</>
+                      <div
+                        onClick={() => {
+                          router.push(`/tournaments/${event.id}`);
+                        }}
+                      >
+                        {renderEvent(event)}
+                      </div>
                     ))}
                   </div>
                 )}

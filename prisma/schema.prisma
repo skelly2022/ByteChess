@@ -39,23 +39,38 @@ model Puzzle {
 }
 
 model CustomGame {
-    id             String @id @default(auto()) @map("_id") @db.ObjectId
+    id             String   @id @default(auto()) @map("_id") @db.ObjectId
     Rating         Int
     Color          String
     Time           String
     Mode           String
     walletAddress  String
-    walletAddress2 String @default("")
-    FEN            String @default("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    walletAddress2 String   @default("")
+    FEN            String   @default("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    createdAt      DateTime @default(now())
 }
 
 model Tournament {
-    id       String   @id @default(auto()) @map("_id") @db.ObjectId
+    id       String             @id @default(auto()) @map("_id") @db.ObjectId
     name     String
     type     String
     date     DateTime
     duration String
     image    String
+    players  TournamentPlayer[] // Define a relation to the User model
+}
+
+model TournamentPlayer {
+    id            String      @id @default(auto()) @map("_id") @db.ObjectId
+    name          String
+    walletAddress String
+    score         Int         @default(0)
+    bulletRating  Int         @default(1200) // Default bullet rating
+    blitzRating   Int         @default(1200) // Default blitz rating
+    rapidRating   Int         @default(1200) // Default rapid rating
+    Tournament    Tournament? @relation(fields: [tournamentId], references: [id])
+    tournamentId  String?     @db.ObjectId
+    result        Int         @default(0)
 }
 
 model Profile {

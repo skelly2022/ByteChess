@@ -1,9 +1,8 @@
 //@ts-nocheck
-import { PrismaClient } from "@prisma/client";
+
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { api } from "~/utils/api";
-import { useSession } from "next-auth/react";
+import useTournamentModal from "~/hooks/useTournamentModal";
+
 import useUserModal from "~/hooks/useUserStore";
 import axios from "axios"; // Import the axios library
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
@@ -15,6 +14,8 @@ import useLossModal from "~/hooks/InGameModals/useLossModal";
 const ModalLoss = () => {
   const LossModal = useLossModal();
   const user = useUserModal();
+  const tournamentStore = useTournamentModal();
+  const router = useRouter();
 
   const bodyContent = (
     <div className="flex flex-col items-center justify-center gap-8 rounded-lg p-4 text-white shadow-lg">
@@ -31,6 +32,17 @@ const ModalLoss = () => {
           Mint your Game
         </button>
         <button className="bg-yellow px-6 py-3 text-green">Tweet It</button>
+        {tournamentStore.tournamentID !== "" && (
+          <button
+            className="bg-yellow px-6 py-3 text-green"
+            onClick={() => {
+              router.push(`/tournaments/${tournamentStore.tournamentID}`);
+              LossModal.onClose();
+            }}
+          >
+            Return to Tournament{" "}
+          </button>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import useTournamentModal from "~/hooks/useTournamentModal";
 
 interface ModalProps {
   isOpen?: boolean;
@@ -27,6 +28,7 @@ const ModalGame: React.FC<ModalProps> = ({
   secondaryAction,
   secondaryActionLabel,
 }) => {
+  const tournament = useTournamentModal();
   const [showModal, setShowModal] = useState(isOpen);
   useEffect(() => {
     setShowModal(isOpen);
@@ -70,14 +72,15 @@ const ModalGame: React.FC<ModalProps> = ({
           >
             <div className="translate relative flex h-full w-full flex-col rounded-lg  border-4 border-yellow bg-green text-white shadow-lg outline-none focus:outline-none md:h-auto lg:h-auto">
               {/* Header */}
-
-              <div className="flex items-center justify-center rounded-t  p-3">
+              {tournament.tournamentID === "" && (
                 <button
                   className="absolute left-9 border-0 p-1 transition hover:opacity-70"
                   onClick={handleClose}
                 >
                   <IoMdClose size={18} />
                 </button>
+              )}
+              <div className="flex items-center justify-center rounded-t  p-3">
                 <div className="text-lg font-semibold text-yellow">{title}</div>
               </div>
               {/* Body */}

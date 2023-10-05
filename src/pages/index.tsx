@@ -11,16 +11,17 @@ import useUserModal from "~/hooks/useUserStore";
 import { useSession } from "next-auth/react";
 import UserProfile from "~/modals/UserProfile";
 import socket from "~/helpers/socket";
+import useLoginModal from "~/hooks/useLoginModal";
 
 export default function Home() {
   const user = useUserModal();
   const session = useSession();
   const play = usePlayModal();
+  const loginModal = useLoginModal();
   const getUser = api.example.getUser.useMutation({
     onSuccess(data) {
       console.log(data);
       user.setUser(data);
-      socket.emit("userConnected", data.id);
     },
   });
 
@@ -28,8 +29,9 @@ export default function Home() {
     console.log(session);
     if (session.status === "authenticated") {
       getUser.mutateAsync({ address: session.data.user.name });
+      socket.emit("userConnected", session.data.user.name);
     } else {
-      // loginModal.onOpen();
+      loginModal.onOpen();
     }
   }, [session]);
   useEffect(() => {
@@ -46,15 +48,13 @@ export default function Home() {
       </ClientOnly>
       <main
         className="no-scrollbar  flex min-h-screen flex-col 
-        items-center justify-center  overflow-auto bg-green"
-        style={
-          {
-            // backgroundImage: `url(/images/2.jpg)`,
-            // backgroundSize: "cover",
-            // backgroundRepeat: "no-repeat",
-            // backgroundPosition: "center center",
-          }
-        }
+         overflow-auto bg-green pt-20"
+        // style={{
+        //   backgroundImage: `url(/images/white.jpg)`,
+        //   backgroundSize: "cover",
+        //   backgroundRepeat: "no-repeat",
+        //   backgroundPosition: "center center",
+        // }}
       >
         <LandingPage />
       </main>

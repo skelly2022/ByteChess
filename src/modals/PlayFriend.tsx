@@ -14,6 +14,7 @@ import Assets from "../helpers/assets";
 import "react-dropdown/style.css";
 import Loading from "src/components/Loading";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const { whiteStyle, blackStyle, half } = Assets;
 
@@ -29,7 +30,7 @@ const LoginModal = () => {
   const [selectedOption, setSelectedOption] = useState(options[0]); // Initialize selected option
   const [selectedMode, setSelectedMode] = useState("rated"); // Initialize selected option
   const { select, wallets, publicKey, disconnect } = useWallet();
-
+  const session = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const newGame = api.games.newGame.useMutation({
     async onSuccess(data) {
@@ -76,7 +77,7 @@ const LoginModal = () => {
       newGame.mutateAsync(data);
     } else {
       const data = {
-        address: publicKey.toBase58(),
+        address: session.data.user.name,
         mode: selectedMode,
         time: count.toString() + " + " + incrementCount.toString(),
         color: getRandomColor(color),

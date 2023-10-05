@@ -17,12 +17,12 @@ const PlayVsPlay = () => {
   const { data } = api.games.getAllGames.useQuery();
   const router = useRouter();
   return (
-    <div className="flex h-5/6 w-full items-center justify-center lg:w-1/2">
+    <div className="flex h-[90%] w-[90%] items-center justify-center rounded-lg bg-green p-3 lg:w-1/2">
       <Tabs.Root
-        className="text-green items-cente flex h-full w-full flex-col justify-center"
+        className=" flex h-full w-full flex-col justify-center text-green"
         defaultValue="tab1"
       >
-        <Tabs.List className="text-yellow flex border-b">
+        <Tabs.List className="flex border-b text-yellow">
           <Tabs.Trigger
             className=" flex h-[45px] flex-1 
             cursor-default select-none items-center justify-center px-5 text-[15px] leading-none
@@ -43,25 +43,25 @@ const PlayVsPlay = () => {
           </Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content className=" h-full grow outline-none " value="tab1">
-          <div className="grid h-[90%] w-full grid-cols-2 gap-2  p-3">
+          <div className="grid h-auto w-full grid-cols-2 gap-2  p-3">
             {dataOptions.map((item) => (
               <div
                 key={item.dataId}
                 data-id={item.dataId}
-                className=" bg-yellow hover:bg-green hover:text-yellow flex flex-col
-                  items-center justify-center rounded-sm"
+                className=" flex h-[115px] flex-col items-center justify-center
+                  rounded-sm bg-yellow hover:bg-green hover:text-yellow"
               >
                 <div className="clock">{item.clock}</div>
                 <div className="perf">{item.perf}</div>
               </div>
             ))}
           </div>
-          <div className="flex h-[10%] w-full grow flex-row justify-center gap-2 ">
-            <button className="bg-yellow text-green h-10  w-48 rounded px-2 py-1 font-bold">
+          <div className="flex h-auto w-full grow flex-row justify-center gap-2 ">
+            <button className="h-10 w-48 rounded  bg-yellow px-2 py-1 font-bold text-green">
               Play with a friend
             </button>
             <button
-              className="bg-yellow text-green h-10  w-48 rounded px-2 py-1 font-bold "
+              className="h-10 w-48 rounded  bg-yellow px-2 py-1 font-bold text-green "
               onClick={() => {
                 play.onOpen();
               }}

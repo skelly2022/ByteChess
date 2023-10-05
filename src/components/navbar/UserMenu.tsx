@@ -9,6 +9,11 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "react-hot-toast";
 import useUserStore from "src/hooks/useUserStore";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { AiFillTrophy } from "react-icons/ai";
+import { IoExtensionPuzzleSharp } from "react-icons/io5";
+import { CgProfile } from "react-icons/cg";
+import { MdLeaderboard } from "react-icons/md";
+
 import { signOut, useSession } from "next-auth/react";
 import useProfileModal from "~/hooks/useProfileModal";
 
@@ -91,53 +96,59 @@ const UserMenu: React.FC<UserMenuProps> = () => {
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
         <div className="hidden items-center gap-3 md:flex">
-          <div
-            onClick={() => {
-              tournaments();
-            }}
-            className=" cursor-pointer rounded-lg border border-yellow  px-4 py-2 text-sm font-semibold text-yellow
-              transition md:block "
-          >
-            Tournaments
-          </div>
-          <div
-            onClick={() => {
-              puzzles();
-            }}
-            className=" cursor-pointer rounded-lg border border-yellow  px-4 py-2 text-sm font-semibold text-yellow
-              transition md:block "
-          >
-            Puzzles
-          </div>
           {session ? (
             <div
               onClick={() => {
                 OpenProfile();
               }}
-              className=" cursor-pointer rounded-lg border border-yellow  px-4 py-2 text-sm font-semibold text-yellow
-              transition md:block "
+              className=" cursor-pointer  items-center justify-center  border-2 border-yellow bg-green px-4 py-2 text-sm font-semibold text-yellow
+              transition hover:rounded hover:border-black hover:text-black md:flex "
             >
               Profile
+              <CgProfile className="m-1" />
             </div>
           ) : (
             <></>
           )}
           <div
             onClick={() => {
+              tournaments();
+            }}
+            className=" cursor-pointer  items-center justify-center  border-2 border-yellow bg-green px-4 py-2 text-sm font-semibold  text-yellow
+              transition hover:rounded hover:border-black hover:text-black md:flex "
+          >
+            Tournaments <AiFillTrophy className="m-1" />
+          </div>
+          <div
+            onClick={() => {
+              puzzles();
+            }}
+            className=" cursor-pointer  items-center justify-center  border-2 border-yellow bg-green px-4 py-2 text-sm font-semibold text-yellow
+              transition hover:rounded hover:border-black hover:text-black md:flex "
+          >
+            Puzzles
+            <IoExtensionPuzzleSharp className="m-1" />
+          </div>
+
+          <div
+            onClick={() => {
               router.push("/leaderboard");
             }}
-            className=" cursor-pointer rounded-lg border  border-yellow px-4 
-            py-2 text-sm font-semibold text-yellow 
-             transition   md:block "
+            className=" cursor-pointer  items-center  justify-center border-2 
+            border-yellow bg-green px-4 py-2 text-sm font-semibold text-yellow 
+             transition   hover:rounded hover:border-black hover:text-black md:flex "
           >
-            Leaderboard
+            Leaderboard <MdLeaderboard className="m-1" />
           </div>
           {session ? (
             <div
-              className="cursor-pointer rounded-lg border 
-              border-yellow px-4 py-2 
-              text-sm font-semibold text-yellow transition   md:block "
+              className="cursor-pointer  items-center 
+              justify-center border-2 border-yellow 
+              bg-green px-4 py-2 text-sm font-semibold text-black transition hover:rounded  hover:border-yellow hover:text-black md:flex "
               onClick={toggleOpen}
+              style={{
+                boxShadow: "-5px 5px black",
+              }}
             >
               {extractFirstAndLast5Characters(session.user.name)}
             </div>
@@ -146,9 +157,12 @@ const UserMenu: React.FC<UserMenuProps> = () => {
               onClick={() => {
                 connectWallet();
               }}
-              className=" cursor-pointer rounded-lg border 
-              border-yellow px-4 py-2 
-              text-sm font-semibold text-yellow transition   md:block "
+              style={{
+                boxShadow: "-5px 5px yellow",
+              }}
+              className=" m-1 cursor-pointer  items-center 
+              justify-center border-2 border-yellow 
+              px-4 py-2 text-sm font-semibold text-black transition hover:rounded   hover:border-yellow hover:text-black md:flex "
             >
               Connect Wallet
             </div>
@@ -182,7 +196,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
               {/* <MenuItem onClick={login} label="Login" /> */}
               {session ? (
                 <div
-                  className="cursor-pointer  bg-nav px-4 py-3 font-semibold transition hover:bg-neutral-300"
+                  className="cursor-pointer  bg-nav px-4 py-3 font-semibold transition hover:rounded hover:border-black hover:bg-neutral-300 hover:text-black"
                   onClick={() => {
                     disconnect(), disconnectWallet();
                     toggleHam();

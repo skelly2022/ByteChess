@@ -19,6 +19,7 @@ import { api } from "~/utils/api";
 import useUserStore from "~/hooks/useUserStore";
 import useWinModal from "~/hooks/InGameModals/useWinModal";
 import useLossModal from "~/hooks/InGameModals/useLossModal";
+import useTournamentModal from "~/hooks/useTournamentModal";
 interface LiveGameProps {
   boardOrientation: any;
   connected: boolean;
@@ -36,6 +37,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   const user = useUserStore();
   const WinModal = useWinModal();
   const LossModal = useLossModal();
+  const tournament = useTournamentModal();
   const chessboardRef = useRef();
   const { playID } = router.query;
   const [playMoveSound, setPlayMoveSound] = useState(false);
@@ -59,12 +61,18 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       console.log(result);
     },
   });
+  const updateTournamentGame = api.games.updateGameFen.useMutation({
+    async onSuccess(result) {},
+    async onError(result) {},
+  });
   const updateWin = api.games.updateGameWin.useMutation({
     async onSuccess(result) {
       user.setUser(result.rating);
       play.setOpponent(result.loserRating);
       WinModal.onOpen();
-
+      if (tournament.tournamentID !== "") {
+        updateTournamentGame.mutateAsync({ id: tournament.myID });
+      }
       socket.emit("checkmate", {
         roomId: playID,
         loser: result.loserRating,

@@ -5,14 +5,14 @@ import Assets from "~/helpers/assets";
 const { extractFirstAndLast5Characters } = Assets;
 import { useMediaQuery } from "react-responsive";
 
-interface ChatComponentProps {
+interface ChatProps {
   chatMessages: { text: string; sender: string }[];
   newMessage: string;
   onNewMessageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSendChatMessage: (icon?: string) => void;
 }
 
-const ChatComponent: React.FC<ChatComponentProps> = ({
+const Chat: React.FC<ChatProps> = ({
   chatMessages,
   newMessage,
   onNewMessageChange,
@@ -45,19 +45,19 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
 
   return (
     <div
-      className={`flex w-1/2 flex-col pt-2 lg:w-full ${
-        isLargeScreen
-          ? "h-[90%]"
-          : "fixed bottom-60 right-[15%] h-[50%] w-[65%] bg-white"
-      } z-50  rounded-lg`}
+      className={`flex h-full w-full flex-col`}
       ref={chatContainerRef} // Set the reference to the chat component
       id="chat-container"
     >
-      <div className="no-scrollbar h-60 flex-grow space-y-2 overflow-auto  px-3 py-2">
+      <div className="no-scrollbar flex h-[90%] flex-wrap space-y-2 overflow-auto  px-3 py-2">
         {chatMessages.map((message, index) => (
           <div
             key={index}
-            className={`flex w-full gap-2 rounded-md ${
+            className={`overflow flex w-full gap-1 break-words ${
+              message.text === "monkey" || message.text === "kekw"
+                ? "items-start"
+                : "items-center "
+            } ${
               message.sender ===
               //@ts-ignore
               `${extractFirstAndLast5Characters(user.user.walletAddress)}`
@@ -65,26 +65,21 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
                 : ""
             }`}
           >
+            <strong className=" self-start">{message.sender}:</strong>
             {message.text === "monkey" || message.text === "kekw" ? (
-              <>
-                <strong>{message.sender}: </strong>
-                <Image
-                  // onClick={() => router.push("/")}
-                  alt="Logo"
-                  className="cursor-pointer md:block"
-                  height={30}
-                  width={30}
-                  src={`/images/${message.text}.jpeg`}
-                />
-              </>
+              <Image
+                alt="Logo"
+                className="cursor-pointer md:block"
+                height={30}
+                width={30}
+                src={`/images/${message.text}.jpeg`}
+              />
             ) : (
-              <>
-                <strong>{message.sender}: </strong>
-                {message.text}
-              </>
+              <span className="self-start">{message.text}</span>
             )}
           </div>
         ))}
+
         {/* Create a placeholder div to scroll to */}
         <div ref={messagesContainerRef}></div>
       </div>
@@ -119,11 +114,11 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
           value={newMessage}
           onChange={onNewMessageChange}
           onKeyPress={handleKeyPress}
-          className="w-full rounded-lg bg-yellow  px-3 py-2 "
+          className="w-full rounded-lg bg-slate-200 px-3  py-2 outline-none "
         />
       </div>
     </div>
   );
 };
 
-export default ChatComponent;
+export default Chat;

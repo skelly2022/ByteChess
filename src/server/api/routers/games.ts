@@ -51,6 +51,27 @@ export const gamesRouter = createTRPCRouter({
       }
       return game;
     }),
+  getGameTournament: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const game = await prisma.customGame.findFirst({
+        where: {
+          walletAddress: input.id,
+        },
+        orderBy: {
+          createdAt: "desc", // Assuming you have a 'createdAt' field. Change this to your timestamp field's name if different.
+        },
+      });
+
+      if (!game) {
+        throw new Error("game not found");
+      }
+      return game;
+    }),
 
   updatePlayerJoin: publicProcedure
     .input(
@@ -201,4 +222,5 @@ export const gamesRouter = createTRPCRouter({
     const games = await prisma.customGame.findMany({});
     return games;
   }),
+  createNFT: publicProcedure.mutation(async () => {}),
 });

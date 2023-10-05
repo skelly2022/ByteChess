@@ -119,7 +119,7 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
         <div className="w-full rounded-b-lg  pt-2 font-bold md:hidden">
           <RatingContainer type="me" />
         </div>
-        <div className="relative mt-3 flex w-full justify-evenly bg-yellow shadow-xl md:bg-green">
+        <div className="relative mt-1 flex w-full justify-evenly  shadow-xl md:bg-green">
           <div className=" w-full rounded-lg py-2 font-bold md:hidden">
             <ActionContainer />
             <div className="absolute bottom-[10%] right-0 z-50 cursor-pointer md:bottom-5 lg:right-20 xl:hidden">
@@ -150,7 +150,7 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
       </div>
       <div
         className="absolute bottom-[10%] right-0 z-50 hidden cursor-pointer md:bottom-5 
-      md:block lg:right-20 xl:hidden"
+      md:right-16 md:block xl:hidden"
       >
         {" "}
         <BsFillChatDotsFill

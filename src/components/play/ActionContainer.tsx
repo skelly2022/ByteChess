@@ -175,7 +175,7 @@ const ActionContainer = () => {
           {icons.map((item, index) => (
             <div
               key={index}
-              className={`${
+              className={`bg-error ${
                 activeIcon !== null && activeIcon !== index
                   ? "hidden"
                   : "flex w-auto items-center justify-center  px-2   text-center text-black shadow transition-transform active:scale-y-75"
@@ -184,7 +184,7 @@ const ActionContainer = () => {
                   ? showClose || showHalf || showFlag
                     ? "m-2 h-full w-full bg-green"
                     : "rounded-sm bg-error  "
-                  : "rounded-sm border-2 border-yellow"
+                  : "rounded-sm "
               }`}
             >
               <ul className=" ">

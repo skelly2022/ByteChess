@@ -7,9 +7,9 @@ import BlockChain from "./BlockChain";
 
 const LandingPage = () => {
   return (
-    <div className=" flex h-screen pt-28 text-white ">
-      <div className=" flex h-[calc(100vh-157px)] w-screen flex-row justify-evenly ">
-        <div className="flex h-full w-full flex-col">
+    <div className=" flex h-[calc(100vh-96px)] w-full text-white ">
+      <div className=" flex h-full w-full flex-row justify-evenly ">
+        <div className="flex h-full w-full flex-col gap-5">
           <div className="flex h-[40%] w-full flex-col">
             <div className=" relative flex h-auto w-full items-center justify-center">
               <div
@@ -28,12 +28,12 @@ const LandingPage = () => {
                   fontWeight: 800,
                   wordWrap: "break-word",
                 }}
-                className="text-yellow absolute  top-0 text-[130px] md:text-[150px]"
+                className="absolute top-0  text-[130px] text-yellow md:text-[150px]"
               >
                 CHESS
               </div>
             </div>
-            <div className="flex h-auto w-full items-center justify-center">
+            <div className="z-10 flex h-auto w-full items-center justify-center">
               <div className="h-16 w-16 ">
                 <div
                   style={{
@@ -57,7 +57,7 @@ const LandingPage = () => {
                 </div>
               </div>
               <div className="h-[2px] w-16 bg-black"></div>
-              <div className=" text-yellow flex h-16 w-auto items-center justify-center rounded-2xl bg-black px-2">
+              <div className=" flex h-16 w-auto items-center justify-center rounded-2xl bg-black px-2 text-yellow">
                 {" "}
                 <h1
                   style={{
@@ -72,7 +72,7 @@ const LandingPage = () => {
               </div>
             </div>
           </div>
-          <div className="flex h-[60%] w-full items-center justify-center">
+          <div className="flex h-[60%] w-full items-center justify-center md:pt-4">
             <PlayVsPlay />
           </div>
         </div>

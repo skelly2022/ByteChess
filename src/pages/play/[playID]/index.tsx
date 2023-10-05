@@ -18,6 +18,7 @@ import LoginModal from "~/modals/LoginModal";
 import ModalWin from "~/modals/InGameModals/ModalWin";
 import ModalDraw from "~/modals/InGameModals/ModalDraw";
 import ModalLoss from "~/modals/InGameModals/ModalLoss";
+import useWinModal from "~/hooks/InGameModals/useWinModal";
 
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 
@@ -26,6 +27,7 @@ const Home = () => {
   const user = useUserStore();
   const [loading, setLoading] = useState(true);
   const session = useSession();
+  const win = useWinModal();
 
   const play = usePlayModal();
   const [boardOrientation, setBoardOrientation] = useState("black");

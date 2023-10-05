@@ -26,5 +26,69 @@ function extractFirstAndLast5Characters(inputString) {
 
   return `${first5}..${last5}`;
 }
+function formatTimeDifference(startDate) {
+  // Get the current time in milliseconds since the epoch
+  const currentTime = new Date().getTime();
 
-export default { whiteStyle, blackStyle, extractFirstAndLast5Characters, half };
+  // Calculate the time difference in milliseconds
+  const timeDifference = startDate - currentTime;
+
+  // Check if the countdown has reached zero or negative
+  if (timeDifference <= 0) {
+    return "00:00:00"; // Return zero when the countdown is over
+  }
+
+  // Convert the time difference to seconds
+  const timeDifferenceInSeconds = Math.floor(timeDifference / 1000);
+
+  // Calculate hours, minutes, and seconds
+  const hours = Math.floor(timeDifferenceInSeconds / 3600);
+  const minutes = Math.floor((timeDifferenceInSeconds % 3600) / 60);
+  const seconds = timeDifferenceInSeconds % 60;
+
+  // Format the time difference as "hh:mm:ss"
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+    2,
+    "0",
+  )}:${String(seconds).padStart(2, "0")}`;
+}
+function getRandomColor(preferredColor: string) {
+  if (preferredColor === "white") {
+    return "white";
+  } else if (preferredColor === "black") {
+    return "black";
+  } else if (preferredColor === "wb" || !preferredColor) {
+    // Generate a random number between 0 and 1
+    const randomValue = Math.random();
+
+    // Use the random number to determine the color
+    if (randomValue < 0.5) {
+      return "white";
+    } else {
+      return "black";
+    }
+  } else {
+    throw new Error("Invalid color option");
+  }
+}
+function getTimeControlFromString(input) {
+  switch (input.toLowerCase()) {
+    case "bullet":
+      return "1 + 0";
+    case "blitz":
+      return "3 + 2";
+    case "rapid":
+      return "15 + 10";
+    default:
+      return "Unknown time control";
+  }
+}
+export default {
+  whiteStyle,
+  blackStyle,
+  getRandomColor,
+  getTimeControlFromString,
+  extractFirstAndLast5Characters,
+  formatTimeDifference,
+  half,
+};

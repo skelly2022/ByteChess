@@ -11,7 +11,7 @@ interface WinModalStore {
 const useWinModal = create<WinModalStore>((set) => ({
   pk: "",
   setPk: (pk: string) => set({ pk: pk }),
-  isOpen: false,
+  isOpen: true,
   onOpen: () => set({ isOpen: true }),
   onClose: () => {
     set({ isOpen: false });

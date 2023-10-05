@@ -1,6 +1,12 @@
 import { create } from "zustand";
 
 interface tournamentModalStore {
+  myID: any;
+  setMyID: (id: any) => void;
+  tournamentID: any;
+  setTournamentID: (id: any) => void;
+  tournamentStatus: any;
+  setTournamentStatus: (status: any) => void;
   image: any;
   setTournamentImage: (image: any) => void;
   tournaments: any;
@@ -23,6 +29,18 @@ interface tournamentModalStore {
 }
 
 const useTournamentModal = create<tournamentModalStore>((set) => ({
+  myID: "",
+  setMyID: (id: any) => {
+    set({ myID: id });
+  },
+  tournamentID: "",
+  tournamentStatus: "",
+  setTournamentID: (id: any) => {
+    set({ tournamentID: id });
+  },
+  setTournamentStatus: (status: any) => {
+    set({ tournamentStatus: status });
+  },
   image: "",
   setTournamentImage: (image: any) => {
     set({ image: image });
