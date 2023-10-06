@@ -9,7 +9,7 @@ interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
   return (
-    <div className=" z-10 h-28 w-full bg-green ">
+    <div className="z-10 h-28 w-full overflow-visible bg-green">
       <div className="py-4 ">
         <Container>
           <div className="flex flex-row items-center justify-between gap-3 md:gap-0">

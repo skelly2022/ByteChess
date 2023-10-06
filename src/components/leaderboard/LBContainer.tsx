@@ -10,55 +10,7 @@ import { Session } from "inspector";
 const LBContainer = () => {
   //   const { data } = api.leaderboard.getBullet.useQuery();
   //   console.log(data);
-  const user = useUserModal();
-  function shortenString(str) {
-    if (str.length <= 10) {
-      // If the string is 10 characters or shorter, return it as is.
-      return str;
-    } else {
-      // If the string is longer than 10 characters, extract the first 5, add '...', and append the last 5 characters.
-      const firstFive = str.slice(0, 5);
-      const lastFive = str.slice(-5);
-      return `${firstFive}...${lastFive}`;
-    }
-  }
-  const [dataBullet, setDataBullet] = useState(undefined);
 
-  const [dataPuzzle, setData] = useState(undefined);
-  const [loading, setLoading] = useState(true);
-  const [dataBlitz, setDataBlitz] = useState(undefined);
-  const [dataRapid, setDataRapid] = useState(undefined);
-  const dataRapidRank = api.leaderboard.getRapid.useMutation({
-    onSuccess(dataRapidRank) {
-      setDataRapid(dataRapidRank);
-      setLoading(false);
-    },
-  });
-  const dataBlitzRank = api.leaderboard.getBlitz.useMutation({
-    onSuccess(dataBlitzRank) {
-      console.log(dataBlitzRank);
-      setDataBlitz(dataBlitzRank);
-      setLoading(false);
-    },
-  });
-  const data = api.leaderboard.getPuzzle.useMutation({
-    onSuccess(data) {
-      setData(data);
-      setLoading(false);
-    },
-  });
-  const dataBulletRank = api.leaderboard.getBullet.useMutation({
-    onSuccess(dataBulletRank) {
-      setDataBullet(dataBulletRank);
-      setLoading(false);
-    },
-  });
-  useEffect(() => {
-    data.mutateAsync();
-    dataBulletRank.mutateAsync();
-    dataBlitzRank.mutateAsync();
-    dataRapidRank.mutateAsync();
-  }, []);
   const [page, setPage] = useState("Bullet");
   return (
     <div className=" flex h-[calc(100vh-112px)] w-full flex-col gap-4  ">

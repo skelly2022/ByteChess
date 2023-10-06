@@ -66,29 +66,30 @@ const Puzzle = () => {
                 </td>
               </tr>
             ))}
-            <tr
-              className="flex h-16 w-full cursor-pointer border border-yellow bg-black p-2 text-green
-                     "
-              key="ss"
-            >
-              <td className="flex items-center justify-center p-2 text-lg  font-black">
-                #3
-              </td>
-              <td className="flex items-center justify-center p-2 text-lg font-black">
-                <img
-                  className="w-[45px] rounded-full"
-                  src="https://ipfs.io/ipfs/QmQ5TWTtXoKeupMucMUuss8pCbt3ZyyfV3frCKPjzzJXQf/3597.png"
-                  alt="{player.user}"
-                ></img>
-              </td>
-              <td className="grid items-center justify-items-center  ">
-                grkas.aYkas
-                <span className="font-black text-yellow">6969</span>
-              </td>
-            </tr>
           </>
         )}
       </tbody>
+      <tfoot>
+        <tr
+          className="flex h-16 w-full cursor-pointer border border-yellow bg-black p-2 text-green"
+          key="ss"
+        >
+          <td className="flex items-center justify-center p-2 text-lg font-black">
+            #3
+          </td>
+          <td className="flex items-center justify-center p-2 text-lg font-black">
+            <img
+              className="w-[45px] rounded-full"
+              src="https://ipfs.io/ipfs/QmQ5TWTtXoKeupMucMUuss8pCbt3ZyyfV3frCKPjzzJXQf/3597.png"
+              alt="{player.user}"
+            ></img>
+          </td>
+          <td className="grid items-center justify-items-center">
+            grkas.aYkas
+            <span className="font-black text-yellow">6969</span>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   );
 };

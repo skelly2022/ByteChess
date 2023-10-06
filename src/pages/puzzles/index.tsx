@@ -10,6 +10,7 @@ import useLoginModal from "~/hooks/useLoginModal";
 import usePuzzleStore from "~/hooks/usePuzzleStore";
 import useUserModal from "~/hooks/useUserStore";
 import LoginModal from "~/modals/LoginModal";
+import UserProfile from "~/modals/UserProfile";
 import { api } from "~/utils/api";
 
 type Page = {
@@ -48,6 +49,7 @@ const Home: React.FC<Page> = ({ Page }) => {
         <ToasterProvider />
         <Navbar />
         <LoginModal />
+        <UserProfile />
       </ClientOnly>
       <main className="no-scrollbar flex min-h-[calc(100vh-112px)] flex-col items-center overflow-auto bg-green ">
         {loading ? <Loading /> : <PuzzlesMain />}

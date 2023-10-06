@@ -173,8 +173,8 @@ const UserMenu: React.FC<UserMenuProps> = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl bg-nav text-sm shadow-md md:w-3/4">
-          <div className="flex cursor-pointer flex-col text-black">
+        <div className="absolute right-0 top-12 w-auto  rounded-xl bg-yellow text-sm shadow-md ">
+          <div className="flex w-full cursor-pointer flex-col text-black">
             <>
               {/* <MenuItem onClick={login} label="Login" /> */}
               <MenuItem
@@ -190,13 +190,13 @@ const UserMenu: React.FC<UserMenuProps> = () => {
         </div>
       )}
       {hamOpen && (
-        <div className=" absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl bg-white text-sm shadow-md md:hidden md:w-3/4">
+        <div className=" z-14 absolute right-0 top-12 w-[40vw]  rounded-xl bg-white text-sm shadow-md md:hidden md:w-3/4">
           <div className="flex cursor-pointer flex-col text-center text-black">
             <>
               {/* <MenuItem onClick={login} label="Login" /> */}
               {session ? (
                 <div
-                  className="cursor-pointer  bg-nav px-4 py-3 font-semibold transition hover:rounded hover:border-black hover:bg-neutral-300 hover:text-black"
+                  className="cursor-pointer  px-4 py-3 font-semibold transition hover:rounded hover:border-black hover:bg-neutral-300 hover:text-black"
                   onClick={() => {
                     disconnect(), disconnectWallet();
                     toggleHam();

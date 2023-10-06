@@ -19,6 +19,7 @@ import ModalWin from "~/modals/InGameModals/ModalWin";
 import ModalDraw from "~/modals/InGameModals/ModalDraw";
 import ModalLoss from "~/modals/InGameModals/ModalLoss";
 import useWinModal from "~/hooks/InGameModals/useWinModal";
+import UserProfile from "~/modals/UserProfile";
 
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 
@@ -211,6 +212,7 @@ const Home = () => {
         <LoginModal />
         <ModalWin />
         <ModalLoss />
+        <UserProfile />
         <ModalDraw />
       </ClientOnly>
       <main className="no-scrollbar flex min-h-[calc(100vh-112px)] flex-col items-center overflow-auto bg-green ">
