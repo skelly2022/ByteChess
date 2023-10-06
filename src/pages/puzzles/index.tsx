@@ -51,7 +51,7 @@ const Home: React.FC<Page> = ({ Page }) => {
         <LoginModal />
         <UserProfile />
       </ClientOnly>
-      <main className="no-scrollbar flex min-h-[calc(100vh-112px)] flex-col items-center overflow-auto bg-green ">
+      <main className="no-scrollbar flex h-[calc(100vh-112px)] flex-col items-center overflow-auto bg-green ">
         {loading ? <Loading /> : <PuzzlesMain />}
       </main>
     </>
