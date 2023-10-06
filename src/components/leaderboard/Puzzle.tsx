@@ -28,42 +28,68 @@ const Puzzle = () => {
   }, []);
 
   return (
-    <div className="no-scrollbar grid h-5/6 w-full overflow-auto  p-3">
-      <table className=" text-white ">
-        <thead className="  ">
-          <tr className="bg-yellow text-green my-2 flex h-10 w-full items-center py-10 text-xl font-bold ">
-            <td className="flex w-1/3 items-center justify-center">Rank</td>
-            <td className="flex w-1/3 items-center justify-center">User</td>
-            <td className="flex w-1/3 items-center justify-center">Rating</td>
-          </tr>
-        </thead>
-        <tbody className="">
-          {loading ? (
-            <Loading />
-          ) : (
-            <>
-              {dataPuzzle.map((player, index) => (
-                <tr
-                  className="border-yellow flex h-16 w-full cursor-pointer border  text-black
-        "
-                  key={player.walletAddress}
-                >
-                  <td className="flex w-1/3 items-center justify-center">
-                    #{index + 1}
-                  </td>
-                  <td className="flex w-1/3 items-center justify-center">
-                    {shortenString(player.walletAddress)}
-                  </td>
-                  <td className="flex w-1/3 items-center justify-center">
+    <table className=" h-full text-white ">
+      <thead className="  ">
+        <tr className=" flex h-10 w-full items-center bg-yellow py-6 text-xl font-bold text-black  ">
+          <td className="flex w-full items-center justify-center text-2xl font-black">
+            Puzzle
+          </td>
+        </tr>
+      </thead>
+      <tbody className="no-scrollbar flex h-full flex-col overflow-scroll">
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            {dataPuzzle.map((player, index) => (
+              <tr
+                className="flex h-16 w-full cursor-pointer border border-yellow  p-2 text-black
+         "
+                key={player.walletAddress}
+              >
+                <td className="flex items-center justify-center p-2 text-lg font-black">
+                  #{index + 1}
+                </td>
+                <td className="flex items-center justify-center p-2 text-lg font-black">
+                  <img
+                    className="w-[45px] rounded-full"
+                    src={player.avatar}
+                    alt={player.user}
+                  ></img>
+                </td>
+                <td className="grid items-center justify-items-center  ">
+                  {shortenString(player.walletAddress)}
+                  <span className="font-black text-yellow">
+                    {" "}
                     {player.puzzleRating}
-                  </td>
-                </tr>
-              ))}
-            </>
-          )}
-        </tbody>
-      </table>
-    </div>
+                  </span>
+                </td>
+              </tr>
+            ))}
+            <tr
+              className="flex h-16 w-full cursor-pointer border border-yellow bg-black p-2 text-green
+                     "
+              key="ss"
+            >
+              <td className="flex items-center justify-center p-2 text-lg  font-black">
+                #3
+              </td>
+              <td className="flex items-center justify-center p-2 text-lg font-black">
+                <img
+                  className="w-[45px] rounded-full"
+                  src="https://ipfs.io/ipfs/QmQ5TWTtXoKeupMucMUuss8pCbt3ZyyfV3frCKPjzzJXQf/3597.png"
+                  alt="{player.user}"
+                ></img>
+              </td>
+              <td className="grid items-center justify-items-center  ">
+                grkas.aYkas
+                <span className="font-black text-yellow">6969</span>
+              </td>
+            </tr>
+          </>
+        )}
+      </tbody>
+    </table>
   );
 };
 

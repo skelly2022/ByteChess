@@ -172,7 +172,7 @@ const UserProfile = () => {
       <div className="flex h-full w-full flex-col items-center rounded-xl py-3 shadow-xl md:flex-row">
         <div className="flex h-full w-full flex-col items-center justify-center gap-2 md:w-2/3">
           <div className="flex h-auto w-full gap-2 md:flex-row">
-            <div className="h-full w-1/2 items-center md:w-1/3">
+            <div className="relative h-full w-1/2 items-center md:w-1/3">
               <AiTwotoneEdit
                 size={30}
                 className="absolute left-[9.75rem] z-30 transform rounded-full border border-black bg-green px-1 text-yellow transition-transform hover:scale-105 hover:bg-green active:scale-90"

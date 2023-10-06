@@ -49,15 +49,7 @@ const Home: React.FC<Page> = ({ Page }) => {
         <Navbar />
         <LoginModal />
       </ClientOnly>
-      <main
-        className="fixed min-h-screen  bg-green   "
-        // style={{
-        //   backgroundImage: `url(/images/3.jpg)`,
-        //   backgroundSize: "cover",
-        //   backgroundRepeat: "no-repeat",
-        //   backgroundPosition: "center center",
-        // }}
-      >
+      <main className="no-scrollbar flex min-h-[calc(100vh-112px)] flex-col items-center overflow-auto bg-green ">
         {loading ? <Loading /> : <PuzzlesMain />}
       </main>
     </>

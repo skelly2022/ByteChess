@@ -88,7 +88,7 @@ export default function Home() {
         <PlayFriend />
         <Navbar />
       </ClientOnly>
-      <main className="no-scrollbar bg-green flex min-h-screen flex-col items-center overflow-auto pt-28">
+      <main className="no-scrollbar flex min-h-[calc(100vh-112px)] flex-col items-center overflow-auto bg-green ">
         <LBContainer />
       </main>
     </>

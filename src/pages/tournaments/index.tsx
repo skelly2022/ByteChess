@@ -30,6 +30,9 @@ const Home: React.FC<Page> = ({ Page }) => {
       user.setUser(data);
       setLoading(false);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
 
   useEffect(() => {
@@ -53,16 +56,8 @@ const Home: React.FC<Page> = ({ Page }) => {
         <LoginModal />
         <TournamentModal />
       </ClientOnly>
-      <main
-        className="min-w-screen   bg-green  no-scrollbar overflow-aut flex min-h-screen "
-        // style={{
-        //   backgroundImage: `url(/images/1.png)`,
-        //   backgroundSize: "cover",
-        //   backgroundRepeat: "no-repeat",
-        //   backgroundPosition: "center center",
-        // }}
-      >
-        <div className="no-scrollbar h-full w-full  pt-28">
+      <main className="no-scrollbar flex min-h-[calc(100vh-112px)] flex-col items-center overflow-auto bg-green ">
+        <div className="no-scrollbar h-full w-full  ">
           {loading ? <Loading /> : <TouramentContainer />}
         </div>
       </main>

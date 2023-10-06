@@ -55,15 +55,17 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
     width: `80.33vh`,
   });
 
-  const updateGame = api.games.updateGameFen.useMutation({
+  // const updateGame = api.games.updateGameFen.useMutation({
+  //   async onSuccess(result) {},
+  //   async onError(result) {
+  //     console.log(result);
+  //   },
+  // });
+  const updateTournamentGame = api.tournament.updateTournamentWin.useMutation({
     async onSuccess(result) {},
-    async onError(result) {
-      console.log(result);
+    async onError(error) {
+      console.log(error);
     },
-  });
-  const updateTournamentGame = api.games.updateGameFen.useMutation({
-    async onSuccess(result) {},
-    async onError(result) {},
   });
   const updateWin = api.games.updateGameWin.useMutation({
     async onSuccess(result) {
@@ -160,6 +162,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         [sourceSquare]: { backgroundColor: "rgba(161, 160, 166, 0.8)" },
         [targetSquare]: { backgroundColor: "rgba(161, 160, 166, 0.8)" },
       });
+      console.log(moveMade.pgn);
       const fens = play.fens;
       const moves = play.moves;
       play.setFens([...fens, moveMade.fen]);
@@ -167,10 +170,12 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       newGame.loadPgn(moveMade.pgn);
       setGame(newGame);
       play.setMoves([...moves, moveMade.fullMove.san]);
-      updateGame.mutateAsync({ id: playID, fen: moveMade.fen });
+      // updateGame.mutateAsync({ id: playID, fen: moveMade.fen });
       setPreMoveSquares({});
       if (new Chess(moveMade.fen).isCheckmate() === true) {
         console.log("checkmate");
+        console.log(moveMade.pgn);
+        play.setCurrentFen(moveMade.fen);
         updateWin.mutateAsync({
           winnerAddress: user.user.walletAddress,
           wElo: user.user.bulletRating,
@@ -249,7 +254,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
           newGamePre.loadPgn(moveMade.pgn);
           setGame(newGamePre);
           play.setMoves([...moves, moveMade.fullMove.san]);
-          updateGame.mutateAsync({ id: playID, fen: moveMade.fen });
+          // updateGame.mutateAsync({ id: playID, fen: moveMade.fen });
           setPreMoveSquares({});
           if (new Chess(moveMade.fen).isCheckmate() === true) {
             console.log("checkmate");
@@ -311,7 +316,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       } else if (windowWidth < breakpoints.large) {
         setBoardWrapper({ width: `75.33vh` });
       } else {
-        setBoardWrapper({ width: `80.33vh` });
+        setBoardWrapper({ width: `75.33vh` });
       }
     }
   }, [windowWidth]);

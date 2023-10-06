@@ -37,6 +37,9 @@ const Home: React.FC<Page> = ({ Page }) => {
 
       setLobbyData(data);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
   console.log(data);
   console.log(tournamentID);
@@ -58,6 +61,7 @@ const Home: React.FC<Page> = ({ Page }) => {
     }
   }, [session]);
   useEffect(() => {
+    console.log(tournamentID);
     data.mutateAsync({ id: tournamentID });
   }, []);
   return (
@@ -68,16 +72,8 @@ const Home: React.FC<Page> = ({ Page }) => {
         <LoginModal />
         <TournamentModal />
       </ClientOnly>
-      <main
-        className="min-w-screen   no-scrollbar  flex min-h-screen overflow-auto bg-green "
-        // style={{
-        //   backgroundImage: `url(/images/1.png)`,
-        //   backgroundSize: "cover",
-        //   backgroundRepeat: "no-repeat",
-        //   backgroundPosition: "center center",
-        // }}
-      >
-        <div className="no-scrollbar h-screen w-full  pt-28">
+      <main className="no-scrollbar flex min-h-[calc(100vh-112px)] flex-col items-center overflow-auto bg-green ">
+        <div className="no-scrollbar h-full w-full  ">
           {loading ? (
             <Loading />
           ) : (

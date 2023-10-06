@@ -46,16 +46,7 @@ export default function Home() {
         <Navbar />
         <UserProfile />
       </ClientOnly>
-      <main
-        className="no-scrollbar  flex min-h-screen flex-col 
-         overflow-auto bg-green pt-20"
-        // style={{
-        //   backgroundImage: `url(/images/white.jpg)`,
-        //   backgroundSize: "cover",
-        //   backgroundRepeat: "no-repeat",
-        //   backgroundPosition: "center center",
-        // }}
-      >
+      <main className="no-scrollbar flex h-[calc(100vh-112px)] flex-col items-center overflow-auto bg-green ">
         <LandingPage />
       </main>
     </>

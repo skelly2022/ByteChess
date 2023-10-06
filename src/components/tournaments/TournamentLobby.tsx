@@ -10,7 +10,6 @@ interface TournamentLobbyProps {
 }
 
 const TournamentLobby: React.FC<TournamentLobbyProps> = ({ players }) => {
-  console.log(players);
   return (
     <div className="h-[60%] w-full  ">
       <div className="h-full w-full  ">

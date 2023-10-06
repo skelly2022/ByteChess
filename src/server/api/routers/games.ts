@@ -66,7 +66,7 @@ export const gamesRouter = createTRPCRouter({
           createdAt: "desc", // Assuming you have a 'createdAt' field. Change this to your timestamp field's name if different.
         },
       });
-
+      console.log(game);
       if (!game) {
         throw new Error("game not found");
       }

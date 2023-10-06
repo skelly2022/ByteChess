@@ -17,6 +17,7 @@ import Chat from "./Chat";
 import Logs from "./Logs";
 import { useRouter } from "next/router";
 import useTournamentModal from "~/hooks/useTournamentModal";
+import usePlayModal from "~/hooks/usePlayModal";
 
 const {
   formatTimeDifference,
@@ -36,6 +37,7 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
 }) => {
   const session = useSession();
   const router = useRouter();
+  const play = usePlayModal();
   const tournamentID = Array.isArray(router.query.tournamentID)
     ? router.query.tournamentID[0]
     : router.query.tournamentID;
@@ -50,11 +52,17 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
 
   const newGame = api.games.newGame.useMutation({
     async onSuccess(data) {
+      console.log(data);
+      tournamentStore.setTournamentID(tournament.id);
+
+      // socket.emit()
       router.push(`/play/${data.id}`);
     },
   });
   const getGame = api.games.getGameTournament.useMutation({
     async onSuccess(data) {
+      tournamentStore.setTournamentID(tournament.id);
+      console.log(data);
       router.push(`/play/${data.id}`);
     },
   });
@@ -78,6 +86,9 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
       console.log(data);
       setPlayers(data.players);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
   const leave = api.tournament.leaveTournament.useMutation({
     onSuccess(data, variables, context) {
@@ -92,6 +103,9 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
           session.data.user.name,
         )} has left the Lobby`,
       ]);
+    },
+    onError(error) {
+      console.log(error);
     },
   });
 
@@ -134,6 +148,7 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
     if (foundObject) {
       // Set state or perform any desired action when a match is found
       setMyId(foundObject.id);
+      tournamentStore.setTournamentID(tournament.id);
       tournamentStore.setMyID(foundObject.id);
       return true;
     }
@@ -180,6 +195,9 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
     setJoined(isJoined);
   }, [playersInGame]);
   useEffect(() => {
+    play.resetState();
+  }, []);
+  useEffect(() => {
     updateTimeDifference();
     const interval = setInterval(updateTimeDifference, 1000);
     return () => clearInterval(interval);
@@ -215,14 +233,14 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
     });
   }, []);
   useEffect(() => {
-    socket.on("matchFoundCreator", () => {
+    socket.on("matchFoundCreator", async (args) => {
+      console.log(args);
       const data = {
         address: session.data.user.name,
         mode: tournament.type,
         time: getTimeControlFromString(tournament.type),
         color: getRandomColor("wb"),
       };
-      tournamentStore.setTournamentID(tournament.id);
       newGame.mutateAsync(data);
     });
     socket.on("matchFound", (data) => {
@@ -230,11 +248,13 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
       const dataToSend = {
         id: data.opponentSocketWallet,
       };
-      tournamentStore.setTournamentID(tournament.id);
       setTimeout(() => {
         getGame.mutateAsync(dataToSend);
       }, 2000);
     });
+    return () => {
+      socket.off("matchFoundCreator");
+    };
   }, []);
   return (
     <div className="flex h-full w-full items-center justify-center gap-6 p-3">

@@ -115,16 +115,16 @@ export const tournamentRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        wallet: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
+      console.log(input);
       const find = await prisma.tournamentPlayer.findFirst({
         where: {
           id: input.id,
         },
       });
-
+      console.log(find);
       const update = await prisma.tournamentPlayer.update({
         where: {
           id: input.id,
