@@ -231,6 +231,9 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
       id: tournament.id,
       wallet: session.data.user.name,
     });
+    return () => {
+      socket.off("userConnectedTournament");
+    };
   }, []);
   useEffect(() => {
     socket.on("matchFoundCreator", async (args) => {
@@ -243,6 +246,12 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
       };
       newGame.mutateAsync(data);
     });
+    return () => {
+      socket.off("matchFoundCreator");
+    };
+  }, []);
+
+  useEffect(() => {
     socket.on("matchFound", (data) => {
       console.log(data);
       const dataToSend = {
@@ -253,7 +262,7 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
       }, 2000);
     });
     return () => {
-      socket.off("matchFoundCreator");
+      socket.off("matchFound");
     };
   }, []);
   return (
