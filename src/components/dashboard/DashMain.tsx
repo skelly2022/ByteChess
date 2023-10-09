@@ -21,8 +21,10 @@ const DashMain = () => {
     onSuccess(data) {
       console.log(data);
       if (selectedNft !== null) {
-        const copy = selectedNft;
-        selectedNft.isLiked = !selectedNft.isLiked;
+        setSelectedNft((prevNft) => ({
+          ...prevNft,
+          isLiked: !prevNft.isLiked,
+        }));
       }
       const updatedNfts = allNfts.map((nft) => {
         if (nft.image === data.img) {
@@ -57,7 +59,20 @@ const DashMain = () => {
   });
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const handlePrevious = () => {
+    const nftsList = isShowingMyNfts ? myNfts : allNfts;
+    const currentIndex = nftsList.findIndex((nft) => nft.id === selectedNft.id);
+    setSelectedNft(nftsList[1]);
+  };
 
+  const handleNext = () => {
+    console.log("hey");
+    const nftsList = isShowingMyNfts ? myNfts : allNfts;
+    const currentIndex = nftsList.findIndex((nft) => nft.id === selectedNft.id);
+    if (currentIndex < nftsList.length - 1) {
+      setSelectedNft(nftsList[0]);
+    }
+  };
   const handleItemsPerPageChange = (event) => {
     setItemsPerPage(Number(event.target.value));
     setCurrentPage(1); // Reset to first page whenever items per page change
@@ -112,61 +127,48 @@ const DashMain = () => {
     <div className="no-scrollbar relative flex h-full w-full justify-center overflow-scroll">
       <div className="m-3 flex h-full w-full flex-col  ">
         <div className="flex h-auto w-full items-center justify-center gap-3 ">
-          <button
-            className={`rounded-lg px-3 py-2 text-black ${
-              isShowingMyNfts ? "border shadow-xl" : "bg-yellow"
-            }`}
-            onClick={() => handleNftViewToggle(false)}
-          >
-            Popular Nfts
-          </button>
-          <button
-            className={`rounded-lg px-3 py-2 text-black ${
-              isShowingMyNfts ? "bg-yellow" : "border shadow-xl"
-            }`}
-            onClick={() => handleNftViewToggle(true)}
-          >
-            My Games
-          </button>
+          {/* ... your buttons ... */}
         </div>
-        <div className="flex w-full flex-col items-center space-y-4 p-4">
-          <div className="flex items-center space-x-4">
-            <label htmlFor="itemsPerPage" className="text-lg">
-              Show{" "}
-            </label>
-            <select
-              id="itemsPerPage"
-              value={itemsPerPage}
-              onChange={handleItemsPerPageChange}
-              className="rounded-md border bg-white p-2 outline-none"
-              style={{ appearance: "none" }}
-            >
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-            </select>
-          </div>
-          <div className="text-center">
-            Showing {startItem} - {endItem} out of {totalItems} results
-          </div>
-          {/* Add pagination controls here if needed */}
-        </div>
-        {/* Ternary operator to decide which set of NFTs to render */}
-        {selectedNft === null && (
-          <AllNfts
-            nfts={isShowingMyNfts ? myNfts : allNfts}
-            onNftClick={handleNftClick}
-            handleLike={handleClick}
-          />
-        )}
-        {selectedNft !== null && (
+
+        {selectedNft === null ? ( // Check if selectedNft is null
           <>
-            <DashBoard
-              selectedGame={selectedNft}
-              onHandleBack={handleBackClick}
-              handleLike={handleClickLike}
+            <div className="flex w-full flex-col items-center space-y-4 p-4">
+              <div className="flex items-center space-x-4">
+                <label htmlFor="itemsPerPage" className="text-lg">
+                  Show{" "}
+                </label>
+                <select
+                  id="itemsPerPage"
+                  value={itemsPerPage}
+                  onChange={handleItemsPerPageChange}
+                  className="rounded-md border bg-white p-2 outline-none"
+                  style={{ appearance: "none" }}
+                >
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+              <div className="text-center">
+                Showing {startItem} - {endItem} out of {totalItems} results
+              </div>
+              {/* Add pagination controls here if needed */}
+            </div>
+
+            <AllNfts
+              nfts={isShowingMyNfts ? myNfts : allNfts}
+              onNftClick={handleNftClick}
+              handleLike={handleClick}
             />
           </>
+        ) : (
+          <DashBoard
+            selectedGame={selectedNft}
+            onHandleBack={handleBackClick}
+            onPrevious={handlePrevious} // Pass the function as a prop
+            onNext={handleNext} //
+            handleLike={handleClickLike}
+          />
         )}
       </div>
     </div>

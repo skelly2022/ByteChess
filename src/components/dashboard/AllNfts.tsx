@@ -115,7 +115,7 @@ const AllNfts: React.FC<AllNftsProps> = ({ nfts, onNftClick, handleLike }) => {
                   onClick={() => {
                     handleLike(nft.image);
                   }}
-                  className="absolute left-0 flex items-center justify-center bg-yellow"
+                  className="absolute left-0 flex cursor-pointer items-center justify-center bg-yellow transition-transform hover:scale-105 active:scale-90"
                 >
                   <AiFillHeart color={nft.isLiked ? "red" : ""} />
 

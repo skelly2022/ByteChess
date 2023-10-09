@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
-import { AiFillHeart, AiOutlineArrowRight } from "react-icons/ai";
+import {
+  AiFillHeart,
+  AiOutlineArrowLeft,
+  AiOutlineArrowRight,
+} from "react-icons/ai";
 import Assets from "../../helpers/assets";
 const { whiteStyle, blackStyle, extractFirstAndLast5Characters } = Assets;
 import usePlayModal from "~/hooks/usePlayModal";
@@ -12,17 +16,23 @@ interface DashBoardProps {
   selectedGame: any;
   onHandleBack: any;
   handleLike: any;
+  onPrevious: any;
+  onNext: any;
 }
 
 const DashBoard: React.FC<DashBoardProps> = ({
   selectedGame,
   onHandleBack,
   handleLike,
+  onNext,
+  onPrevious,
 }) => {
   console.log(selectedGame);
 
-  const moveString = selectedGame.attributes[0].value;
+  const [currentSelectedGame, setCurrentSelectedGame] = useState(selectedGame);
+  const moveString = currentSelectedGame.attributes[0].value;
   const splitMoves = moveString.split(" ");
+
   const [game, setGame] = useState(new Chess());
   const [windowWidth, setWindowWidth] = useState(null);
   const [pgn, setPgn] = useState("");
@@ -152,10 +162,30 @@ const DashBoard: React.FC<DashBoardProps> = ({
     newGame.loadPgn(convertToPGN(moveString));
     setGame(newGame);
     setPgn(convertToPGN(moveString));
-  }, []);
+  }, [moveString]);
+  useEffect(() => {
+    setCurrentSelectedGame(selectedGame);
+  }, [selectedGame]);
 
   return (
-    <div className="flex h-auto  w-full grow flex-col items-center justify-center gap-3  p-3 md:flex-row">
+    <div className="mt-10 flex  h-auto w-full grow flex-col justify-center gap-3  p-3 md:flex-row">
+      <div
+        className="hidden h-[40.33vh] w-full flex-col items-center justify-center p-3 md:flex md:h-[60.33vh] md:w-auto "
+        onClick={() => {
+          onPrevious();
+        }}
+      >
+        <AiOutlineArrowLeft size={30} />
+      </div>
+
+      <div
+        className="absolute left-4 top-1/2 flex -translate-y-1/2 transform md:hidden"
+        onClick={() => {
+          onPrevious();
+        }}
+      >
+        <AiOutlineArrowLeft size={30} />
+      </div>
       <div className="flex h-auto w-auto  justify-center ">
         <div style={boardWrapper} className="z-10">
           <Chessboard
@@ -245,6 +275,23 @@ const DashBoard: React.FC<DashBoardProps> = ({
             </tbody>
           </table>
         </div>
+      </div>
+      <div
+        className="hidden h-[40.33vh] w-full flex-col items-center justify-center p-3 md:flex md:h-[60.33vh] md:w-auto "
+        onClick={() => {
+          onNext();
+        }}
+      >
+        <AiOutlineArrowRight size={30} />
+      </div>
+
+      <div
+        className="absolute right-4 top-1/2 flex -translate-y-1/2 transform md:hidden"
+        onClick={() => {
+          onNext();
+        }}
+      >
+        <AiOutlineArrowRight size={30} />
       </div>
     </div>
   );
