@@ -12,6 +12,11 @@ const DashMain = () => {
   const [myNfts, setMyNfts] = useState([]);
   const [isShowingMyNfts, setIsShowingMyNfts] = useState(false); // <-- New state
   const [selectedNft, setSelectedNft] = useState(null);
+  const totalItems = 150; // This can come from your API or database
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const startItem = (currentPage - 1) * itemsPerPage + 1;
+  const endItem = Math.min(startItem + itemsPerPage - 1, totalItems);
   const addLike = api.mint.addLike.useMutation({
     onSuccess(data) {
       console.log(data);
@@ -50,6 +55,13 @@ const DashMain = () => {
       setAllNfts(updatedNfts);
     },
   });
+
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const handleItemsPerPageChange = (event) => {
+    setItemsPerPage(Number(event.target.value));
+    setCurrentPage(1); // Reset to first page whenever items per page change
+  };
 
   const handleClickLike = (id: string) => {
     if (session.status === "authenticated") {
@@ -116,6 +128,28 @@ const DashMain = () => {
           >
             My Games
           </button>
+        </div>
+        <div className="flex w-full flex-col items-center space-y-4 p-4">
+          <div className="flex items-center space-x-4">
+            <label htmlFor="itemsPerPage" className="text-lg">
+              Show{" "}
+            </label>
+            <select
+              id="itemsPerPage"
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+              className="rounded-md border bg-white p-2 outline-none"
+              style={{ appearance: "none" }}
+            >
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+          <div className="text-center">
+            Showing {startItem} - {endItem} out of {totalItems} results
+          </div>
+          {/* Add pagination controls here if needed */}
         </div>
         {/* Ternary operator to decide which set of NFTs to render */}
         {selectedNft === null && (

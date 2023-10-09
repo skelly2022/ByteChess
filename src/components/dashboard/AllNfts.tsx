@@ -70,7 +70,8 @@ const AllNfts: React.FC<AllNftsProps> = ({ nfts, onNftClick, handleLike }) => {
     }
   }, [windowWidth]);
   useEffect(() => {
-    setLocalNfts(nfts);
+    const sortedNfts = [...nfts].sort((a, b) => b.likes - a.likes);
+    setLocalNfts(sortedNfts);
   }, [nfts]);
   return (
     <div className=" flex h-auto w-full grow flex-col items-center gap-3 p-3 md:flex-row  md:flex-wrap md:items-start md:gap-5">
@@ -79,7 +80,20 @@ const AllNfts: React.FC<AllNftsProps> = ({ nfts, onNftClick, handleLike }) => {
 
         if (finalFen) {
           return (
-            <div style={boardWrapper} className="flex flex-col" key={index}>
+            <div
+              style={boardWrapper}
+              className="relative flex flex-col"
+              key={index}
+            >
+              <div
+                className="absolute left-0 top-0 z-[100]   transform text-2xl font-bold text-gray-500"
+                style={{
+                  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
+                }}
+              >
+                <span className="text-gray-500 opacity-80">#</span>
+                {index + 1}
+              </div>
               <div
                 className="h-full w-full"
                 onClick={() => {
