@@ -194,7 +194,7 @@ const DashBoard: React.FC<DashBoardProps> = ({
             <div style={blackStyle}></div>
           </div>
         </div>
-        <div className="flex w-full justify-evenly py-2">
+        <div className="flex w-full cursor-pointer justify-evenly py-2">
           <div
             className="flex items-center gap-2 rounded-xl bg-yellow px-3 py-1"
             onClick={() => {
@@ -204,8 +204,19 @@ const DashBoard: React.FC<DashBoardProps> = ({
             Like this Game{" "}
             <AiFillHeart color={selectedGame.isLiked ? "red" : ""} />
           </div>
-          <div className="flex items-center gap-2 rounded-xl bg-slate-500 px-3 py-1">
+          <div className="group relative flex items-center gap-2 rounded-xl bg-slate-500 px-3 py-1">
             Analyze this game
+            <div
+              style={{
+                backgroundColor: "rgba(0,0,0,0.7)",
+                transform: "translateX(-50%)",
+                bottom: "100%",
+                left: "50%",
+              }}
+              className="pointer-events-none absolute rounded px-2 py-1 text-white opacity-0 transition duration-300 ease-in-out group-hover:opacity-100"
+            >
+              Coming Soon
+            </div>
           </div>
         </div>
         <div className="no-scrollbar h-auto w-full grow overflow-scroll">
