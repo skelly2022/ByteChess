@@ -141,7 +141,7 @@ const PuzzlesMain = () => {
   }, [publicKey]);
 
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center  md:flex-row  md:gap-3">
+    <div className="z-0 flex h-screen w-screen flex-col items-center justify-center  md:flex-row  md:gap-3">
       {loading ? (
         <>
           <div className="flex h-auto w-full  justify-center  md:h-full md:w-auto">

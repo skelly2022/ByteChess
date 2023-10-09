@@ -127,34 +127,26 @@ const DashMain = () => {
     <div className="no-scrollbar relative flex h-full w-full justify-center overflow-scroll">
       <div className="m-3 flex h-full w-full flex-col  ">
         <div className="flex h-auto w-full items-center justify-center gap-3 ">
-          {/* ... your buttons ... */}
+          <button
+            className={`rounded-lg px-3 py-2 text-black ${
+              isShowingMyNfts ? "border shadow-xl" : "bg-yellow"
+            }`}
+            onClick={() => handleNftViewToggle(false)}
+          >
+            Popular Nfts
+          </button>
+          <button
+            className={`rounded-lg px-3 py-2 text-black ${
+              isShowingMyNfts ? "bg-yellow" : "border shadow-xl"
+            }`}
+            onClick={() => handleNftViewToggle(true)}
+          >
+            My Games
+          </button>{" "}
         </div>
 
         {selectedNft === null ? ( // Check if selectedNft is null
           <>
-            <div className="flex w-full flex-col items-center space-y-4 p-4">
-              <div className="flex items-center space-x-4">
-                <label htmlFor="itemsPerPage" className="text-lg">
-                  Show{" "}
-                </label>
-                <select
-                  id="itemsPerPage"
-                  value={itemsPerPage}
-                  onChange={handleItemsPerPageChange}
-                  className="rounded-md border bg-white p-2 outline-none"
-                  style={{ appearance: "none" }}
-                >
-                  <option value="10">10</option>
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                </select>
-              </div>
-              <div className="text-center">
-                Showing {startItem} - {endItem} out of {totalItems} results
-              </div>
-              {/* Add pagination controls here if needed */}
-            </div>
-
             <AllNfts
               nfts={isShowingMyNfts ? myNfts : allNfts}
               onNftClick={handleNftClick}

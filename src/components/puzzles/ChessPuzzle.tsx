@@ -234,7 +234,7 @@ const Board: React.FC<PuzzleProps> = ({
   }, [windowWidth]);
 
   return (
-    <div style={boardWrapper}>
+    <div style={boardWrapper} className="z-10">
       <Chessboard
         position={game.fen()}
         boardOrientation={getSideToPlayFromFen(fen) === "w" ? "black" : "white"}

@@ -93,7 +93,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
     // }
   }, [session]);
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <div className="flex flex-row items-center gap-3">
         <div className="hidden items-center gap-3 md:flex">
           {session ? (
@@ -173,7 +173,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="absolute right-0 top-12 w-auto  rounded-xl bg-yellow text-sm shadow-md ">
+        <div className="absolute right-0 top-12 z-50 w-auto  rounded-xl bg-yellow text-sm shadow-md ">
           <div className="flex w-full cursor-pointer flex-col text-black">
             <>
               {/* <MenuItem onClick={login} label="Login" /> */}
@@ -190,7 +190,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
         </div>
       )}
       {hamOpen && (
-        <div className=" z-14 absolute right-0 top-12 w-[40vw]  rounded-xl bg-white text-sm shadow-md md:hidden md:w-3/4">
+        <div className=" z-190 absolute right-0 top-12 w-[40vw]  rounded-xl bg-white text-sm shadow-md md:hidden md:w-3/4">
           <div className="flex cursor-pointer flex-col text-center text-black">
             <>
               {/* <MenuItem onClick={login} label="Login" /> */}
