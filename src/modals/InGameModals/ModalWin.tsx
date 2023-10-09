@@ -1,21 +1,16 @@
 //@ts-nocheck
-import { PrismaClient } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { api } from "~/utils/api";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import useUserModal from "~/hooks/useUserStore";
-import axios from "axios"; // Import the axios library
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import useLoginModal from "~/hooks/useLoginModal";
+import { useWallet } from "@solana/wallet-adapter-react";
+
 import ModalGame from "~/modals/InGameModals/ModalGame";
 import useWinModal from "~/hooks/InGameModals/useWinModal";
-import { Console } from "console";
 import useTournamentModal from "~/hooks/useTournamentModal";
-import socket from "~/helpers/socket";
+import socket2 from "~/helpers/socketMint";
 import { connection, program } from "~/anchor/setup";
 import { Transaction } from "@solana/web3.js";
-import Loading from "~/components/Loading";
 import usePlayModal from "~/hooks/usePlayModal";
 
 const UserWin = () => {
@@ -28,6 +23,34 @@ const UserWin = () => {
   const play = usePlayModal();
 
   const router = useRouter();
+  const wWallet = () => {
+    if (play.side === "white") {
+      return user.user.walletAddress;
+    } else {
+      return play.opponent.walletAddress;
+    }
+  };
+
+  const bWallet = () => {
+    if (play === "black") {
+      return user.user.walletAddress;
+    } else {
+      return play.opponent.walletAddress;
+    }
+  };
+  function getGameType(timeControl) {
+    // Split the string by the "+" sign
+    const [minutes, increment] = timeControl.split("+").map(Number);
+
+    if (minutes < 3) {
+      return "Bullet";
+    } else if (minutes < 10) {
+      return "Blitz";
+    } else {
+      return "Rapid";
+    }
+  }
+  const time = getGameType(play.minutes + " + " + play.increment);
   const handleClick = async () => {
     setLoading(true);
     const tx = new Transaction();
@@ -36,10 +59,12 @@ const UserWin = () => {
       const { blockhash, lastValidBlockHeight } =
         await connection.getLatestBlockhash();
       setLoading(false);
-      socket.emit("mintGame", {
+      socket2.emit("mintGame", {
         wallet: session.data.user.name,
         fen: play.currentFen,
         moves: play.moves,
+        wWallet: wWallet(),
+        bWallet: bWallet(),
       });
 
       console.log(txSig);
@@ -50,9 +75,21 @@ const UserWin = () => {
   const bodyContent = (
     <div className="flex flex-col items-center justify-center  text-white ">
       <h1 className="text-4xl font-bold">Congratulations</h1>
-      <h2 className="text-2xl font-bold">
-        Your New Rank: {user.user.bulletRating}
-      </h2>
+      {time === "Bullet" && (
+        <h2 className="text-2xl font-bold">
+          Your New Rank: {user.user.bulletRating}
+        </h2>
+      )}
+      {time === "Blitz" && (
+        <h2 className="text-2xl font-bold">
+          Your New Rank: {user.user.blitzRating}
+        </h2>
+      )}
+      {time === "Rapid" && (
+        <h2 className="text-2xl font-bold">
+          Your New Rank: {user.user.rapidRating}
+        </h2>
+      )}
       <div className="mt-4 grid grid-cols-2 gap-4">
         <button className="bg-yellow px-6 py-3 text-green">Rematch </button>
         <button className="bg-yellow px-6 py-3 text-green">New Opponent</button>

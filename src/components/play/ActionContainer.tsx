@@ -15,7 +15,9 @@ import useDrawModal from "~/hooks/InGameModals/useDrawModal";
 
 const ActionContainer = () => {
   const router = useRouter();
-  const { playID } = router.query;
+  const playID = Array.isArray(router.query.playID)
+    ? router.query.playID[0]
+    : router.query.playID;
   const user = useUserModal();
   const play = usePlayModal();
   const [showClose, setShowClose] = useState(false);
@@ -76,7 +78,7 @@ const ActionContainer = () => {
       console.log(result);
       user.setUser(result.loserRating);
       play.setOpponent(result.rating);
-      socket.emit("checkmate", {
+      socket.emit("resign", {
         roomId: playID,
         loser: result.loserRating,
         winner: result.rating,
@@ -107,10 +109,9 @@ const ActionContainer = () => {
         setGameResigned(true);
         socket.emit("resignGame", { roomId: playID });
         updateWin.mutateAsync({
-          winnerAddress: play.opponent.walletAddress,
-          wElo: play.opponent.bulletRating,
-          lElo: user.user.bulletRating,
-          loserAddress: user.user.walletAddress,
+          wAddress: play.opponent.walletAddress,
+          lAddress: user.user.walletAddress,
+          id: playID,
         });
         LossModal.onOpen();
       }
@@ -135,10 +136,9 @@ const ActionContainer = () => {
     resetActiveIcon();
     setGameResigned(true);
     updateDraw.mutateAsync({
-      winnerAddress: play.opponent.walletAddress,
-      wElo: play.opponent.bulletRating,
-      lElo: user.user.bulletRating,
-      loserAddress: user.user.walletAddress,
+      wAddress: play.opponent.walletAddress,
+      lAddress: user.user.walletAddress,
+      id: playID,
     });
     DrawModal.onOpen();
   };
@@ -150,15 +150,6 @@ const ActionContainer = () => {
     socket.on("drawDeclined", (data) => {
       resetActiveIcon();
     });
-    socket.on("gameResigned", (data) => {
-      resetActiveIcon();
-      setGameResigned(true);
-      WinModal.onOpen();
-    });
-    socket.on("checkmated", (data) => {
-      play.setOpponent(data.loser);
-      user.setUser(data.winner);
-    });
     socket.on("drawAccepted", (data) => {
       resetActiveIcon();
       console.log(data);
@@ -166,6 +157,18 @@ const ActionContainer = () => {
       setGameResigned(true);
       play.setOpponent(data.loser);
       user.setUser(data.winner);
+    });
+    socket.on("resigned", (data) => {
+      console.log(data);
+      WinModal.onOpen();
+      play.setOpponent(data.loser);
+      user.setUser(data.winner);
+    });
+    socket.on("checkmated", (data) => {
+      console.log(data);
+      LossModal.onOpen();
+      play.setOpponent(data.winner);
+      user.setUser(data.loser);
     });
   }, []);
   return (

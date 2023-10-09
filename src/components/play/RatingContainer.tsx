@@ -22,7 +22,19 @@ const RatingContainer: React.FC<RatingContainerProps> = ({
   const user = useUserStore();
   const play = usePlayModal();
   const session = useSession();
-  const time = categorizeChessGame(play.minutes + " + " + play.increment);
+  function getGameType(timeControl) {
+    // Split the string by the "+" sign
+    const [minutes, increment] = timeControl.split("+").map(Number);
+
+    if (minutes < 3) {
+      return "Bullet";
+    } else if (minutes < 10) {
+      return "Blitz";
+    } else {
+      return "Rapid";
+    }
+  }
+  const time = getGameType(play.minutes + " + " + play.increment);
   return (
     <div
       className={`flex h-12 w-full items-center justify-between  ${
@@ -59,8 +71,8 @@ const RatingContainer: React.FC<RatingContainerProps> = ({
         {time === "Bullet" && type === "me" && (
           <h1>{user.user.bulletRating}</h1>
         )}
-        {time === "Blitz" && type === "me" && <h1>{user.user.bulletRating}</h1>}
-        {time === "Rapid" && type === "me" && <h1>{user.user.bulletRating}</h1>}
+        {time === "Blitz" && type === "me" && <h1>{user.user.blitzRating}</h1>}
+        {time === "Rapid" && type === "me" && <h1>{user.user.rapidRating}</h1>}
       </div>
       <Timer type={type} />
     </div>

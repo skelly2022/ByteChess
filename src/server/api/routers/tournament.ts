@@ -88,6 +88,9 @@ export const tournamentRouter = createTRPCRouter({
         where: {
           tournamentId: input.id,
         },
+        orderBy: {
+          result: "desc", // This sorts players by 'result' in descending order
+        },
       });
       return { players: currentPlayers };
     }),
@@ -108,6 +111,9 @@ export const tournamentRouter = createTRPCRouter({
         where: {
           tournamentId: input.tournamentId,
         },
+        orderBy: {
+          result: "desc", // This sorts players by 'result' in descending order
+        },
       });
       return { players: currentPlayers };
     }),
@@ -122,6 +128,9 @@ export const tournamentRouter = createTRPCRouter({
       const find = await prisma.tournamentPlayer.findFirst({
         where: {
           id: input.id,
+        },
+        orderBy: {
+          result: "desc", // This sorts players by 'result' in descending order
         },
       });
       console.log(find);
@@ -145,6 +154,9 @@ export const tournamentRouter = createTRPCRouter({
       const currentPlayers = await prisma.tournamentPlayer.findMany({
         where: {
           tournamentId: input.id,
+        },
+        orderBy: {
+          result: "desc", // This sorts players by 'result' in descending order
         },
       });
       return { players: currentPlayers };

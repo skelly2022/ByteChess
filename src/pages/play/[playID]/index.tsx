@@ -34,6 +34,8 @@ const Home = () => {
   const [boardOrientation, setBoardOrientation] = useState("black");
   const [connected, setConnected] = useState(false);
   const [gameID, setGameID] = useState("");
+  const [gameType, setGameType] = useState("");
+
   const { playID } = router.query;
   const { publicKey } = useWallet();
   const getUser = api.example.getUser.useMutation({
@@ -48,6 +50,8 @@ const Home = () => {
   const getGame = api.games.getGame.useMutation({
     async onSuccess(userData) {
       setGameID(userData.id);
+      setGameType(userData.Time);
+
       const [minutes, seconds] = userData.Time.split("+").map((part) =>
         parseInt(part.trim()),
       );
@@ -68,6 +72,7 @@ const Home = () => {
     const isMySide = userData.walletAddress === myWalletAddress;
 
     if (isMySide === true) {
+      play.setSide(userData.Color);
       socket.emit("createRoom", { roomId: userData.id }, (data) => {
         console.log(data);
         if (data.lastMove === null) {
@@ -111,6 +116,8 @@ const Home = () => {
         ? userData.Color
         : getOppositeColor(userData.Color);
       setBoardOrientation(playerSide);
+      play.setSide(playerSide);
+
       if (userData.walletAddress2 !== "") {
         getOpponent.mutateAsync({ address: userData.walletAddress2 });
       }
@@ -223,6 +230,7 @@ const Home = () => {
             <LiveGameContainer
               boardOrientation={boardOrientation}
               connected={connected}
+              gameType={gameType}
             />
           )}
         </div>

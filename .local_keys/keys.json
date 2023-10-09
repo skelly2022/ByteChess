@@ -1,9 +1,9 @@
 {
   "userAddress": "dKTV1dqiqwJ9gATrh1sdejiYi2VWKpVrntK5Vj2Yqtt",
   "testWallet": "GiE6CHSCUuJjsiJgA4JGTyhVxuxP77ZDK6YsbPHaQiRW",
-  "treeAddress": "AwdWkpTm8DcsVHV29HZbiJgWC3QXEckSugZnG3TtTffS",
-  "treeAuthority": "Dtyhm96FkPrUtkTYBoAfUWjgTqQDFPpho3WGYJTknVZi",
-  "collectionMint": "28ugP7hbEADU3v1tB2UPGUw5z7uY2PFviZyf3ewUYXeB",
-  "collectionMetadataAccount": "G297kaM9SdbdbCFqZ8hvwwzb6dptW43CAApHKSER3MYF",
-  "collectionMasterEditionAccount": "5BETn6tgydNWB4PcFBXruh9chhmY4CZnQRz6mo6K8Dtk"
+  "treeAddress": "Hevm3MFvT6bdMWyHRhJAzYE3mNCNSDY2n8Z9ARmmBqCD",
+  "treeAuthority": "7eziRSXf989JWxTDhDbakKcZLfcDj8oqY1z6SF5rdczz",
+  "collectionMint": "69wmFCG8F2XyBNAF1bsB5Vhsj7bSNwNTvQWCf2qq7AHP",
+  "collectionMetadataAccount": "4c1c9Nz44hj6bHATUFucuZ757Xxg5t4g6YszsguophL4",
+  "collectionMasterEditionAccount": "HjsafNKis2v82W167yi2m3WWSaaW5hRiELrxrV1cjnFn"
 }

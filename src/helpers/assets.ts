@@ -17,13 +17,8 @@ const half = {
 };
 
 function extractFirstAndLast5Characters(inputString) {
-  if (typeof inputString !== "string" || inputString.length < 10) {
-    return null; // Return null for invalid input
-  }
-
   const first5 = inputString.substring(0, 5);
   const last5 = inputString.substring(inputString.length - 5);
-
   return `${first5}..${last5}`;
 }
 function formatTimeDifference(startDate) {

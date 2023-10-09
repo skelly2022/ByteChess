@@ -55,7 +55,7 @@ const UserProfile = () => {
   const [isEditNamePopupOpen, setIsEditNamePopupOpen] = useState(false);
   const [myImages, setMyImages] = useState([]);
   const [search, setSearch] = useState(false);
-
+  const [nfts, setNfts] = useState([]);
   const currentUser = user?.user || defaultUser; // Use user data if it exists, otherwise use hardcoded data
   const currentSearchedUser = user?.searchedUser || defaultUser;
 
@@ -89,7 +89,13 @@ const UserProfile = () => {
       setMyImages(data);
     },
   });
-
+  const data1 = api.mint.getAllNftsProfile.useMutation({
+    async onSuccess(data1) {
+      console.log(data1);
+      setNfts(data1);
+    },
+  });
+  console.log(`CNFT`, data1);
   const response = api.example.getAllNfts.useMutation({
     onSuccess(data) {
       console.log("nfts:", data);
@@ -136,6 +142,7 @@ const UserProfile = () => {
     console.log("MODAL", ProfileModal.isOpen);
     if (ProfileModal.isOpen) {
       response.mutateAsync({ address: session.data.user.name });
+      data1.mutateAsync({ address: session.data.user.name }); // Add this line
     } else {
       setLoading(true);
     }
@@ -379,26 +386,14 @@ const UserProfile = () => {
               Gallery
             </div>
             <div className="flex h-auto w-full flex-wrap items-center justify-center gap-3 bg-offBlack ">
-              <img
-                className="w-[45%] cursor-pointer"
-                src={"images/exampleCNFT.jpg"}
-                alt={`NFT `}
-              />
-              <img
-                className="w-[45%] cursor-pointer"
-                src={"images/exampleCNFT.jpg"}
-                alt={`NFT `}
-              />{" "}
-              <img
-                className="w-[45%] cursor-pointer"
-                src={"images/exampleCNFT.jpg"}
-                alt={`NFT `}
-              />{" "}
-              <img
-                className="w-[45%] cursor-pointer"
-                src={"images/exampleCNFT.jpg"}
-                alt={`NFT `}
-              />
+              {nfts.map((nft) => (
+                <img
+                  key={nft.id}
+                  className="w-[45%] cursor-pointer"
+                  src={nft.image} // Assuming the structure based on given data
+                  alt={`NFT ${nft.id}`}
+                />
+              ))}
             </div>
           </div>
           <div className="flex w-full flex-col gap-2">

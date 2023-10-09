@@ -3,6 +3,19 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "src/server/api/trpc";
 import { prisma } from "src/server/db";
 
+function getGameType(timeControl) {
+  // Split the string by the "+" sign
+  const [minutes, increment] = timeControl.split("+").map(Number);
+
+  if (minutes < 3) {
+    return "Bullet";
+  } else if (minutes < 10) {
+    return "Blitz";
+  } else {
+    return "Rapid";
+  }
+}
+
 function calculateEloChange(winnerRating, loserRating) {
   const kFactor = 32; // You can adjust this as needed
   const expectedWinnerScore =
@@ -139,66 +152,171 @@ export const gamesRouter = createTRPCRouter({
   updateGameWin: publicProcedure
     .input(
       z.object({
-        winnerAddress: z.string(),
-        loserAddress: z.string(),
-        wElo: z.number(),
-        lElo: z.number(),
+        wAddress: z.string(),
+        lAddress: z.string(),
+        id: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
-      console.log(input);
-      const { winnerNewRating, loserNewRating } = calculateEloChange(
-        input.wElo,
-        input.lElo,
-      );
-      const rating = await prisma.user.update({
-        where: { walletAddress: input.winnerAddress },
+      const game = await prisma.customGame.findFirst({
+        where: { id: input.id },
+      });
+      if (game.gameOver) {
+        return;
+      }
+      const findGame = await prisma.customGame.update({
+        where: { id: input.id },
         data: {
-          bulletRating: winnerNewRating,
+          gameOver: true,
         },
       });
-      const loseUser = await prisma.user.findFirst({
-        where: { walletAddress: input.loserAddress },
-      });
-      const loserRating = await prisma.user.update({
-        where: { walletAddress: input.loserAddress },
-        data: {
-          bulletRating: loserNewRating,
+      console.log(findGame);
 
-          // losse,
-        },
+      const winner = await prisma.user.findFirst({
+        where: { walletAddress: input.wAddress },
       });
-      return { rating: rating, loserRating: loserRating };
+      const loser = await prisma.user.findFirst({
+        where: { walletAddress: input.lAddress },
+      });
+      if (getGameType(findGame.Time) === "Bullet") {
+        const { winnerNewRating, loserNewRating } = calculateEloChange(
+          winner.bulletRating,
+          loser.bulletRating,
+        );
+        const rating = await prisma.user.update({
+          where: { walletAddress: input.wAddress },
+          data: {
+            bulletRating: winnerNewRating,
+          },
+        });
+
+        const loserRating = await prisma.user.update({
+          where: { walletAddress: input.lAddress },
+          data: {
+            bulletRating: loserNewRating,
+          },
+        });
+        return { rating: rating, loserRating: loserRating };
+      }
+      if (getGameType(findGame.Time) === "Blitz") {
+        const { winnerNewRating, loserNewRating } = calculateEloChange(
+          winner.blitzRating,
+          loser.blitzRating,
+        );
+        const rating = await prisma.user.update({
+          where: { walletAddress: input.wAddress },
+          data: {
+            blitzRating: winnerNewRating,
+          },
+        });
+
+        const loserRating = await prisma.user.update({
+          where: { walletAddress: input.lAddress },
+          data: {
+            blitzRating: loserNewRating,
+          },
+        });
+        return { rating: rating, loserRating: loserRating };
+      }
+      if (getGameType(findGame.Time) === "Rapid") {
+        const { winnerNewRating, loserNewRating } = calculateEloChange(
+          winner.rapidRating,
+          loser.rapidRating,
+        );
+        const rating = await prisma.user.update({
+          where: { walletAddress: input.wAddress },
+          data: {
+            rapidRating: winnerNewRating,
+          },
+        });
+
+        const loserRating = await prisma.user.update({
+          where: { walletAddress: input.lAddress },
+          data: {
+            rapidRating: loserNewRating,
+          },
+        });
+        return { rating: rating, loserRating: loserRating };
+      }
     }),
   updateGameDraw: publicProcedure
     .input(
       z.object({
-        winnerAddress: z.string(),
-        loserAddress: z.string(),
-        wElo: z.number(),
-        lElo: z.number(),
+        wAddress: z.string(),
+        lAddress: z.string(),
+        id: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
-      console.log(input);
-      const { winnerNewRating, loserNewRating } = calculateEloChangeDraw(
-        input.wElo,
-        input.lElo,
-      );
-      console.log(winnerNewRating, loserNewRating);
-      const rating = await prisma.user.update({
-        where: { walletAddress: input.winnerAddress },
-        data: {
-          bulletRating: winnerNewRating,
-        },
+      const findGame = await prisma.customGame.findFirst({
+        where: { id: input.id },
       });
-      const loserRating = await prisma.user.update({
-        where: { walletAddress: input.loserAddress },
-        data: {
-          bulletRating: loserNewRating,
-        },
+      const winner = await prisma.user.findFirst({
+        where: { walletAddress: input.wAddress },
       });
-      return { rating: rating, loserRating: loserRating };
+      const loser = await prisma.user.findFirst({
+        where: { walletAddress: input.lAddress },
+      });
+      if (getGameType(findGame.Time) === "Bullet") {
+        const { winnerNewRating, loserNewRating } = calculateEloChangeDraw(
+          winner.bulletRating,
+          loser.bulletRating,
+        );
+        const rating = await prisma.user.update({
+          where: { walletAddress: input.wAddress },
+          data: {
+            bulletRating: winnerNewRating,
+          },
+        });
+
+        const loserRating = await prisma.user.update({
+          where: { walletAddress: input.lAddress },
+          data: {
+            bulletRating: loserNewRating,
+          },
+        });
+        return { rating: rating, loserRating: loserRating };
+      }
+      if (getGameType(findGame.Time) === "Blitz") {
+        const { winnerNewRating, loserNewRating } = calculateEloChangeDraw(
+          winner.blitzRating,
+          loser.blitzRating,
+        );
+        const rating = await prisma.user.update({
+          where: { walletAddress: input.wAddress },
+          data: {
+            blitzRating: winnerNewRating,
+          },
+        });
+
+        const loserRating = await prisma.user.update({
+          where: { walletAddress: input.lAddress },
+          data: {
+            blitzRating: loserNewRating,
+          },
+        });
+        return { rating: rating, loserRating: loserRating };
+      }
+      if (getGameType(findGame.Time) === "Rapid") {
+        const { winnerNewRating, loserNewRating } = calculateEloChangeDraw(
+          winner.rapidRating,
+          loser.rapidRating,
+        );
+        const rating = await prisma.user.update({
+          where: { walletAddress: input.wAddress },
+          data: {
+            rapidRating: winnerNewRating,
+          },
+        });
+
+        const loserRating = await prisma.user.update({
+          where: { walletAddress: input.lAddress },
+          data: {
+            rapidRating: loserNewRating,
+          },
+        });
+        return { rating: rating, loserRating: loserRating };
+      }
     }),
   getUsers: publicProcedure
     .input(

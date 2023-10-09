@@ -21,11 +21,13 @@ const { extractFirstAndLast5Characters } = Assets;
 interface LiveGameProps {
   boardOrientation: any;
   connected: boolean;
+  gameType: string;
 }
 
 const LiveGameContainer: React.FC<LiveGameProps> = ({
   boardOrientation,
   connected,
+  gameType,
 }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([]); // State to store chat messages

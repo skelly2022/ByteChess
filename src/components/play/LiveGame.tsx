@@ -20,6 +20,7 @@ import useUserStore from "~/hooks/useUserStore";
 import useWinModal from "~/hooks/InGameModals/useWinModal";
 import useLossModal from "~/hooks/InGameModals/useLossModal";
 import useTournamentModal from "~/hooks/useTournamentModal";
+import { useSession } from "next-auth/react";
 interface LiveGameProps {
   boardOrientation: any;
   connected: boolean;
@@ -39,7 +40,10 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   const LossModal = useLossModal();
   const tournament = useTournamentModal();
   const chessboardRef = useRef();
-  const { playID } = router.query;
+  const session = useSession();
+  const playID = Array.isArray(router.query.playID)
+    ? router.query.playID[0]
+    : router.query.playID;
   const [playMoveSound, setPlayMoveSound] = useState(false);
   const [playCheckSound, setPlayCheckSound] = useState(false);
 
@@ -71,6 +75,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
     async onSuccess(result) {
       user.setUser(result.rating);
       play.setOpponent(result.loserRating);
+      console.log(result);
       WinModal.onOpen();
       if (tournament.tournamentID !== "") {
         updateTournamentGame.mutateAsync({ id: tournament.myID });
@@ -80,16 +85,6 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         loser: result.loserRating,
         winner: result.rating,
       });
-    },
-    async onError(result) {
-      console.log(result);
-    },
-  });
-  const updateLoss = api.games.getUsers.useMutation({
-    async onSuccess(result) {
-      console.log(result);
-      // play.setOpponent(result.rating);
-      // user.setUser(result.loserRating);
     },
     async onError(result) {
       console.log(result);
@@ -177,10 +172,9 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         console.log(moveMade.pgn);
         play.setCurrentFen(moveMade.fen);
         updateWin.mutateAsync({
-          winnerAddress: user.user.walletAddress,
-          wElo: user.user.bulletRating,
-          lElo: play.opponent.bulletRating,
-          loserAddress: play.opponent.walletAddress,
+          wAddress: session.data.user.name,
+          lAddress: play.opponent.walletAddress,
+          id: playID,
         });
         socket.emit("makeMove", { roomId: playID, fen: moveMade });
         play.setOpponentTimer(false);
@@ -200,11 +194,9 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
     }
   }
   useEffect(() => {
-    console.log(preMoveSquares);
-  }, [preMoveSquares]);
-  useEffect(() => {
-    setGame(new Chess(play.fens[play.index]));
-  }, [play.index]);
+    setPreMoveSquares({});
+  }, []);
+
   useEffect(() => {
     socket.on("moveMade", (data) => {
       setMoveSquares({
@@ -284,19 +276,14 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         }
       }
     });
-    socket.on("checkmated", (data) => {
-      console.log(data);
-      LossModal.onOpen();
-      play.setOpponent(data.winner);
-      user.setUser(data.loser);
-    });
   }, [preMoveSquares]);
   useEffect(() => {
-    chessboardRef.current?.clearPremoves();
-  }, []);
+    setGame(new Chess(play.fens[play.index]));
+  }, [play.index]);
   useEffect(() => {
     setGame(new Chess(play.fen));
   }, [play.fen]);
+
   const updateWindowWidth = () => {
     setWindowWidth(window.innerWidth);
   };

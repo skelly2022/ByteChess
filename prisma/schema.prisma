@@ -48,6 +48,7 @@ model CustomGame {
     walletAddress2 String   @default("")
     FEN            String   @default("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     createdAt      DateTime @default(now())
+    gameOver       Boolean  @default(false)
 }
 
 model Tournament {
@@ -82,4 +83,11 @@ model Profile {
     userName    String?
     imageUrls   String[]
     discordId   String?
+}
+
+model Mint {
+    id         String   @id @default(auto()) @map("_id") @db.ObjectId
+    likes      Int      @default(0)
+    img        String   @unique
+    usersLiked String[]
 }
