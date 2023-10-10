@@ -75,7 +75,6 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
     async onSuccess(result) {
       user.setUser(result.rating);
       play.setOpponent(result.loserRating);
-      console.log(result);
       WinModal.onOpen();
       if (tournament.tournamentID !== "") {
         updateTournamentGame.mutateAsync({ id: tournament.myID });
@@ -176,12 +175,22 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
           lAddress: play.opponent.walletAddress,
           id: playID,
         });
-        socket.emit("makeMove", { roomId: playID, fen: moveMade });
+        socket.emit("makeMove", {
+          roomId: playID,
+          fen: moveMade,
+          userId: session.data.user.name,
+          checkmate: true,
+        });
         play.setOpponentTimer(false);
         play.setMyTimer(false);
         return;
       } else {
-        socket.emit("makeMove", { roomId: playID, fen: moveMade });
+        socket.emit("makeMove", {
+          roomId: playID,
+          fen: moveMade,
+          userId: session.data.user.name,
+          checkmate: false,
+        });
       }
       if (newGame.moveNumber() !== 1) {
         play.setOpponentTimer(true);
@@ -251,17 +260,26 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
           if (new Chess(moveMade.fen).isCheckmate() === true) {
             console.log("checkmate");
             updateWin.mutateAsync({
-              winnerAddress: user.user.walletAddress,
-              wElo: user.user.bulletRating,
-              lElo: play.opponent.bulletRating,
-              loserAddress: play.opponent.walletAddress,
+              wAddress: session.data.user.name,
+              lAddress: play.opponent.walletAddress,
+              id: playID,
             });
-            socket.emit("makeMove", { roomId: playID, fen: moveMade });
+            socket.emit("makeMove", {
+              roomId: playID,
+              fen: moveMade,
+              userId: session.data.user.name,
+              checkmate: true,
+            });
             play.setOpponentTimer(false);
             play.setMyTimer(false);
             return;
           } else {
-            socket.emit("makeMove", { roomId: playID, fen: moveMade });
+            socket.emit("makeMove", {
+              roomId: playID,
+              fen: moveMade,
+              userId: session.data.user.name,
+              checkmate: false,
+            });
           }
           if (newGame.moveNumber() !== 1) {
             play.setOpponentTimer(true);
@@ -276,6 +294,9 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         }
       }
     });
+    return () => {
+      socket.off("moveMade");
+    };
   }, [preMoveSquares]);
   useEffect(() => {
     setGame(new Chess(play.fens[play.index]));
@@ -307,7 +328,22 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       }
     }
   }, [windowWidth]);
+  useEffect(() => {
+    socket.on("timeUp", (data) => {
+      console.log(data);
+      if (data.winner === session.data.user.name) {
+        updateWin.mutateAsync({
+          wAddress: session.data.user.name,
+          lAddress: play.opponent.walletAddress,
+          id: playID,
+        });
+      }
+    });
 
+    return () => {
+      socket.off("timeUp");
+    };
+  }, []);
   return (
     <div style={boardWrapper}>
       <Chessboard

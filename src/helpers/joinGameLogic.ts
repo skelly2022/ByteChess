@@ -1,5 +1,10 @@
 const getOppositeColor = (color: any) => {
-  return color === "white" ? "black" : "white";
+  console.log(color);
+  if (color === "white") {
+    return "black";
+  } else {
+    return "white";
+  }
 };
 
 const categorizeChessGame = (timeString) => {

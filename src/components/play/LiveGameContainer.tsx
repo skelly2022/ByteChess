@@ -88,7 +88,15 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
       socket.off("chatMessageInc");
     };
   }, []);
+  useEffect(() => {
+    socket.on("timeUp", (data) => {
+      console.log(data);
+    });
 
+    return () => {
+      socket.off("timeUp");
+    };
+  }, []);
   return (
     <div
       className="flex h-[calc(100vh-112px)] w-screen items-center justify-center gap-5

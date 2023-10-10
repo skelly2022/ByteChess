@@ -29,6 +29,8 @@ interface PlayModalStore {
   onOpen: () => void;
   onClose: () => void;
   resetState: () => void;
+  rematchState: string;
+  setRematch: () => void;
 }
 
 const usePlayModal = create<PlayModalStore>((set) => ({
@@ -70,6 +72,8 @@ const usePlayModal = create<PlayModalStore>((set) => ({
   onClose: () => {
     set({ isOpen: false });
   },
+  rematchState: "DEFAULT",
+  setRematch: () => set({ rematchState: "DEFAULT" }),
   resetState: () =>
     set({
       index: 0,

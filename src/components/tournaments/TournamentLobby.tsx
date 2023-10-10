@@ -1,4 +1,4 @@
-//@ts-nocheck
+import { useState, useEffect } from "react";
 import { TournamentPlayer } from "../../types/games";
 import assets from "~/helpers/assets";
 
@@ -10,11 +10,15 @@ interface TournamentLobbyProps {
 }
 
 const TournamentLobby: React.FC<TournamentLobbyProps> = ({ players }) => {
-  console.log(players);
+  const [sortedPlayers, setSortedPlayers] = useState<TournamentPlayer[]>([]);
+  useEffect(() => {
+    const sorted = [...players].sort((a, b) => b.result - a.result); // Sort in descending order
+    setSortedPlayers(sorted);
+  }, [players]);
   return (
     <div className="h-[60%] w-full  ">
       <div className="h-full w-full  ">
-        {players.map((player, index) => (
+        {sortedPlayers.map((player, index) => (
           <div
             key={index}
             className={`relative flex h-12 w-full items-center justify-start gap-3 pl-4 text-black ${

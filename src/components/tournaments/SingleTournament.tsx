@@ -58,12 +58,18 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
       // socket.emit()
       router.push(`/play/${data.id}`);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
   const getGame = api.games.getGameTournament.useMutation({
     async onSuccess(data) {
       tournamentStore.setTournamentID(tournament.id);
       console.log(data);
       router.push(`/play/${data.id}`);
+    },
+    onError(error) {
+      console.log(error);
     },
   });
   const join = api.tournament.joinTournament.useMutation({
@@ -79,6 +85,9 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
           session.data.user.name,
         )} has joined the Lobby`,
       ]);
+    },
+    onError(error) {
+      console.log(error);
     },
   });
   const newPlayers = api.tournament.getPlayers.useMutation({

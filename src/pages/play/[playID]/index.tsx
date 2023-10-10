@@ -20,6 +20,7 @@ import ModalDraw from "~/modals/InGameModals/ModalDraw";
 import ModalLoss from "~/modals/InGameModals/ModalLoss";
 import useWinModal from "~/hooks/InGameModals/useWinModal";
 import UserProfile from "~/modals/UserProfile";
+import useLossModal from "~/hooks/InGameModals/useLossModal";
 
 const { categorizeChessGame, getOppositeColor } = joinGameLogic;
 
@@ -46,9 +47,17 @@ const Home = () => {
         setLoading(false);
       }, 400);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
   const getGame = api.games.getGame.useMutation({
     async onSuccess(userData) {
+      if (userData.gameOver === true) {
+        toast.error("Game Over");
+        router.push("/");
+      }
+      console.log(userData);
       setGameID(userData.id);
       setGameType(userData.Time);
 
@@ -59,14 +68,23 @@ const Home = () => {
       socket.emit("username", { username: publicKey.toBase58() }, (r) => {});
       getPlayerSide(userData, publicKey.toBase58());
     },
+    async onError(error) {
+      console.log(error);
+    },
   });
   const getOpponent = api.example.getUser.useMutation({
     async onSuccess(userData) {
       play.setOpponent(userData);
     },
+    async onError(error) {
+      console.log(error);
+    },
   });
   const updateGame = api.games.updatePlayerJoin.useMutation({
     async onSuccess(data) {},
+    async onError(error) {
+      console.log(error);
+    },
   });
   const getPlayerSide = async (userData, myWalletAddress) => {
     const isMySide = userData.walletAddress === myWalletAddress;
@@ -116,8 +134,6 @@ const Home = () => {
         ? userData.Color
         : getOppositeColor(userData.Color);
       setBoardOrientation(playerSide);
-      play.setSide(playerSide);
-
       if (userData.walletAddress2 !== "") {
         getOpponent.mutateAsync({ address: userData.walletAddress2 });
       }
@@ -128,6 +144,12 @@ const Home = () => {
         userData.walletAddress2 === "" ||
         userData.walletAddress2 === publicKey.toBase58()
       ) {
+        if (userData.Color === "white") {
+          play.setSide("black");
+        }
+        if (userData.Color === "black") {
+          play.setSide("white");
+        }
         console.log(userData);
         socket.emit("joinRoom", { roomId: userData.id }, (data) => {
           console.log(data);
@@ -210,7 +232,13 @@ const Home = () => {
       getGame.mutateAsync(data);
     }
   }, [playID, publicKey]);
-
+  const WinModal = useWinModal();
+  const LossModal = useLossModal();
+  useEffect(() => {
+    play.setRematch();
+    LossModal.onClose();
+    WinModal.onClose();
+  }, []);
   return (
     <>
       <ClientOnly>

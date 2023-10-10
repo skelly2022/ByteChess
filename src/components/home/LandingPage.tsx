@@ -9,20 +9,19 @@ const LandingPage = () => {
   return (
     <div className="  flex h-full w-full  flex-col text-white">
       <div className=" flex h-1/5 w-full flex-col ">
-        <div className=" flex h-full w-full items-center justify-center ">
+        <div className="flex h-full w-full items-center justify-center py-5">
           <h1
-            className=" text-[100px] font-extrabold text-yellow"
+            className=" font-orbitron text-6xl font-extrabold uppercase tracking-wider text-yellow md:text-7xl"
             style={{
               textShadow: `
-                3px 3px 0px #000,
-                6px 6px 0px rgba(0, 0, 0, 0.7),
-                9px 9px 0px rgba(0, 0, 0, 0.5),
-                12px 12px 15px rgba(0, 0, 0, 0.3)
-              `,
+        3px 3px 0px #000,
+        6px 6px 0px rgba(0, 0, 0, 0.7),
+        9px 9px 0px rgba(0, 0, 0, 0.5),
+        12px 12px 15px rgba(0, 0, 0, 0.3)
+      `,
             }}
           >
-            {" "}
-            CHESS
+            BYTECHESS
           </h1>
         </div>
       </div>

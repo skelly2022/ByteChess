@@ -85,14 +85,26 @@ const LiveGameTimer = () => {
       addMove(play.moves[index - 1]);
     }
   }, [play.moves]);
+  useEffect(() => {
+    console.log(play.moves);
+    if (play.moves.length === 0) {
+      setChessMoves([
+        {
+          moveNumber: 1,
+          whiteMove: "",
+          blackMove: "",
+        },
+      ]);
+    }
+  }, [play.moves]);
 
   return (
-    <div className="text-yellow border-yellow relative flex h-3/4 w-full flex-col rounded-lg border">
+    <div className="relative flex h-3/4 w-full flex-col rounded-lg border border-yellow text-yellow">
       <RatingContainer type="opponent" />
 
       <div
-        className="bg-yellow relative flex cursor-pointer items-center
-       justify-center gap-3 p-2 text-black shadow"
+        className="relative flex cursor-pointer items-center justify-center
+       gap-3 bg-yellow p-2 text-black shadow"
       >
         <AiFillFastBackward
           size={30}
@@ -127,13 +139,13 @@ const LiveGameTimer = () => {
           <div className=" h-full w-full p-3 text-black shadow-md">
             {chessMoves.map((turn) => (
               <div className="flex w-full justify-center ">
-                <div className="bg-yellow flex w-[30%] items-center justify-center border border-black px-4 py-2">
+                <div className="flex w-[30%] items-center justify-center border border-black bg-yellow px-4 py-2">
                   {turn.moveNumber}
                 </div>
-                <div className="bg-yellow flex w-[30%] items-center justify-center border border-black px-4 py-2">
+                <div className="flex w-[30%] items-center justify-center border border-black bg-yellow px-4 py-2">
                   {turn.whiteMove}
                 </div>
-                <div className="bg-yellow flex w-[30%] items-center justify-center border border-black px-4 py-2">
+                <div className="flex w-[30%] items-center justify-center border border-black bg-yellow px-4 py-2">
                   {turn.blackMove}
                 </div>
               </div>

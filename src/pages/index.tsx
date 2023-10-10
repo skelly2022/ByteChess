@@ -12,6 +12,7 @@ import { useSession } from "next-auth/react";
 import UserProfile from "~/modals/UserProfile";
 import socket from "~/helpers/socket";
 import useLoginModal from "~/hooks/useLoginModal";
+import Head from "next/head";
 
 export default function Home() {
   const user = useUserModal();
@@ -46,6 +47,12 @@ export default function Home() {
         <Navbar />
         <UserProfile />
       </ClientOnly>
+      <Head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
       <main className="no-scrollbar flex min-h-[calc(100vh-112px)] flex-col items-center overflow-auto bg-green ">
         <LandingPage />
       </main>

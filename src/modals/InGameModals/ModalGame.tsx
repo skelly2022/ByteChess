@@ -64,7 +64,7 @@ const ModalGame: React.FC<ModalProps> = ({
   return (
     <>
       <div className="no-scrollbar fixed inset-0  z-[9999] flex h-full items-center justify-center overflow-y-auto overflow-x-hidden bg-green/60 outline-none focus:outline-none">
-        <div className=" relative mx-auto my-6 w-full   md:h-auto md:w-3/6 lg:h-1/2 lg:w-1/3 ">
+        <div className=" relative mx-auto my-6 w-3/4   md:h-auto md:w-3/6 lg:h-1/2 lg:w-1/3 ">
           <div
             className={`translate h-full duration-300 ${
               showModal ? "translate-y-0" : "translate-y-full"
@@ -72,14 +72,7 @@ const ModalGame: React.FC<ModalProps> = ({
           >
             <div className="translate relative flex h-full w-full flex-col rounded-lg  border-4 border-yellow bg-green text-white shadow-lg outline-none focus:outline-none md:h-auto lg:h-auto">
               {/* Header */}
-              {tournament.tournamentID === "" && (
-                <button
-                  className="absolute left-9 top-2 border-0 p-1 transition hover:opacity-70"
-                  onClick={handleClose}
-                >
-                  <IoMdClose size={22} />
-                </button>
-              )}
+
               <div className="flex items-center justify-center rounded-t  p-3">
                 <div className="text-lg font-semibold text-yellow">{title}</div>
               </div>
