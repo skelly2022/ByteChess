@@ -84,6 +84,9 @@ const ActionContainer = () => {
         winner: result.rating,
       });
     },
+    onError(error) {
+      console.log(error);
+    },
   });
   const updateDraw = api.games.updateGameDraw.useMutation({
     async onSuccess(result) {
@@ -96,6 +99,9 @@ const ActionContainer = () => {
         loser: result.loserRating,
         winner: result.rating,
       });
+    },
+    onError(error) {
+      console.log(error);
     },
   });
   const handleIconClick = (index) => {
