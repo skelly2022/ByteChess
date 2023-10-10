@@ -89,7 +89,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       console.log(result);
     },
   });
-
+  console.log(play.opponent);
   /// move option logic
   function onSquareClick(square) {
     setPreMoveSquares({});
@@ -331,7 +331,10 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   useEffect(() => {
     socket.on("timeUp", (data) => {
       console.log(data);
-      if (data.winner === session.data.user.name) {
+      if (
+        data.winner === session.data.user.name &&
+        play.opponent.walletAddress !== ""
+      ) {
         updateWin.mutateAsync({
           wAddress: session.data.user.name,
           lAddress: play.opponent.walletAddress,
@@ -343,7 +346,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
     return () => {
       socket.off("timeUp");
     };
-  }, []);
+  }, [play.opponent.walletAddress]);
   return (
     <div style={boardWrapper}>
       <Chessboard
