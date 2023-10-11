@@ -37,6 +37,9 @@ const LoginModal = () => {
       router.push(`/play/${data.id}`);
       play.onClose();
     },
+    onError(error) {
+      console.log(error);
+    },
   });
 
   function getRandomColor(preferredColor: string) {

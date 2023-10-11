@@ -24,6 +24,9 @@ const LoginModal = () => {
     async onSuccess(data) {
       user.setUser(data);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
   const sign = (name) => {
     if (wallet.connected === false) {

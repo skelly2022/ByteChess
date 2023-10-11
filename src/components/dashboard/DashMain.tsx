@@ -55,6 +55,9 @@ const DashMain = () => {
 
       setAllNfts(updatedNfts);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -94,10 +97,16 @@ const DashMain = () => {
     onSuccess(data) {
       setAllNfts(data);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
   const nftsMe = api.mint.getAllNftsProfile.useMutation({
     onSuccess(data) {
       setMyNfts(data);
+    },
+    onError(error) {
+      console.log(error);
     },
   });
   const handleNftViewToggle = (shouldShowMyNfts) => {

@@ -27,6 +27,9 @@ const Home: React.FC<Page> = ({ Page }) => {
       user.setUser(data);
       setLoading(false);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
 
   useEffect(() => {

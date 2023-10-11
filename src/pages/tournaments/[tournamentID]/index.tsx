@@ -38,7 +38,9 @@ const Home: React.FC<Page> = ({ Page }) => {
 
       setLobbyData(data);
     },
-    onError(error) {},
+    onError(error) {
+      console.log(error);
+    },
   });
 
   const user = useUserModal();
@@ -47,7 +49,9 @@ const Home: React.FC<Page> = ({ Page }) => {
     onSuccess(data) {
       user.setUser(data);
     },
-    onError(error) {},
+    onError(error) {
+      console.log(error);
+    },
   });
 
   useEffect(() => {

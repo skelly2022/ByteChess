@@ -51,6 +51,9 @@ const UserWin = () => {
       socket.emit("rematchNewGame", { playID, gameID: data.id });
       router.push(`/play/${data.id}`);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
   const wWallet = () => {
     if (play.side === "white") {

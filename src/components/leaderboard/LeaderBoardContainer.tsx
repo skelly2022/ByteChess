@@ -21,10 +21,16 @@ const LeaderboardContainer = () => {
 
   const updateUser = api.example.updateUser.useMutation({
     onSuccess(data, variables, context) {},
+    onError(error) {
+      console.log(error);
+    },
   });
   const getAllAccounts = api.example.getAllUsers.useMutation({
     onSuccess(data) {
       onSuccessGetData(data);
+    },
+    onError(error) {
+      console.log(error);
     },
   });
   function shortenString(str) {

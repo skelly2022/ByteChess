@@ -49,6 +49,9 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
       user.setUser(result);
       toast.success("Rating Updated");
     },
+    onError(error) {
+      console.log(error);
+    },
   });
 
   const updateRating = api.puzzles.updateRating.useMutation({
@@ -82,7 +85,9 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
         });
       } catch (error) {}
     },
-    async onError(result) {},
+    onError(error) {
+      console.log(error);
+    },
   });
   async function handleClickInitialize() {
     updateRating.mutateAsync({ address: publicKey.toBase58() });

@@ -57,14 +57,18 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
       // socket.emit()
       router.push(`/play/${data.id}`);
     },
-    onError(error) {},
+    onError(error) {
+      console.log(error);
+    },
   });
   const getGame = api.games.getGameTournament.useMutation({
     async onSuccess(data) {
       tournamentStore.setTournamentID(tournament.id);
       router.push(`/play/${data.id}`);
     },
-    onError(error) {},
+    onError(error) {
+      console.log(error);
+    },
   });
   const join = api.tournament.joinTournament.useMutation({
     onSuccess(data, variables, context) {
@@ -80,7 +84,9 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
         )} has joined the Lobby`,
       ]);
     },
-    onError(error) {},
+    onError(error) {
+      console.log(error);
+    },
   });
   const newPlayers = api.tournament.getPlayers.useMutation({
     onSuccess(data, variables, context) {
@@ -102,7 +108,9 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
         )} has left the Lobby`,
       ]);
     },
-    onError(error) {},
+    onError(error) {
+      console.log(error);
+    },
   });
 
   const [timeDifference, setTimeDifference] = useState<string>(

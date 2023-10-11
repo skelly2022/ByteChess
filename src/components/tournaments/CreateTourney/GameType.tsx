@@ -37,6 +37,9 @@ const GameType = () => {
         setImagesLoaded(true);
       }, 5000);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
 
   const openEditPopup = () => {

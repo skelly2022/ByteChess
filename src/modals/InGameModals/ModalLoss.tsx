@@ -38,6 +38,9 @@ const ModalLoss = () => {
       socket.emit("rematchNewGame", { playID, gameID: data.id });
       router.push(`/play/${data.id}`);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
   function getGameType(timeControl) {
     // Split the string by the "+" sign

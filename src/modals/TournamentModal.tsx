@@ -21,6 +21,9 @@ const TournamentModal = () => {
     async onSuccess(data) {
       tournament.setTournaments(data);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
   const {
     register,

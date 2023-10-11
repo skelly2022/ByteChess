@@ -41,6 +41,9 @@ const DashBoard: React.FC<DashBoardProps> = ({
   const [saves, setsaves] = useState([]);
   const getLikes = api.mint.getLikes.useMutation({
     onSuccess(data) {},
+    onError(error) {
+      console.log(error);
+    },
   });
 
   const moves = moveString.split(" ").filter((_, index) => index % 3 !== 0);

@@ -10,6 +10,9 @@ const Rapid = () => {
       setData(data);
       setLoading(false);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
   function shortenString(str) {
     if (str.length <= 10) {

@@ -23,6 +23,9 @@ export default function Home() {
     onSuccess(data) {
       user.setUser(data);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
 
   useEffect(() => {

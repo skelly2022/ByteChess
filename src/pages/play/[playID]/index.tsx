@@ -46,7 +46,9 @@ const Home = () => {
         setLoading(false);
       }, 400);
     },
-    onError(error) {},
+    onError(error) {
+      console.log(error);
+    },
   });
   const getGame = api.games.getGame.useMutation({
     async onSuccess(userData) {
@@ -64,17 +66,23 @@ const Home = () => {
       socket.emit("username", { username: publicKey.toBase58() }, (r) => {});
       getPlayerSide(userData, publicKey.toBase58());
     },
-    async onError(error) {},
+    onError(error) {
+      console.log(error);
+    },
   });
   const getOpponent = api.example.getUser.useMutation({
     async onSuccess(userData) {
       play.setOpponent(userData);
     },
-    async onError(error) {},
+    onError(error) {
+      console.log(error);
+    },
   });
   const updateGame = api.games.updatePlayerJoin.useMutation({
     async onSuccess(data) {},
-    async onError(error) {},
+    onError(error) {
+      console.log(error);
+    },
   });
   const getPlayerSide = async (userData, myWalletAddress) => {
     const isMySide = userData.walletAddress === myWalletAddress;

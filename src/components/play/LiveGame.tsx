@@ -61,8 +61,8 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
 
   const updateTournamentGame = api.tournament.updateTournamentWin.useMutation({
     async onSuccess(result) {},
-    async onError(error) {
-      error;
+    onError(error) {
+      console.log(error);
     },
   });
   const updateWin = api.games.updateGameWin.useMutation({
@@ -79,7 +79,9 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         winner: result.rating,
       });
     },
-    async onError(result) {},
+    onError(error) {
+      console.log(error);
+    },
   });
   /// move option logic
   function onSquareClick(square) {

@@ -10,6 +10,9 @@ const TournamentContainer = () => {
     onSuccess(data, variables, context) {
       tournament.setTournaments(data);
     },
+    onError(error) {
+      console.log(error);
+    },
   });
 
   useEffect(() => {
