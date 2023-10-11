@@ -43,7 +43,6 @@ const UserWin = () => {
 
   const newGame = api.games.newGame.useMutation({
     async onSuccess(data) {
-      console.log(data);
       play.resetState();
       play.setRematch();
       setRematchState("DEFAULT");
@@ -81,7 +80,6 @@ const UserWin = () => {
     }
   }
   const cancelRematch = () => {
-    console.log("hey");
     setRematchState("REMATCH");
     socket.emit("rematchDeclined", { playID });
   };
@@ -173,25 +171,27 @@ const UserWin = () => {
 
     case "OFFERDME":
       rematchButtonContent = (
-        <div className="flex items-center gap-2 bg-yellow px-6 py-3 text-green">
+        <div className="flex flex-col items-center gap-2 bg-yellow px-6 py-3 text-green">
           Rematch
-          <button
-            className="rounded-lg bg-success px-1 py-2"
-            onClick={() => {
-              acceptRematch();
-            }}
-          >
-            Yes
-          </button>
-          <button
-            className="rounded-lg bg-error px-1 py-2"
-            onClick={() => {
-              socket.emit("rematchDeclined", { playID });
-              setRematchState("");
-            }}
-          >
-            No
-          </button>
+          <div className="flex w-full items-center justify-center gap-2">
+            <button
+              className="rounded-lg bg-success px-1 py-2"
+              onClick={() => {
+                acceptRematch();
+              }}
+            >
+              Yes
+            </button>
+            <button
+              className="rounded-lg bg-error px-1 py-2"
+              onClick={() => {
+                socket.emit("rematchDeclined", { playID });
+                setRematchState("");
+              }}
+            >
+              No
+            </button>
+          </div>
         </div>
       );
       break;
@@ -224,11 +224,7 @@ const UserWin = () => {
         wWallet: wWallet(),
         bWallet: bWallet(),
       });
-
-      console.log(txSig);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   const bodyContent = (
     <div className="flex flex-col   items-center justify-evenly  bg-green  text-white ">
@@ -309,7 +305,6 @@ const UserWin = () => {
   useEffect(() => {
     // Listen for a received rematch offer
     const handleReceivedRematchOffer = () => {
-      console.log("hey");
       setRematchState("OFFERDME");
     };
 
@@ -343,7 +338,6 @@ const UserWin = () => {
   useEffect(() => {
     // Listen for a received rematch offer
     const handleReceivedRematchOffer = () => {
-      console.log("hey");
       setRematchState("OFFERDME");
     };
 
@@ -358,7 +352,6 @@ const UserWin = () => {
   useEffect(() => {
     // Listen for rematch acceptance
     const handleRematchAccepted = () => {
-      console.log("accepted");
       if (WinModal.isOpen) {
         const data = {
           address: session.data.user.name,
@@ -382,7 +375,6 @@ const UserWin = () => {
   useEffect(() => {
     // Listen for rematch declined
     const handleRematchDeclinedSend = () => {
-      console.log("declined");
       setRematchState("");
       // Do any other logic like routing or setting up the game here
     };

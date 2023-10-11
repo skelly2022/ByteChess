@@ -82,16 +82,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
   const OpenProfile = async () => {
     profileModal.onOpen();
   };
-  useEffect(() => {
-    console.log(session);
-    // if (session.status === "authenticated") {
-    //   showProfile(true);
-    //   console.log(session);
-    //   console.log(session.data.user.name);
-    // } else {
-    //   showProfile(false);
-    // }
-  }, [session]);
+
   return (
     <div className="relative z-50">
       <div className="flex flex-row items-center gap-3">

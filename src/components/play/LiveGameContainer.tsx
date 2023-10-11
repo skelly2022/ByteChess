@@ -54,7 +54,6 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
       text: chatMessage,
       sender: extractFirstAndLast5Characters(session.data.user.name),
     };
-    console.log([...chatMessages, senderMessage]);
     setChatMessages([...chatMessages, senderMessage]); // Add the sender's message only
 
     // Clear the input field
@@ -63,14 +62,6 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
 
   useEffect(() => {
     socket.on("chatMessageInc", (data) => {
-      console.log(chatMessages);
-      console.log([
-        ...chatMessages,
-        {
-          text: data.message,
-          sender: data.sender,
-        },
-      ]);
       const senderMessage = {
         text: data.message,
         sender: data.sender,
@@ -88,15 +79,7 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
       socket.off("chatMessageInc");
     };
   }, []);
-  useEffect(() => {
-    socket.on("timeUp", (data) => {
-      console.log(data);
-    });
 
-    return () => {
-      socket.off("timeUp");
-    };
-  }, []);
   return (
     <div
       className="flex h-[calc(100vh-112px)] w-screen items-center justify-center gap-5

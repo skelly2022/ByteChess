@@ -52,25 +52,19 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
 
   const newGame = api.games.newGame.useMutation({
     async onSuccess(data) {
-      console.log(data);
       tournamentStore.setTournamentID(tournament.id);
 
       // socket.emit()
       router.push(`/play/${data.id}`);
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
   const getGame = api.games.getGameTournament.useMutation({
     async onSuccess(data) {
       tournamentStore.setTournamentID(tournament.id);
-      console.log(data);
       router.push(`/play/${data.id}`);
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
   const join = api.tournament.joinTournament.useMutation({
     onSuccess(data, variables, context) {
@@ -86,18 +80,13 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
         )} has joined the Lobby`,
       ]);
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
   const newPlayers = api.tournament.getPlayers.useMutation({
     onSuccess(data, variables, context) {
-      console.log(data);
       setPlayers(data.players);
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
   const leave = api.tournament.leaveTournament.useMutation({
     onSuccess(data, variables, context) {
@@ -113,9 +102,7 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
         )} has left the Lobby`,
       ]);
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
 
   const [timeDifference, setTimeDifference] = useState<string>(
@@ -141,7 +128,6 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
         text: chatMessage,
         sender: extractFirstAndLast5Characters(session.data.user.name),
       };
-      console.log([...chatMessages, senderMessage]);
       setChatMessages([...chatMessages, senderMessage]); // Add the sender's message only
 
       // Clear the input field
@@ -167,9 +153,7 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
   }
   useEffect(() => {
     socket.on("opponentJoinedTournament", (data) => {
-      console.log("hey");
       newPlayers.mutateAsync({ id: tournament.id });
-      console.log(data);
 
       // Add a message to the logMessages
       setLogMessages((prevLogs) => [
@@ -184,11 +168,9 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
   }, []);
   useEffect(() => {
     socket.on("opponentLeftTournament", (data) => {
-      console.log("hey");
       newPlayers.mutateAsync({ id: tournament.id });
 
       // Add a message to the logMessages
-      console.log(data);
       setLogMessages((prevLogs) => [
         ...prevLogs,
         `${extractFirstAndLast5Characters(data.wallet)} has left the Lobby`,
@@ -214,14 +196,6 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
 
   useEffect(() => {
     socket.on("chatMessageInc", (data) => {
-      console.log(chatMessages);
-      console.log([
-        ...chatMessages,
-        {
-          text: data.message,
-          sender: data.sender,
-        },
-      ]);
       setChatMessages((prevChatMessages) => [
         ...prevChatMessages,
         {
@@ -246,7 +220,6 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
   }, []);
   useEffect(() => {
     socket.on("matchFoundCreator", async (args) => {
-      console.log(args);
       const data = {
         address: session.data.user.name,
         mode: tournament.type,
@@ -262,7 +235,6 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
 
   useEffect(() => {
     socket.on("matchFound", (data) => {
-      console.log(data);
       const dataToSend = {
         id: data.opponentSocketWallet,
       };

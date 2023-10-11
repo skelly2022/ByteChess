@@ -39,10 +39,7 @@ const EventCalendar = () => {
       );
       return { ...event, startTime: eventStartTime, endTime: eventEndTime };
     });
-    console.log(events);
     setEvents(events);
-
-    console.log(tournament.tournaments);
   }, [tournament.tournaments]);
 
   const handleDateChange = (direction) => {
@@ -73,7 +70,6 @@ const EventCalendar = () => {
 
   const renderEvent = (event) => {
     const isEventUsed = usedEvents.includes(event.id);
-    console.log(isEventUsed);
     // Add the event's ID to the usedEvents array
     return isEventUsed ? (
       <div

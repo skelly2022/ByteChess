@@ -59,16 +59,10 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
     width: `80.33vh`,
   });
 
-  // const updateGame = api.games.updateGameFen.useMutation({
-  //   async onSuccess(result) {},
-  //   async onError(result) {
-  //     console.log(result);
-  //   },
-  // });
   const updateTournamentGame = api.tournament.updateTournamentWin.useMutation({
     async onSuccess(result) {},
     async onError(error) {
-      console.log(error);
+      error;
     },
   });
   const updateWin = api.games.updateGameWin.useMutation({
@@ -77,7 +71,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       play.setOpponent(result.loserRating);
       WinModal.onOpen();
       if (tournament.tournamentID !== "") {
-        updateTournamentGame.mutateAsync({ id: tournament.myID });
+        updateTournamentGame.mutateAsync({ id: session.data.user.name });
       }
       socket.emit("checkmate", {
         roomId: playID,
@@ -85,11 +79,8 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         winner: result.rating,
       });
     },
-    async onError(result) {
-      console.log(result);
-    },
+    async onError(result) {},
   });
-  console.log(play.opponent);
   /// move option logic
   function onSquareClick(square) {
     setPreMoveSquares({});
@@ -142,7 +133,6 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         [sourceSquare]: { backgroundColor: "rgba(186, 41, 41, 0.8)" },
         [targetSquare]: { backgroundColor: "rgba(186, 41, 41, 0.8)" },
       });
-      console.log("hey");
       return;
     }
     let data = {
@@ -156,7 +146,6 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
         [sourceSquare]: { backgroundColor: "rgba(161, 160, 166, 0.8)" },
         [targetSquare]: { backgroundColor: "rgba(161, 160, 166, 0.8)" },
       });
-      console.log(moveMade.pgn);
       const fens = play.fens;
       const moves = play.moves;
       play.setFens([...fens, moveMade.fen]);
@@ -167,8 +156,6 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       // updateGame.mutateAsync({ id: playID, fen: moveMade.fen });
       setPreMoveSquares({});
       if (new Chess(moveMade.fen).isCheckmate() === true) {
-        console.log("checkmate");
-        console.log(moveMade.pgn);
         play.setCurrentFen(moveMade.fen);
         updateWin.mutateAsync({
           wAddress: session.data.user.name,
@@ -198,7 +185,6 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       play.setMyTimer(false);
       setPlayMoveSound(true);
     } else {
-      console.log("falsemove");
       return false;
     }
   }
@@ -227,13 +213,10 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       if (new Chess(data.fen).isCheckmate() === true) {
         play.setMyTimer(false);
         play.setOpponentTimer(false);
-        console.log("checkmated");
         LossModal.onClose();
         // Delay execution by 1 second
       }
       if (preMoveSquares != {}) {
-        console.log(preMoveSquares);
-
         const keys = Object.keys(preMoveSquares);
         const sourceSquare = keys[0];
         const targetSquare = keys[1];
@@ -258,7 +241,6 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
           // updateGame.mutateAsync({ id: playID, fen: moveMade.fen });
           setPreMoveSquares({});
           if (new Chess(moveMade.fen).isCheckmate() === true) {
-            console.log("checkmate");
             updateWin.mutateAsync({
               wAddress: session.data.user.name,
               lAddress: play.opponent.walletAddress,
@@ -287,7 +269,6 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
           play.setMyTimer(false);
           setPlayMoveSound(true);
         } else {
-          console.log("falsemove");
           setPreMoveSquares({});
 
           return false;
@@ -330,7 +311,6 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
   }, [windowWidth]);
   useEffect(() => {
     socket.on("timeUp", (data) => {
-      console.log(data);
       if (
         data.winner === session.data.user.name &&
         play.opponent.walletAddress !== ""

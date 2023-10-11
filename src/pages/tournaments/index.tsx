@@ -27,13 +27,10 @@ const Home: React.FC<Page> = ({ Page }) => {
   const session = useSession();
   const getUser = api.example.getUser.useMutation({
     onSuccess(data) {
-      console.log(data);
       user.setUser(data);
       setLoading(false);
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
 
   useEffect(() => {
@@ -42,7 +39,6 @@ const Home: React.FC<Page> = ({ Page }) => {
     puzzle.setRanked(false);
   }, []);
   useEffect(() => {
-    console.log(session);
     if (session.status === "authenticated") {
       getUser.mutateAsync({ address: session.data.user.name });
     } else {

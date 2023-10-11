@@ -21,13 +21,11 @@ export default function Home() {
   const loginModal = useLoginModal();
   const getUser = api.example.getUser.useMutation({
     onSuccess(data) {
-      console.log(data);
       user.setUser(data);
     },
   });
 
   useEffect(() => {
-    console.log(session);
     if (session.status === "authenticated") {
       getUser.mutateAsync({ address: session.data.user.name });
       socket.emit("userConnected", session.data.user.name);

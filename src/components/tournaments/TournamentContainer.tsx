@@ -8,7 +8,6 @@ const TournamentContainer = () => {
   const tournament = useTournamentModal();
   const tournaments = api.tournament.getAllTournaments.useMutation({
     onSuccess(data, variables, context) {
-      console.log(data);
       tournament.setTournaments(data);
     },
   });

@@ -36,7 +36,6 @@ export default function OpponentTimer({ expiryTimestamp }) {
   }, []);
 
   useEffect(() => {
-    console.log(play.opponentTimer);
     if (play.opponentTimer === true) {
       resume();
     }

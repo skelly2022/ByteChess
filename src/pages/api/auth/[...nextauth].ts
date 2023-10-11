@@ -29,7 +29,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           //   return null;
           // }
           const csrfToken = await getCsrfToken({ req: { ...req, body: null } });
-          console.log(signinMessage);
 
           if (signinMessage.nonce !== csrfToken) {
             return null;

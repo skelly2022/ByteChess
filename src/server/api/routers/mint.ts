@@ -31,7 +31,6 @@ export const mintRouter = createTRPCRouter({
 
       try {
         // Log input to ensure it's being received correctly
-        console.log("Input Address:", input.address);
 
         const response = await axios.post(url, {
           jsonrpc: "2.0",
@@ -45,7 +44,6 @@ export const mintRouter = createTRPCRouter({
         });
 
         // Log the full response to ensure it's structured as expected
-        console.log("Full Response:", response.data);
 
         // Check if response.data.result.items is defined and not empty
         if (

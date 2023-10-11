@@ -8,9 +8,6 @@ import Loading from "../Loading";
 import useUserModal from "~/hooks/useUserStore";
 import { Session } from "inspector";
 const LBContainer = () => {
-  //   const { data } = api.leaderboard.getBullet.useQuery();
-  //   console.log(data);
-
   const [page, setPage] = useState("Bullet");
   return (
     <div className=" flex h-[calc(100vh-112px)] w-full flex-col gap-4  ">

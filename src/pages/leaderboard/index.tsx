@@ -9,7 +9,6 @@ import usePlayModal from "~/hooks/usePlayModal";
 import LeaderboardContainer from "~/components/leaderboard/LeaderBoardContainer";
 import { Chess } from "chess.js";
 import { Chessboard, ClearPremoves } from "react-chessboard";
-import MyTimer from "~/components/play/MyTimer";
 import LBContainer from "~/components/leaderboard/LBContainer";
 const boardWrapper = {
   width: `70vw`,
@@ -61,7 +60,6 @@ export default function Home() {
       to: targetSquare,
       promotion: piece[1].toLowerCase() ?? "q",
     });
-    console.log(gameCopy.pgn());
 
     setGame(gameCopy);
 

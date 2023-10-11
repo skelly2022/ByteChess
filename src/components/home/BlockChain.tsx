@@ -34,9 +34,7 @@ const BlockChain = () => {
           rating: account.data.toString(),
         };
         accounts.push(user);
-      } catch (error) {
-        console.log(`Error fetching GameDataAccount state: ${error}`);
-      }
+      } catch (error) {}
     });
 
     // Wait for all promises to resolve

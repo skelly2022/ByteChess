@@ -41,15 +41,12 @@ const Home = () => {
   const { publicKey } = useWallet();
   const getUser = api.example.getUser.useMutation({
     onSuccess(data) {
-      console.log(data);
       user.setUser(data);
       setTimeout(() => {
         setLoading(false);
       }, 400);
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
   const getGame = api.games.getGame.useMutation({
     async onSuccess(userData) {
@@ -57,7 +54,6 @@ const Home = () => {
         toast.error("Game Over");
         router.push("/");
       }
-      console.log(userData);
       setGameID(userData.id);
       setGameType(userData.Time);
 
@@ -68,23 +64,17 @@ const Home = () => {
       socket.emit("username", { username: publicKey.toBase58() }, (r) => {});
       getPlayerSide(userData, publicKey.toBase58());
     },
-    async onError(error) {
-      console.log(error);
-    },
+    async onError(error) {},
   });
   const getOpponent = api.example.getUser.useMutation({
     async onSuccess(userData) {
       play.setOpponent(userData);
     },
-    async onError(error) {
-      console.log(error);
-    },
+    async onError(error) {},
   });
   const updateGame = api.games.updatePlayerJoin.useMutation({
     async onSuccess(data) {},
-    async onError(error) {
-      console.log(error);
-    },
+    async onError(error) {},
   });
   const getPlayerSide = async (userData, myWalletAddress) => {
     const isMySide = userData.walletAddress === myWalletAddress;
@@ -92,7 +82,6 @@ const Home = () => {
     if (isMySide === true) {
       play.setSide(userData.Color);
       socket.emit("createRoom", { roomId: userData.id }, (data) => {
-        console.log(data);
         if (data.lastMove === null) {
           return;
         } else {
@@ -100,7 +89,6 @@ const Home = () => {
           if (data.lastMoveColor === null) {
             return;
           }
-          console.log(data.lastMoveColor[0] === userData.Color[0]);
           if (data.lastMoveColor[0] === userData.Color[0]) {
             play.setOpponentTimer(true);
             if (data.lastMoveColor === "black") {
@@ -150,9 +138,7 @@ const Home = () => {
         if (userData.Color === "black") {
           play.setSide("white");
         }
-        console.log(userData);
         socket.emit("joinRoom", { roomId: userData.id }, (data) => {
-          console.log(data);
           if (data.lastMoveColor === null) {
             return;
           } else {
@@ -217,7 +203,6 @@ const Home = () => {
     // });
   }, [socket]);
   useEffect(() => {
-    console.log(session);
     if (session.status === "authenticated") {
       getUser.mutateAsync({ address: session.data.user.name });
     } else {

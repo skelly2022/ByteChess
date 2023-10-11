@@ -38,7 +38,6 @@ export const exampleRouter = createTRPCRouter({
   getUser: publicProcedure
     .input(z.object({ address: z.string() }))
     .mutation(async ({ input }) => {
-      console.log(input);
       const user = await prisma.user.findFirst({
         where: {
           walletAddress: input.address,
@@ -49,7 +48,6 @@ export const exampleRouter = createTRPCRouter({
 
   getAllUsers: publicProcedure.mutation(async () => {
     const users = await prisma.user.findMany({});
-    console.log(users);
     return users;
   }),
 
@@ -79,28 +77,5 @@ export const exampleRouter = createTRPCRouter({
         },
       });
       return user;
-    }),
-
-  getAllNfts: publicProcedure
-    .input(z.object({ address: z.string() }))
-    .mutation(async ({ input }) => {
-      const url = `https://api-mainnet.magiceden.dev/v2/wallets/${input.address}/tokens`;
-      const response = await axios.get(url, {
-        headers: {
-          accept: "application/json",
-        },
-      });
-
-      console.log("Response:", response);
-      //    if (response.data) {
-      //    res.json(response.data);
-      //    } else {
-      //    res.status(204).send('No Content');
-      //   }
-      // } catch (error) {
-      //     console.log('Error:', error);
-      //   res.status(500).json({ error: error.toString() });
-      //  }
-      return response.data;
     }),
 });

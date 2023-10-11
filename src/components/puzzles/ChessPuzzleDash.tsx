@@ -80,9 +80,7 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
           address: publicKey.toBase58(),
           rating: result.puzzleRatingChain,
         });
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     },
     async onError(result) {},
   });
@@ -123,7 +121,7 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
   }, [puzzle.sign]);
 
   return (
-    <div className=" md:border-yellow  flex h-auto w-full flex-wrap gap-2   text-white md:h-[60%] md:border ">
+    <div className=" flex  h-auto w-full flex-wrap gap-2 text-white   md:h-[60%] md:border md:border-yellow ">
       <div className="  flex  h-auto w-1/2 flex-col rounded-lg   md:w-full  ">
         <div className=" flex h-full w-full transform flex-col items-center justify-center ">
           {!puzzle.ranked && (
@@ -171,15 +169,15 @@ const ChessPuzzleDash: React.FC<PuzzleDashProps> = ({
               }}
             >
               <Switch.Thumb
-                className="shadow-blackA7 bg-yellow block h-[32px] 
-                   w-[32px] translate-x-0.5   rounded-full shadow-[0_2px_2px]
+                className="shadow-blackA7 block h-[32px] w-[32px] 
+                   translate-x-0.5 rounded-full   bg-yellow shadow-[0_2px_2px]
                     transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[38px]"
               />
             </Switch.Root>
           </div>
           {puzzle.ranked && (
             <div className="flex w-full  items-center justify-center gap-3 md:flex-col">
-              <h1 className="text-yellow text-3xl">
+              <h1 className="text-3xl text-yellow">
                 {" "}
                 {user.user.puzzleCount}/5{" "}
               </h1>

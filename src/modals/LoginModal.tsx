@@ -26,7 +26,6 @@ const LoginModal = () => {
     },
   });
   const sign = (name) => {
-    console.log(name);
     if (wallet.connected === false) {
       select(name);
     } else {
@@ -60,9 +59,7 @@ const LoginModal = () => {
         signature: serializedSignature,
       });
       loginModal.onClose();
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -71,10 +68,6 @@ const LoginModal = () => {
     }
   }, [wallet.connected]);
 
-  useEffect(() => {
-    console.log(wallet.connected);
-    console.log(publicKey);
-  }, []);
   const bodyContent = (
     <div className="flex h-[100px] items-center justify-center gap-8">
       {wallets.map((wallet) => {

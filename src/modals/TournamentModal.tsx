@@ -45,7 +45,6 @@ const TournamentModal = () => {
     if (step !== STEPS.CREATE) {
       return onNext();
     }
-    console.log("create");
     const selectedDate = tournament.date; // This should be a Date object
     const selectedTime = tournament.startTime; // Example selected time in HH:mm format
     const [hours, minutes] = selectedTime.split(":");
@@ -56,10 +55,7 @@ const TournamentModal = () => {
     //@ts-ignore
 
     const combinedDateTime = new Date(year, month, day, hours, minutes);
-    console.log(combinedDateTime);
-    console.log(tournament.name);
-    console.log(tournament.duration);
-    console.log(tournament.type);
+
     newTournament.mutateAsync({
       date: combinedDateTime,
       name: tournament.name,

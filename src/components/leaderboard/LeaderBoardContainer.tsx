@@ -58,9 +58,7 @@ const LeaderboardContainer = () => {
           rating: account.data.toString(),
         };
         accounts.push(user);
-      } catch (error) {
-        console.log(`Error fetching GameDataAccount state: ${error}`);
-      }
+      } catch (error) {}
     });
 
     // Wait for all promises to resolve
@@ -70,7 +68,6 @@ const LeaderboardContainer = () => {
     const sortedAccounts = accounts.sort(
       (a, b) => parseInt(b.rating) - parseInt(a.rating),
     );
-    console.log(sortedAccounts);
     setSortedAccounts(sortedAccounts);
     setLoading(false);
   }

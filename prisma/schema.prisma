@@ -69,6 +69,7 @@ model TournamentPlayer {
     bulletRating  Int         @default(1200) // Default bullet rating
     blitzRating   Int         @default(1200) // Default blitz rating
     rapidRating   Int         @default(1200) // Default rapid rating
+    createdAt     DateTime    @default(now())
     Tournament    Tournament? @relation(fields: [tournamentId], references: [id])
     tournamentId  String?     @db.ObjectId
     result        Int         @default(0)

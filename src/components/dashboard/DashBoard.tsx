@@ -27,8 +27,6 @@ const DashBoard: React.FC<DashBoardProps> = ({
   onNext,
   onPrevious,
 }) => {
-  console.log(selectedGame);
-
   const [currentSelectedGame, setCurrentSelectedGame] = useState(selectedGame);
   const moveString = currentSelectedGame.attributes[0].value;
   const splitMoves = moveString.split(" ");
@@ -42,9 +40,7 @@ const DashBoard: React.FC<DashBoardProps> = ({
   });
   const [saves, setsaves] = useState([]);
   const getLikes = api.mint.getLikes.useMutation({
-    onSuccess(data) {
-      console.log(data);
-    },
+    onSuccess(data) {},
   });
 
   const moves = moveString.split(" ").filter((_, index) => index % 3 !== 0);

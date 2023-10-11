@@ -79,7 +79,6 @@ export const gamesRouter = createTRPCRouter({
           createdAt: "desc", // Assuming you have a 'createdAt' field. Change this to your timestamp field's name if different.
         },
       });
-      console.log(game);
       if (!game) {
         throw new Error("game not found");
       }
@@ -139,7 +138,6 @@ export const gamesRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      console.log(input);
       // const games = await prisma.customGame.findMany({});
       // return games;
       const games = await prisma.customGame.update({
@@ -170,7 +168,6 @@ export const gamesRouter = createTRPCRouter({
           gameOver: true,
         },
       });
-      console.log(findGame);
 
       const winner = await prisma.user.findFirst({
         where: { walletAddress: input.wAddress },
@@ -326,8 +323,6 @@ export const gamesRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      console.log(input);
-
       const rating = await prisma.user.findFirst({
         where: { walletAddress: input.winnerAddress },
       });

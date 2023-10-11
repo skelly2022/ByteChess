@@ -48,6 +48,7 @@ export const tournamentRouter = createTRPCRouter({
           tournamentId: input.id,
         },
       });
+
       return { tournament: tournament, players: currentPlayers };
     }),
   joinTournament: publicProcedure
@@ -124,24 +125,23 @@ export const tournamentRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      console.log(input);
       const find = await prisma.tournamentPlayer.findFirst({
         where: {
-          id: input.id,
+          walletAddress: input.id,
         },
         orderBy: {
-          result: "desc", // This sorts players by 'result' in descending order
+          createdAt: "desc", // Assuming you have a 'createdAt' field. Change this to your timestamp field's name if different.
         },
       });
-      console.log(find);
       const update = await prisma.tournamentPlayer.update({
         where: {
-          id: input.id,
+          id: find.id,
         },
         data: {
           result: find.result + 3,
         },
       });
+
       return;
     }),
   getPlayers: publicProcedure
@@ -160,5 +160,49 @@ export const tournamentRouter = createTRPCRouter({
         },
       });
       return { players: currentPlayers };
+    }),
+  updateTournamentDraw: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const currentPlayers = await prisma.customGame.findFirst({
+        where: { id: input.id },
+      });
+      const find = await prisma.tournamentPlayer.findFirst({
+        where: {
+          walletAddress: currentPlayers.walletAddress,
+        },
+        orderBy: {
+          createdAt: "desc", // Assuming you have a 'createdAt' field. Change this to your timestamp field's name if different.
+        },
+      });
+      const update = await prisma.tournamentPlayer.update({
+        where: {
+          id: find.id,
+        },
+        data: {
+          result: find.result + 1,
+        },
+      });
+      const find2 = await prisma.tournamentPlayer.findFirst({
+        where: {
+          walletAddress: currentPlayers.walletAddress2,
+        },
+        orderBy: {
+          createdAt: "desc", // Assuming you have a 'createdAt' field. Change this to your timestamp field's name if different.
+        },
+      });
+      const update2 = await prisma.tournamentPlayer.update({
+        where: {
+          id: find2.id,
+        },
+        data: {
+          result: find2.result + 1,
+        },
+      });
+      return;
     }),
 });

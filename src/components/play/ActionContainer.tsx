@@ -8,10 +8,10 @@ import socket from "~/helpers/socket";
 import { api } from "~/utils/api";
 import useUserModal from "~/hooks/useUserStore";
 import usePlayModal from "~/hooks/usePlayModal";
-import styles from "../styles/Animations.module.css";
 import useWinModal from "~/hooks/InGameModals/useWinModal";
 import useLossModal from "~/hooks/InGameModals/useLossModal";
 import useDrawModal from "~/hooks/InGameModals/useDrawModal";
+import useTournamentModal from "~/hooks/useTournamentModal";
 
 const ActionContainer = () => {
   const router = useRouter();
@@ -29,17 +29,9 @@ const ActionContainer = () => {
   const WinModal = useWinModal();
   const LossModal = useLossModal();
   const DrawModal = useDrawModal();
+  const tournament = useTournamentModal();
 
   const icons = [
-    {
-      icon: (
-        <AiOutlineClose
-          size={30}
-          className={`mt-2 cursor-pointer text-black`}
-        />
-      ),
-      text: "Close button clicked.",
-    },
     {
       icon: <h1 className="text-4xl">½</h1>,
       text: (
@@ -73,25 +65,35 @@ const ActionContainer = () => {
       text: <></>,
     },
   ];
+  const updateTournamentGame = api.tournament.updateTournamentWin.useMutation({
+    async onSuccess(result) {},
+    async onError(error) {},
+  });
+  const updateTournamentDraw = api.tournament.updateTournamentDraw.useMutation({
+    async onSuccess(result) {},
+    async onError(error) {},
+  });
   const updateWin = api.games.updateGameWin.useMutation({
     async onSuccess(result) {
-      console.log(result);
       user.setUser(result.loserRating);
       play.setOpponent(result.rating);
+      if (tournament.tournamentID !== "") {
+        updateTournamentGame.mutateAsync({ id: play.opponent.walletAddress });
+      }
       socket.emit("resign", {
         roomId: playID,
         loser: result.loserRating,
         winner: result.rating,
       });
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
   const updateDraw = api.games.updateGameDraw.useMutation({
     async onSuccess(result) {
-      console.log(result);
       user.setUser(result.loserRating);
+      if (tournament.tournamentID !== "") {
+        updateTournamentDraw.mutateAsync({ id: playID });
+      }
       play.setOpponent(result.rating);
       DrawModal.onOpen();
       socket.emit("drawAccept", {
@@ -100,9 +102,7 @@ const ActionContainer = () => {
         winner: result.rating,
       });
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
   const handleIconClick = (index) => {
     setActiveIcon(index);
@@ -112,8 +112,8 @@ const ActionContainer = () => {
         socket.emit("drawRequest", { roomId: playID });
       }
       if (index === 2) {
-        setGameResigned(true);
-        socket.emit("resignGame", { roomId: playID });
+        // setGameResigned(true);
+        // socket.emit("resignGame", { roomId: playID });
         updateWin.mutateAsync({
           wAddress: play.opponent.walletAddress,
           lAddress: user.user.walletAddress,
@@ -150,7 +150,6 @@ const ActionContainer = () => {
   };
   useEffect(() => {
     socket.on("drawRequested", (data) => {
-      console.log("drawRequested");
       setDrawRequested(true);
     });
     socket.on("drawDeclined", (data) => {
@@ -158,20 +157,17 @@ const ActionContainer = () => {
     });
     socket.on("drawAccepted", (data) => {
       resetActiveIcon();
-      console.log(data);
       DrawModal.onOpen();
-      setGameResigned(true);
+      // setGameResigned(true);
       play.setOpponent(data.loser);
       user.setUser(data.winner);
     });
     socket.on("resigned", (data) => {
-      console.log(data);
       WinModal.onOpen();
       play.setOpponent(data.loser);
       user.setUser(data.winner);
     });
     socket.on("checkmated", (data) => {
-      console.log(data);
       LossModal.onOpen();
       play.setOpponent(data.winner);
       user.setUser(data.loser);
@@ -238,12 +234,12 @@ const ActionContainer = () => {
       )}
       {gameResigned === true && (
         <div className="flex h-16 w-full flex-col items-center justify-center gap-2 pt-0 text-black sm:pt-4">
-          <h3 className=" w-1/2 bg-yellow py-1 text-center shadow transition-transform active:scale-y-75">
+          {/* <h3 className=" w-1/2 bg-yellow py-1 text-center shadow transition-transform active:scale-y-75">
             Find New Opponent
           </h3>
           <h3 className=" w-1/2 bg-yellow py-[2px] text-center shadow transition-transform active:scale-y-75">
             Rematch
-          </h3>
+          </h3> */}
         </div>
       )}
     </div>

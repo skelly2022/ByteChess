@@ -77,7 +77,6 @@ const TourneyTime = () => {
   const handleTimeSelect = (time) => {
     const offset = new Date().getTimezoneOffset();
     const userTimezone = offsetToTimezone[offset] || "UTC"; // Default to "UTC" if no match is found
-    console.log(userTimezone);
     setSelectedTime(`${time}`);
     tournament.setStartTime(time);
     setIsOpenTime(!isOpenTime);

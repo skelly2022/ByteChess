@@ -38,7 +38,6 @@ const Timer = ({ type }: { type: string }) => {
       setOpponentTimeInSeconds((prevTime) => {
         const newTime = prevTime - 0.01;
         if (newTime <= 0) {
-          console.log("Opponent's timer has hit zero!");
           clearInterval(timer);
           return 0;
         }
@@ -69,7 +68,6 @@ const Timer = ({ type }: { type: string }) => {
 
       setTimeInSeconds(myNewTime);
       setOpponentTimeInSeconds(opponentNewTime);
-      console.log(data, data.activeTimer, myNewTime, side);
 
       if (data.activeTimer === side && myNewTime > 0) {
         setIsRunning(true);
@@ -92,7 +90,6 @@ const Timer = ({ type }: { type: string }) => {
     socket.on("pauseTimers", () => {
       setIsRunning(false);
       setIsORunning(false);
-      console.log("Timers paused due to checkmate.");
     });
 
     return () => {
@@ -149,7 +146,6 @@ const Timer = ({ type }: { type: string }) => {
   };
   useEffect(() => {
     setSide(play.side);
-    console.log(play.side);
   }, [play.side]);
   return (
     <div className="text-2xl font-bold">

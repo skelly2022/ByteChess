@@ -1,5 +1,4 @@
 const getOppositeColor = (color: any) => {
-  console.log(color);
   if (color === "white") {
     return "black";
   } else {

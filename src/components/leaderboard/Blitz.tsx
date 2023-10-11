@@ -7,7 +7,6 @@ const Blitz = () => {
   const [loading, setLoading] = useState(true);
   const data = api.leaderboard.getBlitz.useMutation({
     onSuccess(data) {
-      console.log(data);
       setData(data);
       setLoading(false);
     },

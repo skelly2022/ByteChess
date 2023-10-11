@@ -30,7 +30,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
   };
   const handleContainerClick = () => {
     if (!isLargeScreen) {
-      // console.log("hey"); // Log "hey" on non-large screens when chat container is clicked
     }
   };
 

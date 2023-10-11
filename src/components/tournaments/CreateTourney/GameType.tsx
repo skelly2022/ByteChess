@@ -32,7 +32,6 @@ const GameType = () => {
 
   const data = api.example.getAllNfts.useMutation({
     async onSuccess(data) {
-      console.log(data);
       setMyImages(data);
       setTimeout(() => {
         setImagesLoaded(true);
@@ -41,10 +40,8 @@ const GameType = () => {
   });
 
   const openEditPopup = () => {
-    console.log(myImages);
     if (myImages.length === 0) {
       data.mutateAsync({ address: session.data.user.name });
-      console.log("gey");
     } else {
     }
     setIsEditPopupOpen(true);

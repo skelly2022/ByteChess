@@ -95,8 +95,6 @@ export async function mintCompressedNFT(
   const computedCreatorHash = new PublicKey(
     computeCreatorHash(metadataArgs.creators),
   ).toBase58();
-  console.log("computedDataHash:", computedDataHash);
-  console.log("computedCreatorHash:", computedCreatorHash);
 
   /*
     Add a single mint to collection instruction 
@@ -161,13 +159,8 @@ export async function mintCompressedNFT(
       },
     );
 
-    console.log("\nSuccessfully minted the compressed NFT!");
-    // console.log(explorerURL({ txSignature }));
-
     return txSignature;
   } catch (err) {
-    console.error("\nFailed to mint compressed NFT:", err);
-
     // log a block explorer link for the failed transaction
     // await extractSignatureFromFailedTransaction(connection, err);
 

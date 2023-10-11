@@ -24,7 +24,6 @@ const AllNfts: React.FC<AllNftsProps> = ({ nfts, onNftClick, handleLike }) => {
     width: `80.33vh`,
   });
   const [localNfts, setLocalNfts] = useState(nfts);
-  console.log(nfts);
   const getPgnFinalFen = (pgnString) => {
     try {
       const tempGame = new Chess();

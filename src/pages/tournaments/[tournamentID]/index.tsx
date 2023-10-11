@@ -38,26 +38,19 @@ const Home: React.FC<Page> = ({ Page }) => {
 
       setLobbyData(data);
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
-  console.log(data);
-  console.log(tournamentID);
+
   const user = useUserModal();
   const session = useSession();
   const getUser = api.example.getUser.useMutation({
     onSuccess(data) {
-      console.log(data);
       user.setUser(data);
     },
-    onError(error) {
-      console.log(error);
-    },
+    onError(error) {},
   });
 
   useEffect(() => {
-    console.log(session);
     if (session.status === "authenticated") {
       getUser.mutateAsync({ address: session.data.user.name });
     } else {
@@ -65,7 +58,6 @@ const Home: React.FC<Page> = ({ Page }) => {
     }
   }, [session]);
   useEffect(() => {
-    console.log(tournamentID);
     data.mutateAsync({ id: tournamentID });
   }, []);
   return (

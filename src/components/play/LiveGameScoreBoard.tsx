@@ -86,7 +86,6 @@ const LiveGameTimer = () => {
     }
   }, [play.moves]);
   useEffect(() => {
-    console.log(play.moves);
     if (play.moves.length === 0) {
       setChessMoves([
         {

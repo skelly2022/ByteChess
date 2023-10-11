@@ -61,7 +61,6 @@ const UserProfile = () => {
 
   const getUser = api.example.getUser.useMutation({
     onSuccess(data) {
-      console.log(data);
       user.setSearchedUser(data);
       setSearch(true);
     },
@@ -69,7 +68,6 @@ const UserProfile = () => {
 
   const getName = api.example.updateName.useMutation({
     onSuccess(data) {
-      console.log("Name:", data);
       user.setUser(data);
       setLoading(false);
     },
@@ -77,7 +75,6 @@ const UserProfile = () => {
 
   const getAvatar = api.example.updateAvatar.useMutation({
     onSuccess(data) {
-      console.log("AVATAR:", data);
       user.setUser(data);
       setLoading(false);
     },
@@ -85,20 +82,16 @@ const UserProfile = () => {
 
   const data = api.example.getAllNfts.useMutation({
     async onSuccess(data) {
-      console.log(data);
       setMyImages(data);
     },
   });
   const data1 = api.mint.getAllNftsProfile.useMutation({
     async onSuccess(data1) {
-      console.log(data1);
       setNfts(data1);
     },
   });
-  console.log(`CNFT`, data1);
   const response = api.example.getAllNfts.useMutation({
     onSuccess(data) {
-      console.log("nfts:", data);
       setNftData(data);
       setLoading(false);
     },
@@ -138,8 +131,6 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    console.log(publicKey);
-    console.log("MODAL", ProfileModal.isOpen);
     if (ProfileModal.isOpen) {
       response.mutateAsync({ address: session.data.user.name });
       data1.mutateAsync({ address: session.data.user.name }); // Add this line

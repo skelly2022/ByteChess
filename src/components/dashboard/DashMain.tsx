@@ -19,7 +19,6 @@ const DashMain = () => {
   const endItem = Math.min(startItem + itemsPerPage - 1, totalItems);
   const addLike = api.mint.addLike.useMutation({
     onSuccess(data) {
-      console.log(data);
       if (selectedNft !== null) {
         setSelectedNft((prevNft) => ({
           ...prevNft,
@@ -66,7 +65,6 @@ const DashMain = () => {
   };
 
   const handleNext = () => {
-    console.log("hey");
     const nftsList = isShowingMyNfts ? myNfts : allNfts;
     const currentIndex = nftsList.findIndex((nft) => nft.id === selectedNft.id);
     if (currentIndex < nftsList.length - 1) {
@@ -80,16 +78,13 @@ const DashMain = () => {
 
   const handleClickLike = (id: string) => {
     if (session.status === "authenticated") {
-      console.log("hey");
       addLike.mutateAsync({ address: session.data.user.name, img: id });
     } else {
       toast.error("Must be Signed In");
     }
   };
   const handleClick = (id: string) => {
-    console.log(id);
     if (session.status === "authenticated") {
-      console.log("hey");
       addLike.mutateAsync({ address: session.data.user.name, img: id });
     } else {
       toast.error("Must be Signed In");
@@ -97,13 +92,11 @@ const DashMain = () => {
   };
   const nfts = api.mint.getAllNfts.useMutation({
     onSuccess(data) {
-      console.log(data);
       setAllNfts(data);
     },
   });
   const nftsMe = api.mint.getAllNftsProfile.useMutation({
     onSuccess(data) {
-      console.log(data);
       setMyNfts(data);
     },
   });
@@ -113,7 +106,6 @@ const DashMain = () => {
   };
   const handleNftClick = (nftData) => {
     setSelectedNft(nftData);
-    console.log(nftData);
   };
 
   const handleBackClick = () => {
