@@ -33,6 +33,15 @@ const ActionContainer = () => {
 
   const icons = [
     {
+      icon: (
+        <AiOutlineClose
+          size={30}
+          className={`mt-2 cursor-pointer text-black`}
+        />
+      ),
+      text: "Close button clicked.",
+    },
+    {
       icon: <h1 className="text-4xl">½</h1>,
       text: (
         <div className="flex h-full w-full scale-150 items-center rounded-md px-2">
@@ -67,14 +76,19 @@ const ActionContainer = () => {
   ];
   const updateTournamentGame = api.tournament.updateTournamentWin.useMutation({
     async onSuccess(result) {},
-    async onError(error) {},
+    async onError(error) {
+      console.log(error);
+    },
   });
   const updateTournamentDraw = api.tournament.updateTournamentDraw.useMutation({
     async onSuccess(result) {},
-    async onError(error) {},
+    async onError(error) {
+      console.log(error);
+    },
   });
   const updateWin = api.games.updateGameWin.useMutation({
     async onSuccess(result) {
+      console.log(result);
       user.setUser(result.loserRating);
       play.setOpponent(result.rating);
       if (tournament.tournamentID !== "") {
@@ -150,6 +164,7 @@ const ActionContainer = () => {
   };
   useEffect(() => {
     socket.on("drawRequested", (data) => {
+      console.log("drawRequested");
       setDrawRequested(true);
     });
     socket.on("drawDeclined", (data) => {
@@ -157,17 +172,20 @@ const ActionContainer = () => {
     });
     socket.on("drawAccepted", (data) => {
       resetActiveIcon();
+      console.log(data);
       DrawModal.onOpen();
       // setGameResigned(true);
       play.setOpponent(data.loser);
       user.setUser(data.winner);
     });
     socket.on("resigned", (data) => {
+      console.log(data);
       WinModal.onOpen();
       play.setOpponent(data.loser);
       user.setUser(data.winner);
     });
     socket.on("checkmated", (data) => {
+      console.log(data);
       LossModal.onOpen();
       play.setOpponent(data.winner);
       user.setUser(data.loser);
