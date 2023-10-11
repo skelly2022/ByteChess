@@ -102,7 +102,7 @@ const LiveGameContainer: React.FC<LiveGameProps> = ({
           />
         </div>
       </div>
-      <div className=" flex h-full w-full flex-col  items-center md:w-auto">
+      <div className=" flex h-full w-full flex-col items-center justify-center md:w-auto">
         <div className="w-full rounded-t-lg  font-bold md:hidden">
           <RatingContainer type="opponent" />
         </div>
