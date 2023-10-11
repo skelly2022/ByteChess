@@ -7,11 +7,11 @@ import BlockChain from "./BlockChain";
 
 const LandingPage = () => {
   return (
-    <div className="  flex h-full w-full  flex-col text-white">
+    <div className="  flex h-full w-full  flex-col justify-evenly text-white">
       <div className=" flex h-1/5 w-full flex-col ">
-        <div className="flex h-full w-full items-center justify-center py-5">
+        <div className="flex h-full w-full items-center justify-center py-10">
           <h1
-            className=" font-orbitron text-6xl font-extrabold uppercase tracking-wider text-yellow md:text-7xl"
+            className=" font-orbitron text-5xl font-extrabold uppercase tracking-wider text-yellow md:text-7xl"
             style={{
               textShadow: `
         3px 3px 0px #000,
