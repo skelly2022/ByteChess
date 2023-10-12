@@ -137,7 +137,10 @@ const LiveGameTimer = () => {
         <div className="h-full w-full">
           <div className=" h-full w-full p-3 text-black shadow-md">
             {chessMoves.map((turn) => (
-              <div className="flex w-full justify-center ">
+              <div
+                className="flex w-full justify-center "
+                key={turn.moveNumber}
+              >
                 <div className="flex w-[30%] items-center justify-center border border-black bg-yellow px-4 py-2">
                   {turn.moveNumber}
                 </div>

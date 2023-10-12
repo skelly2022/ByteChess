@@ -122,6 +122,14 @@ const ActionContainer = () => {
       console.log(error);
     },
   });
+  const resetState = () => {
+    setShowClose(false);
+    setShowHalf(false);
+    setShowFlag(false);
+    setActiveIcon(null);
+    setDrawRequested(false);
+    setGameResigned(false);
+  };
   const handleIconClick = (index) => {
     setActiveIcon(index);
     if (activeIcon === index) {
@@ -130,7 +138,7 @@ const ActionContainer = () => {
         socket.emit("drawRequest", { roomId: playID });
       }
       if (index === 2) {
-        // setGameResigned(true);
+        resetState();
         // socket.emit("resignGame", { roomId: playID });
         updateWin.mutateAsync({
           wAddress: play.opponent.walletAddress,
@@ -255,13 +263,49 @@ const ActionContainer = () => {
         </div>
       )}
       {gameResigned === true && (
-        <div className="flex h-16 w-full flex-col items-center justify-center gap-2 pt-0 text-black sm:pt-4">
-          {/* <h3 className=" w-1/2 bg-yellow py-1 text-center shadow transition-transform active:scale-y-75">
-            Find New Opponent
-          </h3>
-          <h3 className=" w-1/2 bg-yellow py-[2px] text-center shadow transition-transform active:scale-y-75">
-            Rematch
-          </h3> */}
+        <div className=" flex h-12 w-full items-center justify-center gap-10  text-black">
+          {icons.map((item, index) => (
+            <div
+              key={index}
+              className={`bg-error ${
+                activeIcon !== null && activeIcon !== index
+                  ? "hidden"
+                  : "flex w-auto items-center justify-center  px-2   text-center text-black shadow transition-transform active:scale-y-75"
+              } ${
+                activeIcon === index
+                  ? showClose || showHalf || showFlag
+                    ? "m-2 h-full w-full bg-green"
+                    : "rounded-sm bg-error  "
+                  : "rounded-sm "
+              }`}
+            >
+              <ul className=" ">
+                <li
+                  className={`inline-block w-auto transform transition-transform  ${
+                    activeIcon === index ? " " : ""
+                  }`}
+                  onClick={() => handleIconClick(index)}
+                >
+                  {showHalf && activeIcon === index ? item.text : item.icon}
+                </li>
+              </ul>
+            </div>
+          ))}
+          {activeIcon !== null && (
+            <div className="bg-blue-500 top-50 absolute right-3 text-center  text-black">
+              <ul className="text-4xl">
+                <li
+                  className="inline-block w-auto transform transition-transform hover:scale-150"
+                  onClick={() => resetActiveIcon()}
+                >
+                  <AiOutlineClose
+                    size={25}
+                    className="mt-1 cursor-pointer text-black"
+                  />
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       )}
     </div>

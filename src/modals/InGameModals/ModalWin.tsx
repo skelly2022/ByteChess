@@ -25,8 +25,10 @@ const UserWin = () => {
   const user = useUserModal();
   const tournamentStore = useTournamentModal();
   const play = usePlayModal();
-  const [rematchState, setRematchState] = useState(play.rematchState);
   const router = useRouter();
+
+  const [rematchState, setRematchState] = useState(play.rematchState);
+  const [newGameLoading, setNewGameLoading] = useState(false);
 
   // DEFAULT, LOADING, OFFERED
   const { playID } = router.query;
@@ -97,6 +99,55 @@ const UserWin = () => {
     setRematchState("LOADING");
     // Do any other logic required on rematch acceptance here
   };
+  let newGameButtonContent;
+  if (newGameLoading) {
+    newGameButtonContent = (
+      <button
+        className="relative flex animate-pulse items-center bg-yellow px-6 py-3 text-green"
+        onClick={() => {
+          setNewGameLoading(false);
+        }}
+      >
+        Finding Opponent
+        <svg
+          className="ml-1 mt-[1px] h-5 w-5 animate-spin text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="black"
+            strokeWidth="2"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="black"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </button>
+    );
+  } else {
+    newGameButtonContent = (
+      <button
+        className="bg-yellow px-6 py-3 text-green"
+        onClick={() => {
+          socket.emit("play2idle", {
+            wallet: session.data.user.name,
+            gameType: `${play.minutes.toString()} + ${play.increment}`,
+          });
+          setNewGameLoading(true);
+          // TODO: Add the logic or function call to find a new opponent
+        }}
+      >
+        New Opponent
+      </button>
+    );
+  }
   let rematchButtonContent;
   switch (rematchState) {
     case "LOADING":
@@ -251,9 +302,7 @@ const UserWin = () => {
         {tournamentStore.tournamentID === "" && (
           <>
             {rematchButtonContent}
-            <button className="bg-yellow px-6 py-3 text-green">
-              New Opponent
-            </button>
+            {newGameButtonContent}
           </>
         )}
       </div>
@@ -305,6 +354,7 @@ const UserWin = () => {
       </div>
     </div>
   );
+
   useEffect(() => {
     // Listen for a received rematch offer
     const handleReceivedRematchOffer = () => {
@@ -338,6 +388,23 @@ const UserWin = () => {
   useEffect(() => {
     setRematchState(play.rematchState);
   }, [play.rematchState]);
+  useEffect(() => {
+    socket.on("matchedUp", (data) => {
+      setNewGameLoading(false);
+    });
+    return () => {
+      socket.off("matchedUp");
+    };
+  }, []);
+  useEffect(() => {
+    socket.on("matched", (roomData) => {
+      setNewGameLoading(false);
+    });
+
+    return () => {
+      socket.off("matched");
+    };
+  }, []);
   useEffect(() => {
     // Listen for a received rematch offer
     const handleReceivedRematchOffer = () => {

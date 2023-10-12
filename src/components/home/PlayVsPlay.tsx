@@ -1,21 +1,52 @@
 import * as Tabs from "@radix-ui/react-tabs";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { BiColor, BiSolidCircle } from "react-icons/bi";
+import socket from "~/helpers/socket";
 import usePlayModal from "~/hooks/usePlayModal";
 import useUserStore from "~/hooks/useUserStore";
 import { api } from "~/utils/api";
 
 const dataOptions = [
-  { dataId: "1+0", clock: "1+0", perf: "Bullet" },
-  { dataId: "3+2", clock: "3+2", perf: "Blitz" },
-  { dataId: "15+10", clock: "15+10", perf: "Rapid" },
+  { dataId: "1 + 0", clock: "1+0", perf: "Bullet" },
+  { dataId: "3 + 2", clock: "3+2", perf: "Blitz" },
+  { dataId: "15 + 10", clock: "15+10", perf: "Rapid" },
   { dataId: "∞", clock: "∞", perf: "Unlimited" },
 ];
 
 const PlayVsPlay = () => {
   const play = usePlayModal();
   const { data } = api.games.getAllGames.useQuery();
+  const [clickedDataId, setClickedDataId] = useState(null);
   const router = useRouter();
+  const session = useSession();
+  const handleDivClick = (dataId) => {
+    console.log(session.status);
+    if (session.status !== "authenticated") {
+      toast.error("Must connect wallet to play");
+      return;
+    }
+    // If the clicked div is already loading, return it to its normal state
+    if (clickedDataId === dataId) {
+      socket.emit("leaveQ", {
+        gameType: dataId,
+        wallet: session.data.user.name,
+      });
+      setClickedDataId(null);
+      return;
+    }
+
+    // If no div is loading, set this div to loading
+    if (clickedDataId === null) {
+      socket.emit("joinQ", {
+        gameType: dataId,
+        wallet: session.data.user.name,
+      });
+      setClickedDataId(dataId);
+    }
+  };
   return (
     <div className="flex h-[90%] w-[90%] items-center justify-center rounded-lg bg-green p-3 lg:w-1/2">
       <Tabs.Root
@@ -48,11 +79,47 @@ const PlayVsPlay = () => {
               <div
                 key={item.dataId}
                 data-id={item.dataId}
-                className=" flex h-[115px] flex-col items-center justify-center
-                  rounded-sm bg-yellow hover:bg-green hover:text-yellow"
+                className={`flex h-[115px] flex-col items-center justify-center
+        rounded-sm bg-yellow ${
+          clickedDataId === item.dataId
+            ? "animate-pulsate"
+            : "hover:bg-green hover:text-yellow"
+        } ${clickedDataId ? "cursor-default" : ""}
+        `}
+                onClick={() => handleDivClick(item.dataId)}
               >
-                <div className="clock">{item.clock}</div>
-                <div className="perf">{item.perf}</div>
+                {/* Check if current div is clicked based on dataId */}
+                {clickedDataId === item.dataId ? (
+                  // Loading state (replace this with your loading component or spinner)
+                  <div className="flex items-center">
+                    Finding Match
+                    <svg
+                      className="ml-1 mt-[1px]  h-3 w-3 animate-spin text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="gray"
+                        strokeWidth="2"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="gray"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>{" "}
+                  </div>
+                ) : (
+                  <>
+                    <div className="clock">{item.clock}</div>
+                    <div className="perf">{item.perf}</div>
+                  </>
+                )}
               </div>
             ))}
           </div>

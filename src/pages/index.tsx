@@ -13,10 +13,16 @@ import UserProfile from "~/modals/UserProfile";
 import socket from "~/helpers/socket";
 import useLoginModal from "~/hooks/useLoginModal";
 import Head from "next/head";
+import assets from "~/helpers/assets";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
+
+const { getRandomColor, getTimeControlFromString } = assets;
 
 export default function Home() {
   const user = useUserModal();
   const session = useSession();
+  const router = useRouter();
   const play = usePlayModal();
   const loginModal = useLoginModal();
   const getUser = api.example.getUser.useMutation({
@@ -27,7 +33,23 @@ export default function Home() {
       console.log(error);
     },
   });
-
+  const getGame = api.games.getGameTournament.useMutation({
+    async onSuccess(data) {
+      router.push(`/play/${data.id}`);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
+  const newGame = api.games.newGame.useMutation({
+    async onSuccess(data) {
+      // socket.emit()
+      router.push(`/play/${data.id}`);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
   useEffect(() => {
     if (session.status === "authenticated") {
       getUser.mutateAsync({ address: session.data.user.name });
@@ -38,6 +60,38 @@ export default function Home() {
   }, [session]);
   useEffect(() => {
     play.resetState();
+  }, []);
+  useEffect(() => {
+    socket.on("matchedUp", (data) => {
+      toast.success("Match Found");
+      const dataToSend = {
+        id: data.opponentWallet,
+      };
+      setTimeout(() => {
+        getGame.mutateAsync(dataToSend);
+      }, 2000);
+    });
+    return () => {
+      socket.off("matchedUp");
+    };
+  }, []);
+  useEffect(() => {
+    socket.on("matched", (roomData) => {
+      toast.success("Match Found");
+      console.log("hey");
+      console.log(roomData);
+      const data = {
+        address: roomData.opponentWallet,
+        mode: "Rated",
+        time: roomData.type,
+        color: getRandomColor("wb"),
+      };
+      newGame.mutateAsync(data);
+    });
+
+    return () => {
+      socket.off("matched");
+    };
   }, []);
   return (
     <>
