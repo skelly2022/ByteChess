@@ -168,23 +168,6 @@ const DashBoard: React.FC<DashBoardProps> = ({
 
   return (
     <div className="mt-10 flex  h-auto w-full grow flex-col justify-center gap-3  p-3 md:flex-row">
-      <div
-        className="hidden h-[40.33vh] w-full flex-col items-center justify-center p-3 md:flex md:h-[60.33vh] md:w-auto "
-        onClick={() => {
-          onPrevious();
-        }}
-      >
-        <AiOutlineArrowLeft size={30} />
-      </div>
-
-      <div
-        className="absolute left-4 top-1/2 flex -translate-y-1/2 transform md:hidden"
-        onClick={() => {
-          onPrevious();
-        }}
-      >
-        <AiOutlineArrowLeft size={30} />
-      </div>
       <div className="flex h-auto w-auto  justify-center ">
         <div style={boardWrapper} className="z-10">
           <Chessboard
@@ -274,23 +257,6 @@ const DashBoard: React.FC<DashBoardProps> = ({
             </tbody>
           </table>
         </div>
-      </div>
-      <div
-        className="hidden h-[40.33vh] w-full flex-col items-center justify-center p-3 md:flex md:h-[60.33vh] md:w-auto "
-        onClick={() => {
-          onNext();
-        }}
-      >
-        <AiOutlineArrowRight size={30} />
-      </div>
-
-      <div
-        className="absolute right-4 top-1/2 flex -translate-y-1/2 transform md:hidden"
-        onClick={() => {
-          onNext();
-        }}
-      >
-        <AiOutlineArrowRight size={30} />
       </div>
     </div>
   );

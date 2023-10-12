@@ -54,6 +54,7 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         offBlack: "#161616",
+        grey: "rgba(217, 217, 217, 0.1)",
 
         info: "#2094f3" /* Info */,
         success: "#629a23" /* Success */,
@@ -84,11 +85,31 @@ module.exports = {
           "50%": { transform: "scale(1.05)" },
           "100%": { transform: "scale(1)" },
         },
+        "slide-in-right": {
+          from: { transform: "translateX(100%)" },
+          to: { transform: "translateX(0)" },
+        },
+        "slide-out-right": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(100%)" },
+        },
+        "slide-in-left": {
+          from: { transform: "translateX(-100%)" },
+          to: { transform: "translateX(0)" },
+        },
+        "slide-out-left": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         pulsate: "pulsate 1s ease-in-out infinite",
+        "slide-in-right": "slide-in-right 0.3s ease-out",
+        "slide-out-right": "slide-out-right 0.3s ease-out",
+        "slide-in-left": "slide-in-left 0.3s ease-out",
+        "slide-out-left": "slide-out-left 0.3s ease-out",
       },
     },
   },

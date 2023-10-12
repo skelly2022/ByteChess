@@ -87,26 +87,12 @@ const UserMenu: React.FC<UserMenuProps> = () => {
     <div className="relative z-50">
       <div className="flex flex-row items-center gap-3">
         <div className="hidden items-center gap-3 md:flex">
-          {session ? (
-            <div
-              onClick={() => {
-                OpenProfile();
-              }}
-              className=" cursor-pointer  items-center justify-center  border-2 border-yellow bg-green px-4 py-2 text-sm font-semibold text-yellow
-              transition hover:rounded hover:border-black hover:text-black md:flex "
-            >
-              Profile
-              <CgProfile className="m-1" />
-            </div>
-          ) : (
-            <></>
-          )}
           <div
             onClick={() => {
               tournaments();
             }}
             className=" cursor-pointer  items-center justify-center  border-2 border-yellow bg-green px-4 py-2 text-sm font-semibold  text-yellow
-              transition hover:rounded hover:border-black hover:text-black md:flex "
+              transition  hover:border-black hover:text-black md:flex "
           >
             Tournaments <AiFillTrophy className="m-1" />
           </div>
@@ -115,27 +101,17 @@ const UserMenu: React.FC<UserMenuProps> = () => {
               puzzles();
             }}
             className=" cursor-pointer  items-center justify-center  border-2 border-yellow bg-green px-4 py-2 text-sm font-semibold text-yellow
-              transition hover:rounded hover:border-black hover:text-black md:flex "
+              transition  hover:border-black hover:text-black md:flex "
           >
             Puzzles
             <IoExtensionPuzzleSharp className="m-1" />
           </div>
 
-          <div
-            onClick={() => {
-              router.push("/leaderboard");
-            }}
-            className=" cursor-pointer  items-center  justify-center border-2 
-            border-yellow bg-green px-4 py-2 text-sm font-semibold text-yellow 
-             transition   hover:rounded hover:border-black hover:text-black md:flex "
-          >
-            Leaderboard <MdLeaderboard className="m-1" />
-          </div>
           {session ? (
             <div
               className="cursor-pointer  items-center 
               justify-center border-2 border-yellow 
-              bg-green px-4 py-2 text-sm font-semibold text-black transition hover:rounded  hover:border-yellow hover:text-black md:flex "
+              bg-green px-4 py-2 text-sm font-semibold text-black transition   hover:border-yellow hover:text-black md:flex "
               onClick={toggleOpen}
               style={{
                 boxShadow: "-5px 5px black",
@@ -153,7 +129,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
               }}
               className=" m-1 cursor-pointer  items-center 
               justify-center border-2 border-yellow 
-              px-4 py-2 text-sm font-semibold text-black transition hover:rounded   hover:border-yellow hover:text-black md:flex "
+              px-4 py-2 text-sm font-semibold text-black transition    hover:border-yellow hover:text-black md:flex "
             >
               Connect Wallet
             </div>
@@ -164,19 +140,40 @@ const UserMenu: React.FC<UserMenuProps> = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="absolute right-0 top-12 z-50 w-auto  rounded-xl bg-yellow text-sm shadow-md ">
-          <div className="flex w-full cursor-pointer flex-col text-black">
-            <>
-              {/* <MenuItem onClick={login} label="Login" /> */}
-              <MenuItem
-                onClick={() => {
-                  disconnectWallet();
-                  toggleOpen();
-                  disconnect();
-                }}
-                label="Disconnect"
-              />
-            </>
+        <div className="absolute right-0 top-12 z-50 w-auto  bg-yellow  text-sm shadow-md ">
+          <div className="flex w-full cursor-pointer flex-col text-black ">
+            <div
+              className=" cursor-pointer  items-center justify-center    bg-green px-4 py-2 text-sm font-semibold text-yellow
+              transition  hover:border-black hover:text-black md:flex "
+              onClick={() => {
+                disconnectWallet();
+                toggleOpen();
+                disconnect();
+              }}
+            >
+              Disconnect
+              <CgProfile className="m-1" />
+            </div>
+            <div
+              onClick={() => {
+                OpenProfile();
+              }}
+              className=" cursor-pointer  items-center justify-center    bg-green px-4 py-2 text-sm font-semibold text-yellow
+              transition  hover:border-black hover:text-black md:flex "
+            >
+              Profile
+              <CgProfile className="m-1" />
+            </div>
+            <div
+              onClick={() => {
+                router.push("/leaderboard");
+              }}
+              className=" cursor-pointer  items-center  justify-center 
+             bg-green px-4 py-2 text-sm font-semibold text-yellow 
+             transition    hover:border-black hover:text-black md:flex "
+            >
+              Leaderboard <MdLeaderboard className="m-1" />
+            </div>
           </div>
         </div>
       )}
@@ -187,7 +184,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
               {/* <MenuItem onClick={login} label="Login" /> */}
               {session ? (
                 <div
-                  className="cursor-pointer  px-4 py-3 font-semibold transition hover:rounded hover:border-black hover:bg-neutral-300 hover:text-black"
+                  className="cursor-pointer  px-4 py-3 font-semibold transition  hover:border-black hover:bg-neutral-300 hover:text-black"
                   onClick={() => {
                     disconnect(), disconnectWallet();
                     toggleHam();

@@ -8,36 +8,36 @@ import {
 import { prisma } from "~/server/db";
 
 export const leaderboardRouter = createTRPCRouter({
-  getBullet: protectedProcedure.mutation(async () => {
+  getRatings: protectedProcedure.mutation(async () => {
     const bullet = await prisma.user.findMany({
       orderBy: {
-        bulletRating: "desc", // 'asc' for ascending order, 'desc' for descending order
+        bulletRating: "desc",
       },
     });
-    return bullet;
-  }),
-  getRapid: protectedProcedure.mutation(async () => {
-    const bullet = await prisma.user.findMany({
+
+    const rapid = await prisma.user.findMany({
       orderBy: {
-        rapidRating: "desc", // 'asc' for ascending order, 'desc' for descending order
+        rapidRating: "desc",
       },
     });
-    return bullet;
-  }),
-  getBlitz: protectedProcedure.mutation(async () => {
-    const bullet = await prisma.user.findMany({
+
+    const blitz = await prisma.user.findMany({
       orderBy: {
-        blitzRating: "desc", // 'asc' for ascending order, 'desc' for descending order
+        blitzRating: "desc",
       },
     });
-    return bullet;
-  }),
-  getPuzzle: protectedProcedure.mutation(async () => {
-    const bullet = await prisma.user.findMany({
+
+    const puzzle = await prisma.user.findMany({
       orderBy: {
-        puzzleRating: "desc", // 'asc' for ascending order, 'desc' for descending order
+        puzzleRating: "desc",
       },
     });
-    return bullet;
+
+    return {
+      bullet,
+      rapid,
+      blitz,
+      puzzle,
+    };
   }),
 });

@@ -266,14 +266,6 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
           <div className="flex flex-col items-center px-4">
             <p>STARTING IN</p>
             <p>{timeDifference}</p>
-            <button
-              className="bg-error"
-              onClick={() => {
-                socket.emit("startTournament", { id: tournament.id });
-              }}
-            >
-              Start Tournament
-            </button>
           </div>
         </div>
         <div

@@ -19,8 +19,12 @@ import {
   AiFillCloseCircle,
   AiOutlineArrowLeft,
 } from "react-icons/ai";
+
 import Draggable from "react-draggable";
-import { HiTrophy } from "react-icons/hi2";
+
+import bronze from "public/images/1.png";
+import plat from "public/images/2.png";
+import diamond from "public/images/3.png";
 
 const defaultUser = {
   avatar: "path_to_default_avatar.jpg",
@@ -61,6 +65,7 @@ const UserProfile = () => {
 
   const getUser = api.example.getUser.useMutation({
     onSuccess(data) {
+      console.log(data);
       user.setSearchedUser(data);
       setSearch(true);
     },
@@ -68,6 +73,7 @@ const UserProfile = () => {
 
   const getName = api.example.updateName.useMutation({
     onSuccess(data) {
+      console.log("Name:", data);
       user.setUser(data);
       setLoading(false);
     },
@@ -75,23 +81,22 @@ const UserProfile = () => {
 
   const getAvatar = api.example.updateAvatar.useMutation({
     onSuccess(data) {
+      console.log("AVATAR:", data);
       user.setUser(data);
       setLoading(false);
     },
   });
 
-  const data = api.example.getAllNfts.useMutation({
-    async onSuccess(data) {
-      setMyImages(data);
-    },
-  });
   const data1 = api.mint.getAllNftsProfile.useMutation({
     async onSuccess(data1) {
+      console.log(data1);
       setNfts(data1);
     },
   });
-  const response = api.example.getAllNfts.useMutation({
+  console.log(`CNFT`, data1);
+  const data = api.mint.getAllNfts.useMutation({
     onSuccess(data) {
+      console.log("nfts:", data);
       setNftData(data);
       setLoading(false);
     },
@@ -122,7 +127,7 @@ const UserProfile = () => {
   const openEditPopup = () => {
     setIsEditPopupOpen(true);
     if (myImages.length === 0) {
-      data.mutateAsync({ address: session.data.user.name });
+      data.mutateAsync({ address: publicKey });
     }
   };
 
@@ -131,8 +136,9 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
+    console.log(publicKey);
+    console.log("MODAL", ProfileModal.isOpen);
     if (ProfileModal.isOpen) {
-      response.mutateAsync({ address: session.data.user.name });
       data1.mutateAsync({ address: session.data.user.name }); // Add this line
     } else {
       setLoading(true);
@@ -164,24 +170,35 @@ const UserProfile = () => {
       },
     );
   };
+  function getRankImage(rating) {
+    if (rating < 1200) {
+      return "1";
+    } else if (1500 < rating > 1800) {
+      return "2";
+    } else {
+      return "3"; // Corrected the spelling from 'daimond' to 'diamond'
+    }
+  }
 
   const bodyContent = (
-    <div className="no-scrollbar flex h-full w-full gap-2 overflow-scroll bg-black p-3">
+    <div className="no-scrollbar flex h-full w-full gap-2 overflow-scroll bg-[#262626] p-3">
       <div className="flex h-full w-full flex-col items-center rounded-xl py-3 shadow-xl md:flex-row">
         <div className="flex h-full w-full flex-col items-center justify-center gap-2 md:w-2/3">
           <div className="flex h-auto w-full gap-2 md:flex-row">
-            <div className="relative h-full w-1/2 items-center md:w-1/3">
-              <AiTwotoneEdit
-                size={30}
-                className="absolute left-[9.75rem] z-30 transform rounded-full border border-black bg-green px-1 text-yellow transition-transform hover:scale-105 hover:bg-green active:scale-90"
-                onClick={openEditPopup}
-              />
+            <div className="relative h-full w-auto items-center md:w-auto">
               {!search ? (
-                <img
-                  className="relative h-48 w-48 rounded-full"
-                  src={currentUser.avatar}
-                  alt="User Avatar"
-                ></img>
+                <>
+                  <AiTwotoneEdit
+                    size={30}
+                    className="absolute left-[9.75rem] z-30 transform rounded-full border border-black bg-green px-1 text-yellow transition-transform hover:scale-105 hover:bg-green active:scale-90"
+                    onClick={openEditPopup}
+                  />
+                  <img
+                    className="relative h-48 w-48 rounded-full"
+                    src={currentUser.avatar}
+                    alt="User Avatar"
+                  ></img>
+                </>
               ) : (
                 <img
                   className="h-48 w-48 rounded-full"
@@ -190,7 +207,7 @@ const UserProfile = () => {
                 />
               )}
             </div>
-            <div className="flex h-[160px] w-1/2 flex-col justify-center bg-offBlack p-3 text-xl md:w-2/3">
+            <div className=" flex h-auto w-auto flex-col justify-center p-3 text-xl ">
               {!search ? (
                 <>
                   <p className="align-center flex">
@@ -201,8 +218,7 @@ const UserProfile = () => {
                       onClick={openEditNamePopup}
                     />
                   </p>
-                  <p>Discord: {currentUser.discord}</p>
-                  <p>Twitter: {currentUser.twitter}</p>
+
                   <p>
                     Wallet:{" "}
                     {extractFirstAndLast5Characters(currentUser.walletAddress)}
@@ -216,8 +232,7 @@ const UserProfile = () => {
                   <p className="align-center flex">
                     Name: {currentSearchedUser.name}
                   </p>
-                  <p>Discord: {currentSearchedUser.discord}</p>
-                  <p>Twitter: {currentSearchedUser.twitter}</p>
+
                   <p>
                     Wallet:{" "}
                     {extractFirstAndLast5Characters(
@@ -234,103 +249,83 @@ const UserProfile = () => {
 
           {!search ? (
             <div className="flex h-auto w-full gap-2">
-              <div className="w-1/2 bg-offBlack p-3">
+              <div className=" w-2/3 min-w-fit p-3">
                 <div className="flex flex-col gap-2">
-                  <h1 className="text-2xl font-bold">
-                    {" "}
-                    Rank: <span className="text-xl text-red-900">BRONZE</span>
-                  </h1>
-                  <h1 className="text-2xl font-bold">
-                    {" "}
-                    Puzzles Rank:{" "}
-                    <span className="text-xl text-pink-600">Plat</span>
-                  </h1>
-
-                  <h1 className="text-2xl font-bold">
-                    {" "}
-                    1v1 Rank:{" "}
-                    <span className="text-xl text-[#4AD4FF]">Daimond</span>
-                  </h1>
-                  <h1 className="align-baseline text-2xl font-bold text-white md:flex">
-                    Tournements:{" "}
-                    <span className="text-2xl font-bold text-green">
-                      <HiTrophy className="m-1" />
-                    </span>
-                    <span className="align-baseline text-2xl text-yellow">
-                      {currentUser.trophies}
-                    </span>
-                  </h1>
-                </div>
-              </div>
-              <div className="w-1/2 bg-offBlack p-3">
-                <div className="flex flex-col gap-2">
-                  <h1 className="text-2xl font-bold">
-                    {" "}
+                  <h1 className="flex items-center gap-2 text-2xl font-bold">
                     Bullet Rating:{" "}
                     <span className="text-xl text-yellow">
                       {currentUser.bulletRating}
                     </span>
+                    <span className="text-xl text-yellow">
+                      <img src={`images/1.png`} className="h-10 w-10"></img>
+                    </span>
                   </h1>
-                  <h1 className="w-full text-2xl font-bold">
-                    {" "}
+                  <h1 className="flex items-center gap-2 text-2xl font-bold">
                     Blitz Rating:{" "}
                     <span className="text-xl text-yellow">
                       {currentUser.blitzRating}
                     </span>
+                    <span className="text-xl text-yellow">
+                      <img src={`images/1.png`} className="h-10 w-10"></img>
+                    </span>
                   </h1>
-                  <h1 className="text-2xl font-bold">
-                    {" "}
+                  <h1 className="flex items-center gap-2 text-2xl font-bold">
                     Rapid Rating:{" "}
                     <span className="text-xl text-yellow">
                       {currentUser.rapidRating}
                     </span>
+                    <span className="text-xl text-yellow">
+                      <img src={`images/1.png`} className="h-10 w-10"></img>
+                    </span>
                   </h1>
-                  <h1 className="text-2xl font-bold">
+                  <h1 className="flex items-center gap-2 text-2xl font-bold">
                     Puzzle Rating:{" "}
                     <span className="text-xl text-yellow">
                       {currentUser.puzzleRatingChain}
                     </span>
-                  </h1>
-                  <h1 className="text-2xl font-bold">
-                    Puzzles Played:{" "}
                     <span className="text-xl text-yellow">
-                      {currentUser.completedPuzzles.length}
+                      <img src={`images/1.png`} className="h-10 w-10"></img>
                     </span>
                   </h1>
+                </div>
+              </div>
+              <div className=" flex w-auto p-3">
+                <div className="flex w-full flex-col items-center  gap-2">
+                  <h1 className="text-xl">Trophies</h1>
                 </div>
               </div>
             </div>
           ) : (
             <div className="flex h-auto w-full gap-2">
-              <div className="w-1/2 bg-offBlack p-3">
+              <div className="w-auto p-3">
                 <div className="flex flex-col gap-2">
-                  <h1 className="text-2xl font-bold">
-                    {" "}
-                    Rank: <span className="text-xl text-red-900">BRONZE</span>
-                  </h1>
-                  <h1 className="text-2xl font-bold">
-                    {" "}
-                    Puzzles Rank:{" "}
-                    <span className="text-xl text-pink-600">Plat</span>
-                  </h1>
+                  <h1 className="text-2xl font-bold"> Puzzles Rank: </h1>
+                  <img
+                    src={getRankImage(currentSearchedUser.puzzleRatingChain)}
+                    alt="rank"
+                  />
 
-                  <h1 className="text-2xl font-bold">
-                    {" "}
-                    1v1 Rank:{" "}
-                    <span className="text-xl text-[#4AD4FF]">Daimond</span>
-                  </h1>
+                  <h1 className="text-2xl font-bold"> 1v1 Rank: </h1>
+                  <img
+                    src={getRankImage(
+                      (currentSearchedUser.bulletRating +
+                        currentSearchedUser.blitzRating +
+                        currentSearchedUser.rapidRating) /
+                        4,
+                    )}
+                    alt="bronze"
+                  ></img>
+
                   <h1 className="align-baseline text-2xl font-bold text-white md:flex">
                     Tournements:{" "}
-                    <span className="text-2xl font-bold text-green">
+                    {/* <span className="text-2xl font-bold text-green">
                       <HiTrophy className="m-1" />
-                    </span>
-                    <span className="align-baseline text-2xl text-yellow">
-                      {currentSearchedUser.trophies}
-                    </span>
+                    </span> */}
                   </h1>
+                  <img src={plat} alt="bronze"></img>
                 </div>
               </div>
-              <div className="w-1/2 bg-offBlack p-3">
+              <div className="bg-grey w-2/3 p-3">
                 <div className="flex flex-col gap-2">
                   <h1 className="text-2xl font-bold">
                     {" "}
@@ -376,7 +371,7 @@ const UserProfile = () => {
               {" "}
               Gallery
             </div>
-            <div className="flex h-auto w-full flex-wrap items-center justify-center gap-3 bg-offBlack ">
+            <div className="bg-grey flex h-auto w-full grow flex-wrap items-center justify-center gap-3 ">
               {nfts.map((nft) => (
                 <img
                   key={nft.id}
@@ -425,6 +420,61 @@ const UserProfile = () => {
           </div>
         </div>
       </div>
+      {isEditNamePopupOpen && (
+        <div className="z-9999 fixed left-0 top-0 flex h-full w-full items-center justify-center">
+          <div className="w-96 rounded-lg bg-green p-4 shadow-md">
+            <div className="flex justify-between">
+              <h3 className="text-xl font-bold">Edit Name</h3>
+              <button onClick={closeEditNamePopup}>
+                <AiFillCloseCircle size={25} />
+              </button>
+            </div>
+            <div className="mt-4">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-yellow"
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                className="mt-1 w-full rounded-md border p-2 font-semibold text-black"
+              />
+              <button
+                onClick={handleChangeName}
+                className="bg-blue-500 mt-4 w-full rounded-md p-2 text-white"
+              >
+                Update Name
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isEditPopupOpen && (
+        <div className="z-9999 fixed left-0 top-0 flex h-full w-full items-center justify-center">
+          <div className="w-96 rounded-lg bg-green p-4 shadow-md">
+            <div className="flex justify-between">
+              <h3 className="text-xl font-bold">Edit Avatar</h3>
+              <button onClick={closeEditPopup}>
+                <AiFillCloseCircle size={25} />
+              </button>
+            </div>
+            <div className="mt-4">
+              <h1>ISK TRY FIXING THIS ONE</h1>
+              {/* {data.map(() => (
+                  <div key={data.mintAddress} className="mb-2">
+                      <img src={data.image} alt="avatar" className="w-24 h-24 rounded-full" />
+                      <button className="ml-2 text-sm">Select</button>
+                  </div>
+              ))} */}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 

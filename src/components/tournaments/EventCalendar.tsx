@@ -150,6 +150,7 @@ const EventCalendar = () => {
             <AiOutlineArrowRight size={30} />
           </button>
           <button
+            disabled={true}
             onClick={tournament.onOpen}
             className="absolute right-0 hidden cursor-pointer rounded bg-yellow px-3 py-2 shadow transition-transform active:scale-y-75 sm:block"
           >

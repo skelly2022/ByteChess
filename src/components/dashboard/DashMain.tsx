@@ -74,10 +74,6 @@ const DashMain = () => {
       setSelectedNft(nftsList[0]);
     }
   };
-  const handleItemsPerPageChange = (event) => {
-    setItemsPerPage(Number(event.target.value));
-    setCurrentPage(1); // Reset to first page whenever items per page change
-  };
 
   const handleClickLike = (id: string) => {
     if (session.status === "authenticated") {

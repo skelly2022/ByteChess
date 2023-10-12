@@ -64,12 +64,13 @@ const Modal3: React.FC<Modal3Props> = ({
       <div className="no-scrollbar fixed inset-0 z-50 flex  h-screen  items-center justify-center overflow-y-auto overflow-x-hidden bg-black/60  outline-none focus:outline-none ">
         <div className="  no-scrollbar relative  mx-auto h-[92%] w-[92%] overflow-scroll border-2   border-yellow pb-5 md:h-auto md:w-5/6 md:pb-0 ">
           <div
-            className={`translate h-full  bg-black duration-300  ${
+            className={`translate h-full   duration-300  ${
               showModal3 ? "translate-y-0" : "translate-y-full"
             } ${showModal3 ? "opacity-100" : "opacity-0"}`}
           >
             <div
-              className="translate relative flex h-full w-full  flex-col rounded-lg  bg-black  text-white shadow-lg outline-none 
+              className="translate relative flex h-full w-full  flex-col rounded-lg bg-[#262626]
+              text-white shadow-lg outline-none 
              focus:outline-none md:h-auto lg:h-auto"
             >
               {/* Header */}
