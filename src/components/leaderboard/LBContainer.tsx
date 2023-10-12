@@ -116,7 +116,7 @@ const LBContainer = () => {
                 </div>
 
                 <div className="w-1/3 border-t border-gray-300 p-4 md:w-full">
-                  <h2 className="mb-3 text-xl font-bold">Achievements</h2>
+                  <h2 className="mb-3 text-xl font-bold">Trophies</h2>
                 </div>
               </div>
             </div>
@@ -142,12 +142,8 @@ const LBContainer = () => {
                   </div>
 
                   <div className="flex flex-col items-center justify-center p-4">
-                    <h2 className="mb-3 text-xl font-bold">
-                      Puzzle Rating: 1200
-                    </h2>
-                    <h2 className="mb-3 text-xl font-bold">
-                      Total Puzzles Played: 453
-                    </h2>
+                    <h2 className="mb-3 text-xl font-bold">Rating: 1200</h2>
+                    <h2 className="mb-3 text-xl font-bold">Played: 453</h2>
                   </div>
                 </div>
               </div>
