@@ -191,7 +191,8 @@ const UserProfile = () => {
                   <AiTwotoneEdit
                     size={30}
                     className="absolute left-[9.75rem] z-30 transform rounded-full border border-black bg-green px-1 text-yellow transition-transform hover:scale-105 hover:bg-green active:scale-90"
-                    onClick={openEditPopup}
+                    // onClick={openEditPopup}
+                    disable
                   />
                   <img
                     className="relative h-48 w-48 rounded-full"
@@ -215,7 +216,7 @@ const UserProfile = () => {
                     <AiTwotoneEdit
                       size={20}
                       className="relative left-2 rounded-full border  border-black bg-green px-1 text-yellow transition-transform hover:scale-105 active:scale-90"
-                      onClick={openEditNamePopup}
+                      // onClick={openEditNamePopup}
                     />
                   </p>
 
