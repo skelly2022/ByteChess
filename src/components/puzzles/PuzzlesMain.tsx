@@ -122,6 +122,10 @@ const PuzzlesMain = () => {
             lastValidBlockHeight,
             signature: txSig,
           });
+          if (x) {
+            puzzle.setRanked(!puzzle.ranked);
+            setChecked(!checked);
+          }
           updateUser.mutateAsync({ address: publicKey.toBase58() });
         } catch (error) {
           toast.error("Must create on chain account");
