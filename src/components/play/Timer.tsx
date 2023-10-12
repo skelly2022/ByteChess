@@ -8,12 +8,14 @@ const Timer = ({ type }: { type: string }) => {
   const router = useRouter();
   const { playID } = router.query;
   const [side, setSide] = useState(play.side);
-  const [timeInSeconds, setTimeInSeconds] = useState<number>(0);
-  const [opponentTimeInSeconds, setOpponentTimeInSeconds] = useState<number>(0);
+  const [timeInSeconds, setTimeInSeconds] = useState<number>(play.minutes);
+  const [opponentTimeInSeconds, setOpponentTimeInSeconds] = useState<number>(
+    play.minutes,
+  );
   const [activeTimer, setActiveTimer] = useState<string | null>(null);
 
-  const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [isORunning, setIsORunning] = useState<boolean>(false);
+  const [isRunning, setIsRunning] = useState<boolean>(play.myTimer);
+  const [isORunning, setIsORunning] = useState<boolean>(play.opponentTimer);
   useEffect(() => {
     const initialTimeInSeconds = play.minutes * 60;
     setTimeInSeconds(initialTimeInSeconds);
@@ -62,6 +64,7 @@ const Timer = ({ type }: { type: string }) => {
   // Handle the timerUpdate from the server
   useEffect(() => {
     socket.on("timerUpdate", (data) => {
+      console.log(data);
       const myNewTime = side === "white" ? data.whiteTime : data.blackTime;
       const opponentNewTime =
         side === "white" ? data.blackTime : data.whiteTime;
@@ -83,6 +86,21 @@ const Timer = ({ type }: { type: string }) => {
 
     return () => {
       socket.off("timerUpdate");
+    };
+  }, [socket, side]);
+  useEffect(() => {
+    socket.on("timerUpdateNew", (data) => {
+      console.log(data);
+
+      setTimeInSeconds(data.blackTime);
+      setOpponentTimeInSeconds(data.blackTime);
+
+      setIsRunning(false);
+      setIsORunning(false);
+    });
+
+    return () => {
+      socket.off("timerUpdateNew");
     };
   }, [socket, side]);
   useEffect(() => {
@@ -147,6 +165,7 @@ const Timer = ({ type }: { type: string }) => {
   useEffect(() => {
     setSide(play.side);
   }, [play.side]);
+
   return (
     <div className="text-2xl font-bold">
       {type === "me" && formatTime(timeInSeconds)}

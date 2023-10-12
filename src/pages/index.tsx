@@ -35,6 +35,11 @@ export default function Home() {
   });
   const getGame = api.games.getGameTournament.useMutation({
     async onSuccess(data) {
+      const [minutes, seconds] = data.Time.split("+").map((part) =>
+        parseInt(part.trim()),
+      );
+      play.setMinutes(minutes);
+      play.setIncrement(seconds.toString());
       router.push(`/play/${data.id}`);
     },
     onError(error) {
@@ -44,6 +49,11 @@ export default function Home() {
   const newGame = api.games.newGame.useMutation({
     async onSuccess(data) {
       // socket.emit()
+      const [minutes, seconds] = data.Time.split("+").map((part) =>
+        parseInt(part.trim()),
+      );
+      play.setMinutes(minutes);
+      play.setIncrement(seconds.toString());
       router.push(`/play/${data.id}`);
     },
     onError(error) {
@@ -93,6 +103,23 @@ export default function Home() {
       socket.off("matched");
     };
   }, []);
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      play.resetState();
+      socket.emit(
+        "pageLoad",
+        { address: session.data.user.name },
+        (response) => {
+          console.log("Response from server:", response);
+        },
+      );
+    } else {
+    }
+
+    return () => {
+      socket.off("pageLoad");
+    };
+  }, [session]);
   return (
     <>
       <ClientOnly>

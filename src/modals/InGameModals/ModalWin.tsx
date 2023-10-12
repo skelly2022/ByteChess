@@ -136,7 +136,7 @@ const UserWin = () => {
       <button
         className="bg-yellow px-6 py-3 text-green"
         onClick={() => {
-          socket.emit("play2idle", {
+          socket.emit("joinQ", {
             wallet: session.data.user.name,
             gameType: `${play.minutes.toString()} + ${play.increment}`,
           });
@@ -340,6 +340,15 @@ const UserWin = () => {
             Mint your Game
           </button>
         )}
+        <button
+          className="bg-yellow px-6 py-3 text-green"
+          onClick={() => {
+            router.push(`/`);
+            WinModal.onClose();
+          }}
+        >
+          Return Home{" "}
+        </button>
         {tournamentStore.tournamentID !== "" && (
           <button
             className="bg-yellow px-6 py-3 text-green"

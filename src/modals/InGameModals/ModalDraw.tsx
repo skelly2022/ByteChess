@@ -264,6 +264,15 @@ const ModalDraw = () => {
         <button className="bg-yellow px-6 py-3 text-green">
           Mint your Game
         </button>
+        <button
+          className="bg-yellow px-6 py-3 text-green"
+          onClick={() => {
+            router.push(`/`);
+            ModalDraw.onClose();
+          }}
+        >
+          Return Home{" "}
+        </button>
         {tournamentStore.tournamentID !== "" && (
           <button
             className="bg-yellow px-6 py-3 text-green"

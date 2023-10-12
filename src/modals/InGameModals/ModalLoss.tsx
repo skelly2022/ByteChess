@@ -111,7 +111,7 @@ const ModalLoss = () => {
       <button
         className="bg-yellow px-6 py-3 text-green"
         onClick={() => {
-          socket.emit("play2idle", {
+          socket.emit("joinQ", {
             wallet: session.data.user.name,
             gameType: `${play.minutes.toString()} + ${play.increment}`,
           });
@@ -265,6 +265,15 @@ const ModalLoss = () => {
       <div className="mt-4 grid grid-cols-1 gap-4">
         <button className="bg-yellow px-6 py-3 text-green">
           Mint your Game
+        </button>
+        <button
+          className="bg-yellow px-6 py-3 text-green"
+          onClick={() => {
+            router.push(`/`);
+            LossModal.onClose();
+          }}
+        >
+          Return Home{" "}
         </button>
         {tournamentStore.tournamentID !== "" && (
           <button

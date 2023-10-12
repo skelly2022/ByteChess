@@ -82,6 +82,7 @@ const usePlayModal = create<PlayModalStore>((set) => ({
       currentFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
       time: "",
       opponentTime: "",
+
       minutes: "",
       increment: "",
       fens: ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"],

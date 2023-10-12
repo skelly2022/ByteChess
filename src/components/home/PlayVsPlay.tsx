@@ -1,7 +1,7 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BiColor, BiSolidCircle } from "react-icons/bi";
 import socket from "~/helpers/socket";
@@ -20,6 +20,8 @@ const PlayVsPlay = () => {
   const play = usePlayModal();
   const { data } = api.games.getAllGames.useQuery();
   const [clickedDataId, setClickedDataId] = useState(null);
+  const [inGame, setInGame] = useState(false);
+
   const router = useRouter();
   const session = useSession();
   const handleDivClick = (dataId) => {
@@ -39,14 +41,34 @@ const PlayVsPlay = () => {
     }
 
     // If no div is loading, set this div to loading
-    if (clickedDataId === null) {
+    if (clickedDataId === null && !inGame) {
       socket.emit("joinQ", {
         gameType: dataId,
         wallet: session.data.user.name,
       });
       setClickedDataId(dataId);
+    } else {
+      toast.error("Must wait for current game to finish");
     }
   };
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      play.resetState();
+      socket.emit(
+        "pageLoad",
+        { address: session.data.user.name },
+        (response) => {
+          console.log("Response from server:", response.success);
+          setInGame(response.success);
+        },
+      );
+    } else {
+    }
+
+    return () => {
+      socket.off("pageLoad");
+    };
+  }, [session]);
   return (
     <div className="flex h-[90%] w-[90%] items-center justify-center rounded-lg bg-green p-3 lg:w-1/2">
       <Tabs.Root
