@@ -48,11 +48,11 @@ const Chat: React.FC<ChatProps> = ({
       ref={chatContainerRef} // Set the reference to the chat component
       id="chat-container"
     >
-      <div className="no-scrollbar flex h-[90%] flex-wrap space-y-2 overflow-auto  px-3 py-2">
+      <div className="no-scrollbar flex h-[90%] flex-col gap-3  overflow-auto  px-3 py-2">
         {chatMessages.map((message, index) => (
           <div
             key={index}
-            className={`overflow flex w-full gap-1 break-words ${
+            className={` flex max-h-fit w-full gap-1 break-words ${
               message.text === "monkey" || message.text === "kekw"
                 ? "items-start"
                 : "items-center "
