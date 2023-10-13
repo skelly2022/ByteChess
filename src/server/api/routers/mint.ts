@@ -274,7 +274,7 @@ export const mintRouter = createTRPCRouter({
           return (
             asset.compression &&
             asset.compression.tree ===
-              "ArVnbrRTeNf2WD3a2CE7K7G4Z6p4NgLYutcin2EvQu1J"
+              "J3YBxHqCeTuZWs4DfjCG4d31eGs5zguEXMty2JvQSmvU"
           );
         });
 
@@ -334,7 +334,7 @@ export const mintRouter = createTRPCRouter({
           method: "getAssetsByGroup",
           params: {
             groupKey: "collection",
-            groupValue: "6uAnytqevp5cAMj3VskXZ5Ass8ytGm84ottYCQi1FNUv",
+            groupValue: "Bxvv8TkqQZkygX6yzAJ3RFGheWLh2LkrDYfW95zPA8zi",
             page: 1, // Starts at 1
             limit: 1000,
           },

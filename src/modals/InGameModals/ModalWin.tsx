@@ -77,16 +77,16 @@ const UserWin = () => {
           "dKTV1dqiqwJ9gATrh1sdejiYi2VWKpVrntK5Vj2Yqtt",
         );
         const treeAddress: PublicKey = new PublicKey(
-          "GTo8FqhHL9NribcdrWGLHmhXk9dbG9Gkm1VMrLXaTEsh",
+          "J3YBxHqCeTuZWs4DfjCG4d31eGs5zguEXMty2JvQSmvU",
         );
         const collectionMint: PublicKey = new PublicKey(
-          "CRzmGfCcjZjH7zn9FGntXETrrcKgmFwKpmrkLNzCjz4V",
+          "Bxvv8TkqQZkygX6yzAJ3RFGheWLh2LkrDYfW95zPA8zi",
         );
         const collectionMetadata: PublicKey = new PublicKey(
-          "9N8qQNUE5xx9JaD3ghXSdVHfKHzvVdmpjJiGF1xXcpeA",
+          "W63c27HNftiZ1uFXvQA2CXH3o3SBBwMevRfFrkgF4mq",
         );
         const collectionMasterEditionAccount: PublicKey = new PublicKey(
-          "7YaYie5uiS86bqvB37dNs3Nhi1Hb2KugXwXWWJEffZVQ",
+          "6xY8heWdsCeGTMKm7xVCL936wKks1azt9K37mfoh4Scs",
         );
         // create a new rpc connection, using the ReadApi wrapper
 
