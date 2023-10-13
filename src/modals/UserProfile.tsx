@@ -249,7 +249,7 @@ const UserProfile = () => {
           </div>
 
           {!search ? (
-            <div className="flex h-auto w-full gap-2">
+            <div className="flex h-auto w-full flex-col gap-2 md:flex-row">
               <div className=" w-2/3 min-w-fit p-3">
                 <div className="flex flex-col gap-2">
                   <h1 className="flex items-center gap-2 text-2xl font-bold">
@@ -318,7 +318,7 @@ const UserProfile = () => {
                   ></img>
 
                   <h1 className="align-baseline text-2xl font-bold text-white md:flex">
-                    Tournements:{" "}
+                    Tournaments:{" "}
                     {/* <span className="text-2xl font-bold text-green">
                       <HiTrophy className="m-1" />
                     </span> */}
@@ -388,12 +388,12 @@ const UserProfile = () => {
               <>
                 {" "}
                 <input
-                  className="w-full rounded-xl bg-yellow px-3 py-4 text-black transition-transform hover:scale-105 active:scale-90"
+                  className="w-full rounded-xl bg-yellow px-3 py-4 text-black outline-none transition-transform hover:scale-105 active:scale-90"
                   type="text"
                   placeholder="Enter something..."
                   value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  // onChange={(e) => setSearchValue(e.target.value)}
+                  // onKeyPress={handleKeyPress}
                 />
                 <button className="w-full cursor-not-allowed rounded-xl bg-gray-600 px-3 py-4 text-black transition-transform hover:scale-105 active:scale-90">
                   {" "}
