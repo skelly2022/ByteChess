@@ -324,7 +324,7 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
             </div>
             <div className="flex w-full flex-col text-green">
               Entry Requirements:
-              <span>≥ 20 Bullet rated Games</span>
+              <span>≥ 0 Bullet rated Games</span>
             </div>
           </div>
         </div>
