@@ -34,7 +34,8 @@
     "**/*.cjs",
     "**/*.mjs",
     "src/utils/chessPuzzle/chessTactics.js",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "src/helpers/helpersKeys.ts"
   ],
   "exclude": ["node_modules"]
 }

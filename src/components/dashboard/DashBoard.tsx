@@ -168,12 +168,23 @@ const DashBoard: React.FC<DashBoardProps> = ({
 
   return (
     <div className="mt-10 flex  h-auto w-full grow flex-col justify-center gap-3  p-3 md:flex-row">
-      <div className="flex h-auto w-auto  justify-center ">
+      <div className="flex h-auto w-auto  justify-center pb-3 pr-3 md:pb-0 ">
         <div style={boardWrapper} className="z-10">
           <Chessboard
             position={game.fen()}
             customBoardStyle={{
-              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5)",
+              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5 ",
+            }}
+            customDropSquareStyle={{
+              boxShadow: "inset 0 0 1px 6px rgba(255,255,255,0.75)",
+            }}
+            customDarkSquareStyle={{
+              backgroundColor: "#1D5951",
+              border: "1px solid black",
+            }}
+            customLightSquareStyle={{
+              backgroundColor: "#FFDC26",
+              border: "1px solid black",
             }}
             showBoardNotation={true}
             areArrowsAllowed={true}
@@ -208,7 +219,7 @@ const DashBoard: React.FC<DashBoardProps> = ({
         </div>
         <div className="flex w-full cursor-pointer justify-evenly py-2">
           <div
-            className="flex items-center gap-2 rounded-xl bg-yellow px-3 py-1"
+            className="flex items-center gap-2  bg-yellow px-3 py-1"
             onClick={() => {
               handleLike(selectedGame.image);
             }}
@@ -216,7 +227,7 @@ const DashBoard: React.FC<DashBoardProps> = ({
             Like this Game{" "}
             <AiFillHeart color={selectedGame.isLiked ? "red" : ""} />
           </div>
-          <div className="group relative flex items-center gap-2 rounded-xl bg-slate-500 px-3 py-1">
+          <div className="group relative flex items-center gap-2  bg-slate-500 px-3 py-1">
             Analyze this game
             <div
               style={{

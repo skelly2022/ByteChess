@@ -7,10 +7,10 @@ import usePlayModal from "~/hooks/usePlayModal";
 import useLossModal from "~/hooks/InGameModals/useLossModal";
 import socket from "~/helpers/socket";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 
+import { useWallet } from "@solana/wallet-adapter-react";
 const ModalLoss = () => {
   const session = useSession();
   const LossModal = useLossModal();
@@ -20,7 +20,8 @@ const ModalLoss = () => {
   const play = usePlayModal();
   const [rematchState, setRematchState] = useState("DEFAULT"); // DEFAULT, LOADING, OFFERED
   const [newGameLoading, setNewGameLoading] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const { sendTransaction, publicKey } = useWallet();
   const { playID } = router.query;
   function getRandomColor(preferredColor: string) {
     if (preferredColor === "black") {
@@ -56,7 +57,6 @@ const ModalLoss = () => {
       return "Rapid";
     }
   }
-  const time = getGameType(play.minutes + " + " + play.increment);
   const cancelRematch = () => {
     setRematchState("REMATCH");
     socket.emit("rematchDeclined", { playID });
@@ -72,6 +72,64 @@ const ModalLoss = () => {
     setRematchState("LOADING");
 
     // Do any other logic required on rematch acceptance here
+  };
+  const wWallet = () => {
+    if (play.side === "white") {
+      return user.user.walletAddress;
+    } else {
+      return play.opponent.walletAddress;
+    }
+  };
+
+  const bWallet = () => {
+    if (play === "black") {
+      return user.user.walletAddress;
+    } else {
+      return play.opponent.walletAddress;
+    }
+  };
+  const time = getGameType(play.minutes + " + " + play.increment);
+  function getRatingBasedOnGameType(user, play) {
+    const gameType = time;
+
+    let rating;
+    switch (gameType) {
+      case "Bullet":
+        rating = (user.user.bulletRating + play.opponent.bulletRating) / 2;
+        break;
+      case "Blitz":
+        rating = (user.user.blitzRating + play.opponent.blitzRating) / 2;
+        break;
+      case "Rapid":
+        rating = (user.user.rapidRating + play.opponent.rapidRating) / 2;
+        break;
+      default:
+        throw new Error("Invalid game type");
+    }
+
+    console.log(`RAAAANK for ${gameType}`, rating);
+    return rating;
+  }
+  const handleClick = async () => {
+    // setLoading(true);
+    // try {
+    //   const txSig = await sendTransaction(tx, connection);
+    //   const { blockhash, lastValidBlockHeight } =
+    //     await connection.getLatestBlockhash();
+    //   setLoading(false);
+    //   const rating = getRatingBasedOnGameType(user, play);
+    //   socket2.emit("mintGame", {
+    //     wallet: session.data.user.name,
+    //     fen: play.currentFen,
+    //     moves: play.moves,
+    //     wWallet: wWallet(),
+    //     bWallet: bWallet(),
+    //     rating: rating,
+    //   });
+    //   console.log(`RTAAAAAX`, txSig);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
   console.log(play);
   let newGameButtonContent;
@@ -263,9 +321,39 @@ const ModalLoss = () => {
         )}
       </div>
       <div className="mt-4 grid grid-cols-1 gap-4">
-        <button className="bg-yellow px-6 py-3 text-green">
-          Mint your Game
-        </button>
+        {loading ? (
+          <button className="bg-yellow px-6 py-3 text-green">
+            <svg
+              className="ml-1  h-6 w-[115px] animate-spin text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="black"
+                strokeWidth="2"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="black"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>{" "}
+          </button>
+        ) : (
+          <button
+            className="bg-yellow px-6 py-3 text-green"
+            onClick={() => {
+              handleClick();
+            }}
+          >
+            Mint your Game
+          </button>
+        )}
         <button
           className="bg-yellow px-6 py-3 text-green"
           onClick={() => {

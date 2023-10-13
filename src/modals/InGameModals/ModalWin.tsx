@@ -1,24 +1,59 @@
 //@ts-nocheck
+
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import useUserModal from "~/hooks/useUserStore";
 import { useWallet } from "@solana/wallet-adapter-react";
-import toast from "react-hot-toast";
-
+import {
+  MetadataArgs,
+  TokenProgramVersion,
+  TokenStandard,
+  createMintV1Instruction,
+} from "@metaplex-foundation/mpl-bubblegum";
 import ModalGame from "~/modals/InGameModals/ModalGame";
 import useWinModal from "~/hooks/InGameModals/useWinModal";
 import useTournamentModal from "~/hooks/useTournamentModal";
 import socket from "~/helpers/socket";
 import { api } from "~/utils/api";
-
-import socket2 from "~/helpers/socketMint";
-import { connection, program } from "~/anchor/setup";
-import { Transaction } from "@solana/web3.js";
+import {
+  SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+  createAllocTreeIx,
+  ValidDepthSizePair,
+  SPL_NOOP_PROGRAM_ID,
+} from "@solana/spl-account-compression";
+import {
+  PROGRAM_ID as BUBBLEGUM_PROGRAM_ID,
+  computeCreatorHash,
+  computeDataHash,
+  createCreateTreeInstruction,
+  createMintToCollectionV1Instruction,
+} from "@metaplex-foundation/mpl-bubblegum";
+import {
+  Keypair,
+  PublicKey,
+  Transaction,
+  TransactionInstruction,
+  clusterApiUrl,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
+import {
+  PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID,
+  CreateMetadataAccountArgsV3,
+  createCreateMetadataAccountV3Instruction,
+  createCreateMasterEditionV3Instruction,
+  createSetCollectionSizeInstruction,
+} from "@metaplex-foundation/mpl-token-metadata";
 import usePlayModal from "~/hooks/usePlayModal";
 
+import { connection } from "~/anchor/setup";
+import main from "~/helpers/helpersKeys";
+
 const UserWin = () => {
-  const { sendTransaction } = useWallet();
+  const treeCreator = Keypair.fromSecretKey(
+    new Uint8Array(JSON.parse(process.env.NEXT_PUBLIC_TREE_CREATOR as string)),
+  );
+  const { sendTransaction, wallet, publicKey } = useWallet();
   const [loading, setLoading] = useState(false);
   const WinModal = useWinModal();
   const session = useSession();
@@ -32,6 +67,109 @@ const UserWin = () => {
 
   // DEFAULT, LOADING, OFFERED
   const { playID } = router.query;
+  const data = api.mint.getURI.useMutation({
+    async onSuccess(data) {
+      console.log(data);
+      try {
+        const payer = publicKey;
+
+        const creator: PublicKey = new PublicKey(
+          "dKTV1dqiqwJ9gATrh1sdejiYi2VWKpVrntK5Vj2Yqtt",
+        );
+        const treeAddress: PublicKey = new PublicKey(
+          "GTo8FqhHL9NribcdrWGLHmhXk9dbG9Gkm1VMrLXaTEsh",
+        );
+        const collectionMint: PublicKey = new PublicKey(
+          "CRzmGfCcjZjH7zn9FGntXETrrcKgmFwKpmrkLNzCjz4V",
+        );
+        const collectionMetadata: PublicKey = new PublicKey(
+          "9N8qQNUE5xx9JaD3ghXSdVHfKHzvVdmpjJiGF1xXcpeA",
+        );
+        const collectionMasterEditionAccount: PublicKey = new PublicKey(
+          "7YaYie5uiS86bqvB37dNs3Nhi1Hb2KugXwXWWJEffZVQ",
+        );
+        // create a new rpc connection, using the ReadApi wrapper
+
+        const compressedNFTMetadata: MetadataArgs = {
+          name: "Byte Chess",
+          symbol: "BC",
+          uri: data,
+          creators: [
+            {
+              address: creator,
+              verified: false,
+              share: 100,
+            },
+          ],
+          editionNonce: 0,
+          uses: null,
+          collection: null,
+          primarySaleHappened: false,
+          sellerFeeBasisPoints: 0,
+          isMutable: false,
+          tokenProgramVersion: TokenProgramVersion.Original,
+          tokenStandard: TokenStandard.NonFungible,
+        };
+
+        const [treeAuthority] = PublicKey.findProgramAddressSync(
+          [treeAddress.toBuffer()],
+          BUBBLEGUM_PROGRAM_ID,
+        );
+        const [bubblegumSigner, _bump2] = PublicKey.findProgramAddressSync(
+          // `collection_cpi` is a custom prefix required by the Bubblegum program
+          [Buffer.from("collection_cpi", "utf8")],
+          BUBBLEGUM_PROGRAM_ID,
+        );
+        const mintIxs: TransactionInstruction[] = [];
+        const metadataArgs = Object.assign(compressedNFTMetadata, {
+          collection: { key: collectionMint, verified: false },
+        });
+        mintIxs.push(
+          createMintToCollectionV1Instruction(
+            {
+              payer: payer,
+
+              merkleTree: treeAddress,
+              treeAuthority,
+              treeDelegate: creator,
+
+              // set the receiver of the NFT
+              leafOwner: payer,
+              // set a delegated authority over this NFT
+              leafDelegate: payer,
+              collectionAuthority: creator,
+              collectionAuthorityRecordPda: BUBBLEGUM_PROGRAM_ID,
+              collectionMint: collectionMint,
+              collectionMetadata: collectionMetadata,
+              editionAccount: collectionMasterEditionAccount,
+
+              // other accounts
+              compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+              logWrapper: SPL_NOOP_PROGRAM_ID,
+              bubblegumSigner: bubblegumSigner,
+              tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+            },
+            {
+              metadataArgs,
+            },
+          ),
+        );
+
+        const latestBlockhash = await connection.getLatestBlockhash();
+
+        const transaction = new Transaction({
+          feePayer: payer,
+          blockhash: latestBlockhash.blockhash,
+          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+        }).add(...mintIxs);
+
+        transaction.sign(treeCreator);
+        const txSig = await sendTransaction(transaction, connection);
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
+  });
   function getRandomColor(preferredColor: string) {
     if (preferredColor === "black") {
       return "white";
@@ -263,22 +401,44 @@ const UserWin = () => {
       );
   }
   const time = getGameType(play.minutes + " + " + play.increment);
+  function getRatingBasedOnGameType() {
+    const gameType = time;
+
+    let rating;
+    switch (gameType) {
+      case "Bullet":
+        rating = (user.user.bulletRating + play.opponent.bulletRating) / 2;
+        break;
+      case "Blitz":
+        rating = (user.user.blitzRating + play.opponent.blitzRating) / 2;
+        break;
+      case "Rapid":
+        rating = (user.user.rapidRating + play.opponent.rapidRating) / 2;
+        break;
+      default:
+        throw new Error("Invalid game type");
+    }
+
+    return rating.toString();
+  }
+
   const handleClick = async () => {
-    setLoading(true);
-    const tx = new Transaction();
-    try {
-      const txSig = await sendTransaction(tx, connection);
-      const { blockhash, lastValidBlockHeight } =
-        await connection.getLatestBlockhash();
-      setLoading(false);
-      socket2.emit("mintGame", {
-        wallet: session.data.user.name,
-        fen: play.currentFen,
-        moves: play.moves,
-        wWallet: wWallet(),
-        bWallet: bWallet(),
-      });
-    } catch (error) {}
+    const CLUSTER_URL = process.env.RPC_URL ?? clusterApiUrl("devnet");
+    const fen = play.currentFen;
+    const moves = play.moves;
+    const myWallet = wWallet();
+    const oWallet = bWallet();
+    const rating = getRatingBasedOnGameType();
+    data.mutateAsync({ fen, moves, myWallet, oWallet, rating });
+    console.log(moves);
+
+    console.log(
+      typeof fen,
+      typeof moves,
+      typeof myWallet,
+      typeof oWallet,
+      typeof rating,
+    );
   };
   const bodyContent = (
     <div className="flex flex-col   items-center justify-evenly  bg-green  text-white ">

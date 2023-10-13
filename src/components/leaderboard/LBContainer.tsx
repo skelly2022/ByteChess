@@ -4,8 +4,7 @@ import Bullet from "./Bullet";
 import { api } from "~/utils/api";
 
 import useUserModal from "~/hooks/useUserStore";
-import { Session } from "inspector";
-import { AiOutlineSearch } from "react-icons/ai";
+
 import { useRouter } from "next/router";
 const defaultUser = {
   avatar: "path_to_default_avatar.jpg",
@@ -41,6 +40,11 @@ const LBContainer = () => {
       setRapidData(data.rapid);
     },
   });
+  function extractFirstAndLast5Characters(inputString) {
+    const first5 = inputString.substring(0, 5);
+    const last5 = inputString.substring(inputString.length - 5);
+    return `${first5}..${last5}`;
+  }
   console.log(user);
   useEffect(() => {
     data.mutateAsync();
@@ -48,15 +52,17 @@ const LBContainer = () => {
   return (
     <div className="flex h-[calc(100vh-112px)] w-full flex-col items-center justify-center gap-4 p-4 ">
       <div className="flex h-auto w-full gap-4 rounded-xl bg-yellow">
-        <div className="flex h-16 w-full items-center justify-between  bg-slate-300 px-3">
-          <div className="">210we..12341</div>
+        <div className="flex h-16 w-full items-center justify-between  bg-yellow px-3">
+          <div className="">
+            {extractFirstAndLast5Characters(currentUser.walletAddress)}
+          </div>
 
           {!searchFocus && (
-            <div className="flex cursor-pointer gap-3 bg-slate-50 px-1 py-2">
+            <div className="flex cursor-pointer gap-3 bg-green px-1 py-2">
               <h1
                 onClick={() => setPage("1v1")}
                 className={`  rounded-xl px-2 py-1 ${
-                  page === "1v1" ? "bg-slate-200" : ""
+                  page === "1v1" ? "bg-yellow" : ""
                 } `}
               >
                 1v1{" "}
@@ -64,7 +70,7 @@ const LBContainer = () => {
               <h1
                 onClick={() => setPage("Puzzles")}
                 className={`  rounded-xl px-2 py-1 ${
-                  page === "Bullet" ? "bg-slate-200" : ""
+                  page === "Puzzles" ? "bg-yellow" : ""
                 } `}
               >
                 Puzzles{" "}
@@ -72,7 +78,7 @@ const LBContainer = () => {
               <h1
                 onClick={() => router.push("/dashboard")}
                 className={`  rounded-xl px-2 py-1 ${
-                  page === "Nfts" ? "bg-slate-200" : ""
+                  page === "Nfts" ? "bg-yellow" : ""
                 } `}
               >
                 NFTs
@@ -86,7 +92,7 @@ const LBContainer = () => {
           <>
             {" "}
             <div className="flex h-auto w-full grow flex-col items-center	 justify-between gap-3  py-4">
-              <div className=" flex  w-full grow flex-row rounded-xl bg-slate-200 md:flex md:flex-col">
+              <div className=" flex  w-full grow flex-row rounded-xl bg-yellow md:flex md:flex-col">
                 {/* Profile Picture */}
                 <div className="z-10 flex items-center justify-center p-4">
                   <img
@@ -97,7 +103,7 @@ const LBContainer = () => {
                 </div>
 
                 {/* 1v1 Ratings */}
-                <div className="flex flex-col border-t border-gray-300 p-4">
+                <div className="flex flex-col  p-4">
                   <h2 className="mb-3 text-xl font-bold">1v1 Ratings</h2>
                   <div className="flex flex-col space-y-2">
                     <div className="flex justify-between">
@@ -115,7 +121,7 @@ const LBContainer = () => {
                   </div>
                 </div>
 
-                <div className="w-1/3 border-t border-gray-300 p-4 md:w-full">
+                <div className="w-1/3 p-4 md:w-full">
                   <h2 className="mb-3 text-xl font-bold">Trophies</h2>
                 </div>
               </div>
@@ -132,7 +138,7 @@ const LBContainer = () => {
             {" "}
             <div className="flex w-full gap-3  py-0  md:w-1/2">
               <div className="flex h-auto w-full max-w-fit flex-col	justify-start gap-3   py-4">
-                <div className=" flex h-auto w-auto  flex-row rounded-xl bg-slate-200 md:flex md:flex-col">
+                <div className=" flex h-auto w-auto  flex-row rounded-xl bg-yellow md:flex md:flex-col">
                   <div className="z-10 flex items-center justify-center p-4">
                     <img
                       src="https://ipfs.io/ipfs/QmQ5TWTtXoKeupMucMUuss8pCbt3ZyyfV3frCKPjzzJXQf/3597.png"

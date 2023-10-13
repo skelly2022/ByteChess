@@ -103,23 +103,7 @@ export default function Home() {
       socket.off("matched");
     };
   }, []);
-  useEffect(() => {
-    if (session.status === "authenticated") {
-      play.resetState();
-      socket.emit(
-        "pageLoad",
-        { address: session.data.user.name },
-        (response) => {
-          console.log("Response from server:", response);
-        },
-      );
-    } else {
-    }
 
-    return () => {
-      socket.off("pageLoad");
-    };
-  }, [session]);
   return (
     <>
       <ClientOnly>

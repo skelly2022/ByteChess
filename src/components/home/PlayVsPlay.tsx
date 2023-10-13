@@ -25,30 +25,31 @@ const PlayVsPlay = () => {
   const router = useRouter();
   const session = useSession();
   const handleDivClick = (dataId) => {
-    // console.log(session.status);
-    // if (session.status !== "authenticated") {
-    //   toast.error("Must connect wallet to play");
-    //   return;
-    // }
-    // // If the clicked div is already loading, return it to its normal state
-    // if (clickedDataId === dataId) {
-    //   socket.emit("leaveQ", {
-    //     gameType: dataId,
-    //     wallet: session.data.user.name,
-    //   });
-    //   setClickedDataId(null);
-    //   return;
-    // }
-    // // If no div is loading, set this div to loading
-    // if (clickedDataId === null && !inGame) {
-    //   socket.emit("joinQ", {
-    //     gameType: dataId,
-    //     wallet: session.data.user.name,
-    //   });
-    //   setClickedDataId(dataId);
-    // } else {
-    //   toast.error("Must wait for current game to finish");
-    // }
+    console.log(session.status);
+    if (session.status !== "authenticated") {
+      toast.error("Must connect wallet to play");
+      return;
+    }
+    // If the clicked div is already loading, return it to its normal state
+    if (clickedDataId === dataId) {
+      socket.emit("leaveQ", {
+        gameType: dataId,
+        wallet: session.data.user.name,
+      });
+      setClickedDataId(null);
+      return;
+    }
+
+    // If no div is loading, set this div to loading
+    if (clickedDataId === null && !inGame) {
+      socket.emit("joinQ", {
+        gameType: dataId,
+        wallet: session.data.user.name,
+      });
+      setClickedDataId(dataId);
+    } else {
+      toast.error("Must wait for current game to finish");
+    }
   };
   useEffect(() => {
     if (session.status === "authenticated") {
@@ -145,15 +146,11 @@ const PlayVsPlay = () => {
             ))}
           </div>
           <div className="flex h-auto w-full grow flex-row justify-center gap-2 ">
-            <button
-              className="h-10 w-48 rounded  bg-yellow px-2 py-1 font-bold text-green"
-              disabled={true}
-            >
+            <button className="h-10 w-48 rounded  bg-yellow px-2 py-1 font-bold text-green">
               Play with a friend
             </button>
             <button
               className="h-10 w-48 rounded  bg-yellow px-2 py-1 font-bold text-green "
-              disabled={true}
               onClick={() => {
                 play.onOpen();
               }}

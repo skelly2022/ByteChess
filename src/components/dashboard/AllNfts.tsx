@@ -6,7 +6,12 @@ import Assets from "../../helpers/assets";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";
-const { extractFirstAndLast5Characters } = Assets;
+
+function extractFirstAndLast5Characters(inputString) {
+  const first5 = inputString.substring(0, 3);
+  const last5 = inputString.substring(inputString.length - 3);
+  return `${first5}..${last5}`;
+}
 interface AllNftsProps {
   nfts: any;
   onNftClick: any;
@@ -24,6 +29,7 @@ const AllNfts: React.FC<AllNftsProps> = ({ nfts, onNftClick, handleLike }) => {
     width: `80.33vh`,
   });
   const [localNfts, setLocalNfts] = useState(nfts);
+  console.log(nfts);
   const getPgnFinalFen = (pgnString) => {
     try {
       const tempGame = new Chess();
@@ -73,7 +79,7 @@ const AllNfts: React.FC<AllNftsProps> = ({ nfts, onNftClick, handleLike }) => {
     setLocalNfts(sortedNfts);
   }, [nfts]);
   return (
-    <div className=" flex h-auto w-full grow flex-col items-center gap-3 p-3 md:flex-row  md:flex-wrap md:items-start md:gap-5">
+    <div className=" flex h-auto w-full grow flex-col items-center gap-5 p-3 md:flex-row  md:flex-wrap md:items-start md:gap-8">
       {localNfts.map((nft, index) => {
         const finalFen = getPgnFinalFen(nft.attributes[0].value);
 
@@ -81,20 +87,11 @@ const AllNfts: React.FC<AllNftsProps> = ({ nfts, onNftClick, handleLike }) => {
           return (
             <div
               style={boardWrapper}
-              className="relative flex flex-col"
+              className=" flex flex-col gap-6"
               key={index}
             >
               <div
-                className="absolute left-0 top-0 z-[100]   transform text-2xl font-bold text-gray-500"
-                style={{
-                  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
-                }}
-              >
-                <span className="text-gray-500 opacity-80">#</span>
-                {index + 1}
-              </div>
-              <div
-                className="h-full w-full"
+                className="flex h-full w-full flex-col"
                 onClick={() => {
                   onNftClick(nft);
                 }}
@@ -102,39 +99,90 @@ const AllNfts: React.FC<AllNftsProps> = ({ nfts, onNftClick, handleLike }) => {
                 <Chessboard
                   position={finalFen.fen}
                   boardOrientation={finalFen.side}
+                  customBoardStyle={{
+                    boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5 ",
+                  }}
+                  customDropSquareStyle={{
+                    boxShadow: "inset 0 0 1px 6px rgba(255,255,255,0.75)",
+                  }}
+                  customDarkSquareStyle={{
+                    backgroundColor: "#1D5951",
+                    border: "1px solid black",
+                  }}
+                  customLightSquareStyle={{
+                    backgroundColor: "#FFDC26",
+                    border: "1px solid black",
+                  }}
                 />
               </div>
-              <div className="relative flex h-[45px] w-full items-center justify-center pt-1 md:h-auto">
-                <div
-                  style={{
-                    width: "45px",
-                    height: "45px",
-                    borderRadius: "50%",
-                  }}
-                  onClick={() => {
-                    handleLike(nft.image);
-                  }}
-                  className="absolute left-0 flex cursor-pointer items-center justify-center bg-yellow transition-transform hover:scale-105 active:scale-90"
-                >
-                  <AiFillHeart color={nft.isLiked ? "red" : ""} />
-
-                  <h4>{nft.likes}</h4>
-                </div>
-                <div className="flex flex-row items-center gap-3 md:flex-col md:gap-0">
+              <div className="relative flex  w-full flex-col items-center justify-center md:w-[34.33vh] ">
+                <div className="flex flex-row items-center gap-3 md:flex-row md:gap-0">
                   {finalFen.side === "white" && (
                     <>
-                      {extractFirstAndLast5Characters(nft.attributes[2].value)}
-                      <span>vs</span>
-                      {extractFirstAndLast5Characters(nft.attributes[1].value)}
+                      <h1 className=" font-bold text-black">
+                        {" "}
+                        {extractFirstAndLast5Characters(
+                          nft.attributes[2].value,
+                        )}
+                      </h1>
+                      <span className="px-2 font-bold text-yellow">vs</span>
+                      <h1 className=" font-bold text-white">
+                        {" "}
+                        {extractFirstAndLast5Characters(
+                          nft.attributes[1].value,
+                        )}
+                      </h1>
                     </>
                   )}
                   {finalFen.side === "black" && (
                     <>
-                      {extractFirstAndLast5Characters(nft.attributes[1].value)}
-                      <span>vs</span>
-                      {extractFirstAndLast5Characters(nft.attributes[2].value)}
+                      <h1 className=" font-bold text-white">
+                        {" "}
+                        {extractFirstAndLast5Characters(
+                          nft.attributes[1].value,
+                        )}
+                      </h1>
+                      <span className="px-2 font-bold text-yellow">vs</span>
+                      <h1 className=" font-bold text-black">
+                        {" "}
+                        {extractFirstAndLast5Characters(
+                          nft.attributes[2].value,
+                        )}
+                      </h1>
                     </>
                   )}
+                </div>
+                <div className="flex w-screen justify-center gap-2 pt-2 md:w-auto">
+                  <div
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%",
+                    }}
+                    onClick={() => {
+                      handleLike(nft.image);
+                    }}
+                    className=" left-0 flex cursor-pointer items-center justify-center bg-yellow transition-transform hover:scale-105 active:scale-90"
+                  >
+                    <AiFillHeart color={nft.isLiked ? "red" : ""} />
+
+                    <h4>{nft.likes}</h4>
+                  </div>
+                  <div
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%",
+                    }}
+                    onClick={() => {
+                      handleLike(nft.image);
+                    }}
+                    className=" right-0 flex cursor-pointer flex-col items-center justify-center bg-yellow text-[0.8em] font-bold transition-transform hover:scale-105 active:scale-90"
+                  >
+                    <h1 className="text-md">Rank</h1>
+
+                    <h4>1333</h4>
+                  </div>
                 </div>
               </div>
             </div>
