@@ -314,7 +314,7 @@ const SingleTournament: React.FC<SingleTournamentProps> = ({
               <GiHeavyBullets color="black" size={50} />
             </div>
             <div className="flex w-full flex-col text-black">
-              1+0 • Bullet • 27m
+              1+0 • Bullet • 60m
               <span>Tournament</span>
             </div>
           </div>
