@@ -11,21 +11,21 @@ import { createTRPCRouter, publicProcedure } from "src/server/api/trpc";
 import { prisma } from "src/server/db";
 import axios from "axios";
 
-const QUICKNODE_RPC = process.env.RPC_URL ?? clusterApiUrl("devnet");
-const SOLANA_CONNECTION = new Connection(QUICKNODE_RPC);
+// const QUICKNODE_RPC = process.env.RPC_URL ?? clusterApiUrl("devnet");
+// const SOLANA_CONNECTION = new Connection(QUICKNODE_RPC);
 
-const WALLET = Keypair.fromSecretKey(
-  new Uint8Array(JSON.parse(process.env.NEXT_PUBLIC_TREE_CREATOR as string)),
-);
-const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
-  .use(keypairIdentity(WALLET))
-  .use(
-    bundlrStorage({
-      address: "https://devnet.bundlr.network",
-      providerUrl: QUICKNODE_RPC,
-      timeout: 60000,
-    }),
-  );
+// const WALLET = Keypair.fromSecretKey(
+//   new Uint8Array(JSON.parse(process.env.NEXT_PUBLIC_TREE_CREATOR as string)),
+// );
+// const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
+//   .use(keypairIdentity(WALLET))
+//   .use(
+//     bundlrStorage({
+//       address: "https://devnet.bundlr.network",
+//       providerUrl: QUICKNODE_RPC,
+//       timeout: 60000,
+//     }),
+//   );
 
 async function appendLikesToAssets(assets, userAddress) {
   return Promise.all(
@@ -46,46 +46,46 @@ async function appendLikesToAssets(assets, userAddress) {
   );
 }
 
-function arrayToPGN(moves) {
-  let pgn = "";
-  for (let i = 0; i < moves.length; i += 2) {
-    const moveNumber = i / 2 + 1; // Move numbers start from 1
-    pgn += `${moveNumber}. ${moves[i]} `;
+// function arrayToPGN(moves) {
+//   let pgn = "";
+//   for (let i = 0; i < moves.length; i += 2) {
+//     const moveNumber = i / 2 + 1; // Move numbers start from 1
+//     pgn += `${moveNumber}. ${moves[i]} `;
 
-    // Add the black move if it exists (there might not always be a pair)
-    if (i + 1 < moves.length) {
-      pgn += `${moves[i + 1]} `;
-    }
-  }
+//     // Add the black move if it exists (there might not always be a pair)
+//     if (i + 1 < moves.length) {
+//       pgn += `${moves[i + 1]} `;
+//     }
+//   }
 
-  return pgn.trim(); // Remove any trailing space
-}
+//   return pgn.trim(); // Remove any trailing space
+// }
 
-async function uploadMetadata(
-  imgUri: string,
-  imgType: string,
-  nftName: string,
-  description: string,
-  attributes: { trait_type: string; value: Array }[],
-) {
-  console.log(`Step 2 - Uploading Metadata`);
-  const { uri } = await METAPLEX.nfts().uploadMetadata({
-    name: nftName,
-    description: description,
-    image: imgUri,
-    attributes: attributes,
-    properties: {
-      files: [
-        {
-          type: imgType,
-          uri: imgUri,
-        },
-      ],
-    },
-  });
-  console.log("   Metadata URI:", uri);
-  return uri;
-}
+// async function uploadMetadata(
+//   imgUri: string,
+//   imgType: string,
+//   nftName: string,
+//   description: string,
+//   attributes: { trait_type: string; value: Array }[],
+// ) {
+//   console.log(`Step 2 - Uploading Metadata`);
+//   const { uri } = await METAPLEX.nfts().uploadMetadata({
+//     name: nftName,
+//     description: description,
+//     image: imgUri,
+//     attributes: attributes,
+//     properties: {
+//       files: [
+//         {
+//           type: imgType,
+//           uri: imgUri,
+//         },
+//       ],
+//     },
+//   });
+//   console.log("   Metadata URI:", uri);
+//   return uri;
+// }
 
 export const mintRouter = createTRPCRouter({
   getAllNftsProfile: publicProcedure
@@ -304,36 +304,36 @@ export const mintRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      const CONFIG = {
-        uploadPath: "uploads/",
-        imgFileName: "output.jpg",
-        imgType: "image/jpg",
-        imgName: "ByteChess cNFT",
-        description: "https://www.bytechess.io",
-        attributes: [
-          {
-            trait_type: "Moves",
-            value: arrayToPGN(input.moves),
-          },
-          { trait_type: "myWallet", value: input.myWallet },
-          { trait_type: "oWallet", value: input.oWallet },
-          {
-            trait_type: "Rank",
-            value: input.rating,
-          },
-        ],
-        sellerFeeBasisPoints: 500, //500 bp = 5%
-        symbol: "BC",
-        creators: [{ address: WALLET.publicKey, share: 100 }],
-      };
-      const metadataUri = await uploadMetadata(
-        input.imgUri,
-        CONFIG.imgType,
-        CONFIG.imgName,
-        CONFIG.description,
-        CONFIG.attributes,
-      );
+      // const CONFIG = {
+      //   uploadPath: "uploads/",
+      //   imgFileName: "output.jpg",
+      //   imgType: "image/jpg",
+      //   imgName: "ByteChess cNFT",
+      //   description: "https://www.bytechess.io",
+      //   attributes: [
+      //     {
+      //       trait_type: "Moves",
+      //       value: arrayToPGN(input.moves),
+      //     },
+      //     { trait_type: "myWallet", value: input.myWallet },
+      //     { trait_type: "oWallet", value: input.oWallet },
+      //     {
+      //       trait_type: "Rank",
+      //       value: input.rating,
+      //     },
+      //   ],
+      //   sellerFeeBasisPoints: 500, //500 bp = 5%
+      //   symbol: "BC",
+      //   creators: [{ address: WALLET.publicKey, share: 100 }],
+      // };
+      // const metadataUri = await uploadMetadata(
+      //   input.imgUri,
+      //   CONFIG.imgType,
+      //   CONFIG.imgName,
+      //   CONFIG.description,
+      //   CONFIG.attributes,
+      // );
 
-      return metadataUri;
+      // return metadataUri;
     }),
 });
