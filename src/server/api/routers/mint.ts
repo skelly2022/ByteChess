@@ -66,6 +66,7 @@ async function uploadMetadata(
   imgType: string,
   nftName: string,
   description: string,
+  //@ts-ignore
   attributes: { trait_type: string; value: Array }[],
 ) {
   console.log(`Step 2 - Uploading Metadata`);

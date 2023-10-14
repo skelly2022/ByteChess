@@ -216,7 +216,7 @@ const UserProfile = () => {
                     <AiTwotoneEdit
                       size={20}
                       className="relative left-2 rounded-full border  border-black bg-green px-1 text-yellow transition-transform hover:scale-105 active:scale-90"
-                      // onClick={openEditNamePopup}
+                      onClick={openEditNamePopup}
                     />
                   </p>
 
