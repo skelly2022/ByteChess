@@ -44,7 +44,7 @@ import { connection } from "~/anchor/setup";
 
 const UserWin = () => {
   const treeCreator = Keypair.fromSecretKey(
-    new Uint8Array(JSON.parse(process.env.NEXT_PUBLIC_TREE_CREATOR as string)),
+    new Uint8Array(JSON.parse(process.env.NEXT_PUBLIC_TREE_CREATOR))
   );
   console.log('help')
   const { sendTransaction, wallet, publicKey } = useWallet();
