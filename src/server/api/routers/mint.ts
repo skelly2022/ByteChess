@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { Chess } from "chess.js";
-import { createCanvas, Image } from "canvas";
-import { Connection, Keypair, PublicKey, clusterApiUrl } from "@solana/web3.js";
+
+import { Connection, Keypair, clusterApiUrl } from "@solana/web3.js";
 import {
   Metaplex,
   keypairIdentity,
@@ -11,8 +10,6 @@ import {
 import { createTRPCRouter, publicProcedure } from "src/server/api/trpc";
 import { prisma } from "src/server/db";
 import axios from "axios";
-import path from "path";
-import fs from "fs";
 
 const QUICKNODE_RPC = process.env.RPC_URL ?? clusterApiUrl("devnet");
 const SOLANA_CONNECTION = new Connection(QUICKNODE_RPC);
@@ -30,73 +27,6 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
     }),
   );
 
-// Array of all squares on the board
-const array = [
-  "a8",
-  "b8",
-  "c8",
-  "d8",
-  "e8",
-  "f8",
-  "g8",
-  "h8",
-  "a7",
-  "b7",
-  "c7",
-  "d7",
-  "e7",
-  "f7",
-  "g7",
-  "h7",
-  "a6",
-  "b6",
-  "c6",
-  "d6",
-  "e6",
-  "f6",
-  "g6",
-  "h6",
-  "a5",
-  "b5",
-  "c5",
-  "d5",
-  "e5",
-  "f5",
-  "g5",
-  "h5",
-  "a4",
-  "b4",
-  "c4",
-  "d4",
-  "e4",
-  "f4",
-  "g4",
-  "h4",
-  "a3",
-  "b3",
-  "c3",
-  "d3",
-  "e3",
-  "f3",
-  "g3",
-  "h3",
-  "a2",
-  "b2",
-  "c2",
-  "d2",
-  "e2",
-  "f2",
-  "g2",
-  "h2",
-  "a1",
-  "b1",
-  "c1",
-  "d1",
-  "e1",
-  "f1",
-  "g1",
-  "h1",
-];
 async function appendLikesToAssets(assets, userAddress) {
   return Promise.all(
     assets.map(async (asset) => {
@@ -115,16 +45,7 @@ async function appendLikesToAssets(assets, userAddress) {
     }),
   );
 }
-async function loadImage(filename) {
-  const imagePath = path.join(process.cwd(), "public", filename);
-  const imageBuffer = fs.readFileSync(imagePath);
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = `data:image/png;base64,${imageBuffer.toString("base64")}`;
-  });
-}
+
 function arrayToPGN(moves) {
   let pgn = "";
   for (let i = 0; i < moves.length; i += 2) {
@@ -138,69 +59,6 @@ function arrayToPGN(moves) {
   }
 
   return pgn.trim(); // Remove any trailing space
-}
-
-async function drawChessboard(fen) {
-  // Create a new chess instance and load the FEN
-  const chess = new Chess();
-  chess.load(fen);
-
-  // Create a canvas to draw the chessboard
-  const canvas = createCanvas(400, 400);
-  const ctx = canvas.getContext("2d");
-
-  // Define the square size
-  const squareSize = canvas.width / 8;
-
-  // Define custom dark and light square styles
-  const customDarkSquareStyle = { backgroundColor: "#1D5951" };
-  const customLightSquareStyle = { backgroundColor: "#FFDC26" };
-
-  // Iterate through the squares and draw the chessboard grid and pieces
-  for (const square of array) {
-    const [file, rank] = square.split("");
-
-    // Determine the square's style based on its position
-    const squareStyle =
-      (file.charCodeAt(0) - "a".charCodeAt(0) + parseInt(rank, 10)) % 2 === 0
-        ? customLightSquareStyle
-        : customDarkSquareStyle;
-
-    ctx.fillStyle = squareStyle.backgroundColor;
-    ctx.fillRect(
-      (file.charCodeAt(0) - "a".charCodeAt(0)) * squareSize,
-      (8 - parseInt(rank, 10)) * squareSize,
-      squareSize,
-      squareSize,
-    );
-
-    const piece = chess.get(square);
-
-    if (piece !== null && piece.type && piece.color) {
-      const image = await loadImage(
-        `images/pieces/${piece.color}${piece.type}.png`,
-      );
-
-      ctx.drawImage(
-        image,
-        (file.charCodeAt(0) - "a".charCodeAt(0)) * squareSize,
-        (8 - parseInt(rank, 10)) * squareSize,
-        squareSize,
-        squareSize,
-      );
-    }
-  }
-
-  // Save the canvas as a JPEG image
-  return new Promise((resolve, reject) => {
-    canvas.toBuffer((err, buffer) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(buffer);
-      }
-    });
-  });
 }
 
 async function uploadMetadata(
@@ -228,16 +86,7 @@ async function uploadMetadata(
   console.log("   Metadata URI:", uri);
   return uri;
 }
-async function uploadImageBuffer(
-  buffer: Buffer,
-  fileName: string,
-): Promise<string> {
-  console.log(`Step 1 - Uploading Image`);
-  const imgMetaplexFile = toMetaplexFile(buffer, fileName);
-  const imgUri = await METAPLEX.storage().upload(imgMetaplexFile);
-  console.log(`   Image URI:`, imgUri);
-  return imgUri;
-}
+
 export const mintRouter = createTRPCRouter({
   getAllNftsProfile: publicProcedure
     .input(z.object({ address: z.string() }))
@@ -447,7 +296,7 @@ export const mintRouter = createTRPCRouter({
   getURI: publicProcedure
     .input(
       z.object({
-        fen: z.string(),
+        imgUri: z.string(),
         moves: z.array(z.string()),
         myWallet: z.string(),
         oWallet: z.string(),
@@ -455,7 +304,6 @@ export const mintRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      const imgBuffer = await drawChessboard(input.fen);
       const CONFIG = {
         uploadPath: "uploads/",
         imgFileName: "output.jpg",
@@ -478,9 +326,8 @@ export const mintRouter = createTRPCRouter({
         symbol: "BC",
         creators: [{ address: WALLET.publicKey, share: 100 }],
       };
-      const imgUri = await uploadImageBuffer(imgBuffer, CONFIG.imgFileName);
       const metadataUri = await uploadMetadata(
-        imgUri,
+        input.imgUri,
         CONFIG.imgType,
         CONFIG.imgName,
         CONFIG.description,

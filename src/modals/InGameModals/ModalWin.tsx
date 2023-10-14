@@ -24,9 +24,7 @@ import {
 } from "@solana/spl-account-compression";
 import {
   PROGRAM_ID as BUBBLEGUM_PROGRAM_ID,
-  computeCreatorHash,
-  computeDataHash,
-  createCreateTreeInstruction,
+
   createMintToCollectionV1Instruction,
 } from "@metaplex-foundation/mpl-bubblegum";
 import {
@@ -35,14 +33,10 @@ import {
   Transaction,
   TransactionInstruction,
   clusterApiUrl,
-  sendAndConfirmTransaction,
 } from "@solana/web3.js";
 import {
   PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID,
-  CreateMetadataAccountArgsV3,
-  createCreateMetadataAccountV3Instruction,
-  createCreateMasterEditionV3Instruction,
-  createSetCollectionSizeInstruction,
+
 } from "@metaplex-foundation/mpl-token-metadata";
 import usePlayModal from "~/hooks/usePlayModal";
 
@@ -154,7 +148,6 @@ const UserWin = () => {
             },
           ),
         );
-
         const latestBlockhash = await connection.getLatestBlockhash();
 
         const transaction = new Transaction({
@@ -429,7 +422,15 @@ const UserWin = () => {
     const myWallet = wWallet();
     const oWallet = bWallet();
     const rating = getRatingBasedOnGameType();
-    data.mutateAsync({ fen, moves, myWallet, oWallet, rating });
+    socket.emit("mint", { fen: fen }, (response) => {
+      // Handle server's response here.
+      console.log(response);
+      const imgUri = response
+        data.mutateAsync({ imgUri, moves, myWallet, oWallet, rating });
+
+      // Now 'response' contains the 'x' value sent from the server.
+      // You can use it as needed on the client-side.
+    });
     console.log(moves);
 
     console.log(
