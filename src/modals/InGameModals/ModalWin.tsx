@@ -41,12 +41,12 @@ import {
 import usePlayModal from "~/hooks/usePlayModal";
 
 import { connection } from "~/anchor/setup";
-import main from "~/helpers/helpersKeys";
 
 const UserWin = () => {
   const treeCreator = Keypair.fromSecretKey(
     new Uint8Array(JSON.parse(process.env.NEXT_PUBLIC_TREE_CREATOR as string)),
   );
+  console.log('help')
   const { sendTransaction, wallet, publicKey } = useWallet();
   const [loading, setLoading] = useState(false);
   const WinModal = useWinModal();
