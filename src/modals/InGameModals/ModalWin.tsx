@@ -1,5 +1,4 @@
 //@ts-nocheck
-
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -41,6 +40,7 @@ import {
 import usePlayModal from "~/hooks/usePlayModal";
 
 import { connection } from "~/anchor/setup";
+import { BiArrowBack } from "react-icons/bi";
 
 const UserWin = () => {
   const treeCreator = Keypair.fromSecretKey(
@@ -57,6 +57,9 @@ const UserWin = () => {
   const router = useRouter();
 
   const [rematchState, setRematchState] = useState(play.rematchState);
+  const [minted, setMinted] = useState(false);
+  const [img, setImage] = useState("");
+
   const [newGameLoading, setNewGameLoading] = useState(false);
 
   // DEFAULT, LOADING, OFFERED
@@ -71,16 +74,16 @@ const UserWin = () => {
           "dKTV1dqiqwJ9gATrh1sdejiYi2VWKpVrntK5Vj2Yqtt",
         );
         const treeAddress: PublicKey = new PublicKey(
-          "J3YBxHqCeTuZWs4DfjCG4d31eGs5zguEXMty2JvQSmvU",
+          "AsvQToP6iTK7XKXcaZKd2hkxY9n5f8HojbujvJSVn625",
         );
         const collectionMint: PublicKey = new PublicKey(
-          "Bxvv8TkqQZkygX6yzAJ3RFGheWLh2LkrDYfW95zPA8zi",
+          "A8fMfD6b3EB7bjjwcYuyxQDWgD4UKP1DJDZPj6rbsQkR",
         );
         const collectionMetadata: PublicKey = new PublicKey(
-          "W63c27HNftiZ1uFXvQA2CXH3o3SBBwMevRfFrkgF4mq",
+          "9adSZtStbocMiX2CBvNeCNqrXQc15iB11gKMw7c8SrS",
         );
         const collectionMasterEditionAccount: PublicKey = new PublicKey(
-          "6xY8heWdsCeGTMKm7xVCL936wKks1azt9K37mfoh4Scs",
+          "9sJCBU6cjf4SkPue85ECUwY7wDvSzmsdAB5ZFcWS2KGt",
         );
         // create a new rpc connection, using the ReadApi wrapper
 
@@ -158,6 +161,11 @@ const UserWin = () => {
 
         transaction.sign(treeCreator);
         const txSig = await sendTransaction(transaction, connection);
+        setLoading(false)
+
+        if(txSig){
+          setMinted(true)
+        }
       } catch (error) {
         console.log(error.message);
       }
@@ -400,13 +408,13 @@ const UserWin = () => {
     let rating;
     switch (gameType) {
       case "Bullet":
-        rating = (user.user.bulletRating + play.opponent.bulletRating) / 2;
+        rating = user.user.bulletRating 
         break;
       case "Blitz":
-        rating = (user.user.blitzRating + play.opponent.blitzRating) / 2;
+        rating = user.user.blitzRating
         break;
       case "Rapid":
-        rating = (user.user.rapidRating + play.opponent.rapidRating) / 2;
+        rating = user.user.rapidRating
         break;
       default:
         throw new Error("Invalid game type");
@@ -416,115 +424,125 @@ const UserWin = () => {
   }
 
   const handleClick = async () => {
-    const CLUSTER_URL = process.env.RPC_URL ?? clusterApiUrl("devnet");
-    const fen = play.currentFen;
+    if (img !== ""){
+      setMinted(true)
+      return
+    }
+    setLoading(true)
+    const fens = play.fens;
+    const fensLength = play.fens.length;
     const moves = play.moves;
     const myWallet = wWallet();
     const oWallet = bWallet();
     const rating = getRatingBasedOnGameType();
-    socket.emit("mint", { fen: fen }, (response) => {
+    socket.emit("mint", { fen: fens[fensLength - 1] }, (response) => {
       // Handle server's response here.
       console.log(response);
+      setImage(response)
       const imgUri = response
         data.mutateAsync({ imgUri, moves, myWallet, oWallet, rating });
 
       // Now 'response' contains the 'x' value sent from the server.
       // You can use it as needed on the client-side.
     });
-    console.log(moves);
-
-    console.log(
-      typeof fen,
-      typeof moves,
-      typeof myWallet,
-      typeof oWallet,
-      typeof rating,
-    );
+  
   };
-  const bodyContent = (
-    <div className="flex flex-col   items-center justify-evenly  bg-green  text-white ">
-      <h1 className="text-4xl font-bold">Congratulations</h1>
-      {time === "Bullet" && (
-        <h2 className="text-2xl font-bold">
-          Your New Rank: {user.user.bulletRating}
-        </h2>
-      )}
-      {time === "Blitz" && (
-        <h2 className="text-2xl font-bold">
-          Your New Rank: {user.user.blitzRating}
-        </h2>
-      )}
-      {time === "Rapid" && (
-        <h2 className="text-2xl font-bold">
-          Your New Rank: {user.user.rapidRating}
-        </h2>
-      )}
-      <div className="mt-4 grid grid-cols-2 gap-4">
-        {tournamentStore.tournamentID === "" && (
-          <>
-            {rematchButtonContent}
-            {newGameButtonContent}
-          </>
-        )}
-      </div>
-      <div className="mt-4 grid grid-cols-1 gap-4">
-        {loading ? (
-          <button className="bg-yellow px-6 py-3 text-green">
-            <svg
-              className="ml-1  h-6 w-[115px] animate-spin text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
+ const bodyContent = (
+    <div className="flex flex-col items-center justify-evenly bg-green text-white">
+      {!minted ? (
+        <>
+          <h1 className="text-4xl font-bold">Congratulations</h1>
+          {time === "Bullet" && (
+            <h2 className="text-2xl font-bold">
+              Your New Rank: {user.user.bulletRating}
+            </h2>
+          )}
+          {time === "Blitz" && (
+            <h2 className="text-2xl font-bold">
+              Your New Rank: {user.user.blitzRating}
+            </h2>
+          )}
+          {time === "Rapid" && (
+            <h2 className="text-2xl font-bold">
+              Your New Rank: {user.user.rapidRating}
+            </h2>
+          )}
+          <div className="mt-4 grid grid-cols-2 gap-4">
+            {tournamentStore.tournamentID === "" && (
+              <>
+                {rematchButtonContent}
+                {newGameButtonContent}
+              </>
+            )}
+          </div>
+          <div className="mt-4 grid grid-cols-1 gap-4">
+            {loading ? (
+               <button className="bg-yellow px-6 py-3 text-green">
+               <svg
+                 className="ml-1 h-6 w-[115px] animate-spin text-white"
+                 xmlns="http://www.w3.org/2000/svg"
+                 fill="none"
+                 viewBox="0 0 24 24"
+               >
+                 <circle
+                   className="opacity-25"
+                   cx="12"
+                   cy="12"
+                   r="10"
+                   stroke="black"
+                   strokeWidth="2"
+                 ></circle>
+                 <path
+                   className="opacity-75"
+                   fill="black"
+                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                 ></path>
+               </svg>{" "}
+             </button>
+            ):(
+              <button
+              className="bg-yellow px-6 py-3 text-green"
+              onClick={() => {
+                handleClick();
+              }}
             >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="black"
-                strokeWidth="2"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="black"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>{" "}
-          </button>
-        ) : (
-          <button
-            className="bg-yellow px-6 py-3 text-green"
-            onClick={() => {
-              handleClick();
-            }}
-          >
-            Mint your Game
-          </button>
-        )}
-        <button
-          className="bg-yellow px-6 py-3 text-green"
-          onClick={() => {
-            router.push(`/`);
-            WinModal.onClose();
-          }}
-        >
-          Return Home{" "}
-        </button>
-        {tournamentStore.tournamentID !== "" && (
-          <button
-            className="bg-yellow px-6 py-3 text-green"
-            onClick={() => {
-              router.push(`/tournaments/${tournamentStore.tournamentID}`);
-              WinModal.onClose();
-            }}
-          >
-            Return to Tournament{" "}
-          </button>
-        )}
-      </div>
+              Mint your Game
+            </button>
+            )}
+           
+          
+            <button
+              className="bg-yellow px-6 py-3 text-green"
+              onClick={() => {
+                router.push(`/`);
+                WinModal.onClose();
+              }}
+            >
+              Return Home{" "}
+            </button>
+            {tournamentStore.tournamentID !== "" && (
+              <button
+                className="bg-yellow px-6 py-3 text-green"
+                onClick={() => {
+                  router.push(`/tournaments/${tournamentStore.tournamentID}`);
+                  WinModal.onClose();
+                }}
+              >
+                Return to Tournament{" "}
+              </button>
+            )}
+          </div>
+        </>
+      ) : (
+        <div className="w-full h-full flex flex-col gap-3 items-center relative"> <h1 className="text-2xl">NFT Minted</h1>
+        <img src={img}></img>
+        <button className="bg-yellow text-green px-2 py-3" onClick={()=>{router.push('/dashboard')}}>Show in Dashboard</button>
+        <button className="absolute left-0 top-0" onClick={()=>{setMinted(false)}}><BiArrowBack/></button>
+        </div>
+      )}
     </div>
   );
-
+  
   useEffect(() => {
     // Listen for a received rematch offer
     const handleReceivedRematchOffer = () => {

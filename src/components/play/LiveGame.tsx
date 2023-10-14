@@ -202,6 +202,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
       });
       const fens = play.fens;
       const moves = play.moves;
+      const newMovesArray= [...moves, data.fullMove.san]
       play.setMoves([...moves, data.fullMove.san]);
       play.setFens([...fens, data.fen]);
       const newGame = new Chess();
@@ -239,7 +240,7 @@ const LiveGame: React.FC<LiveGameProps> = ({ boardOrientation, connected }) => {
           const newGamePre = new Chess();
           newGamePre.loadPgn(moveMade.pgn);
           setGame(newGamePre);
-          play.setMoves([...moves, moveMade.fullMove.san]);
+          play.setMoves([...newMovesArray, moveMade.fullMove.san]);
           // updateGame.mutateAsync({ id: playID, fen: moveMade.fen });
           setPreMoveSquares({});
           if (new Chess(moveMade.fen).isCheckmate() === true) {

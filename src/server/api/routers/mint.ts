@@ -124,7 +124,7 @@ export const mintRouter = createTRPCRouter({
           return (
             asset.compression &&
             asset.compression.tree ===
-              "J3YBxHqCeTuZWs4DfjCG4d31eGs5zguEXMty2JvQSmvU"
+              "AsvQToP6iTK7XKXcaZKd2hkxY9n5f8HojbujvJSVn625"
           );
         });
 
@@ -184,7 +184,7 @@ export const mintRouter = createTRPCRouter({
           method: "getAssetsByGroup",
           params: {
             groupKey: "collection",
-            groupValue: "Bxvv8TkqQZkygX6yzAJ3RFGheWLh2LkrDYfW95zPA8zi",
+            groupValue: "A8fMfD6b3EB7bjjwcYuyxQDWgD4UKP1DJDZPj6rbsQkR",
             page: 1, // Starts at 1
             limit: 1000,
           },
@@ -316,8 +316,8 @@ export const mintRouter = createTRPCRouter({
             trait_type: "Moves",
             value: arrayToPGN(input.moves),
           },
-          { trait_type: "myWallet", value: input.myWallet },
-          { trait_type: "oWallet", value: input.oWallet },
+          { trait_type: "White", value: input.myWallet },
+          { trait_type: "Black", value: input.oWallet },
           {
             trait_type: "Rank",
             value: input.rating,

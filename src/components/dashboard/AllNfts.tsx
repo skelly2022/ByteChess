@@ -181,7 +181,7 @@ const AllNfts: React.FC<AllNftsProps> = ({ nfts, onNftClick, handleLike }) => {
                   >
                     <h1 className="text-md">Rank</h1>
 
-                    <h4>1333</h4>
+                    <h4>{nft.attributes[3].value}</h4>
                   </div>
                 </div>
               </div>

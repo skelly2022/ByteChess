@@ -16,6 +16,7 @@ import Head from "next/head";
 import assets from "~/helpers/assets";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import Footer from "~/components/footer/Footer";
 
 const { getRandomColor, getTimeControlFromString } = assets;
 
@@ -119,9 +120,10 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
-      <main className="no-scrollbar flex min-h-[calc(100vh-112px)] flex-col items-center overflow-auto bg-green ">
+      <main className="no-scrollbar flex min-h-[calc(100vh-182px)] flex-col items-center overflow-auto bg-green ">
         <LandingPage />
       </main>
+      <Footer/>
     </>
   );
 }
