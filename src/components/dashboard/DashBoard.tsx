@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import {
+  AiFillFastBackward,
+  AiFillFastForward,
   AiFillHeart,
+  AiFillStepBackward,
+  AiFillStepForward,
   AiOutlineArrowLeft,
   AiOutlineArrowRight,
 } from "react-icons/ai";
@@ -11,6 +15,7 @@ const { whiteStyle, blackStyle, extractFirstAndLast5Characters } = Assets;
 import usePlayModal from "~/hooks/usePlayModal";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 interface DashBoardProps {
   selectedGame: any;
@@ -27,6 +32,8 @@ const DashBoard: React.FC<DashBoardProps> = ({
   onNext,
   onPrevious,
 }) => {
+  console.log(selectedGame);
+
   const [currentSelectedGame, setCurrentSelectedGame] = useState(selectedGame);
   const moveString = currentSelectedGame.attributes[0].value;
   const splitMoves = moveString.split(" ");
@@ -40,9 +47,8 @@ const DashBoard: React.FC<DashBoardProps> = ({
   });
   const [saves, setsaves] = useState([]);
   const getLikes = api.mint.getLikes.useMutation({
-    onSuccess(data) {},
-    onError(error) {
-      console.log(error);
+    onSuccess(data) {
+      console.log(data);
     },
   });
 
@@ -165,15 +171,31 @@ const DashBoard: React.FC<DashBoardProps> = ({
   useEffect(() => {
     setCurrentSelectedGame(selectedGame);
   }, [selectedGame]);
+  const fastBackward = () => {
+    const newGame = new Chess();  // Create a new game instance with the default starting position
+    setGame(newGame);  // Set the game state
+    setPgn('');  // Clear the move history
+    setStack([]);  // Clear the move stack
+    // If the play object's setIndex function is being used to track the current move, reset it as well
+    
+  };
+  const loadToEnd = () => {
+  const newGame = new Chess(); // create a new instance
+  newGame.loadPgn(convertToPGN(moveString)); // load the entire move string
+  setGame(newGame); // Update game state to the final state
+  setPgn(convertToPGN(moveString)); // Update PGN to represent full move sequence
+  setStack([]); // Clear the stack
+}
 
   return (
     <div className="mt-10 flex  h-auto w-full grow flex-col justify-center gap-3  p-3 md:flex-row">
-      <div className="flex h-auto w-auto  justify-center pb-3 pr-3 md:pb-0 ">
+
+      <div className="flex h-auto w-auto  justify-center  px-4" >
         <div style={boardWrapper} className="z-10">
           <Chessboard
             position={game.fen()}
             customBoardStyle={{
-              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5 ",
+              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5)",
             }}
             customDropSquareStyle={{
               boxShadow: "inset 0 0 1px 6px rgba(255,255,255,0.75)",
@@ -193,10 +215,10 @@ const DashBoard: React.FC<DashBoardProps> = ({
         </div>
       </div>
 
-      <div className="flex h-[40.33vh] w-full flex-col items-center  border p-3 md:h-[60.33vh] md:w-auto">
+      <div className="flex h-[40.33vh] w-full flex-col items-center  border  md:h-[60.33vh] md:w-auto p-1">
         <div className="relative flex w-full">
           <div
-            className=" z-100 absolute left-0 top-[22%] flex  h-8 w-8 rotate-180 transform cursor-pointer select-none items-center justify-center rounded-full border-2 border-white p-1.5 text-lg leading-6 text-white hover:bg-white hover:bg-opacity-50 active:right-2"
+            className=" z-100 absolute left-0 top-[22%] flex  h-8 w-8 rotate-180 transform cursor-pointer select-none items-center justify-center rounded-full border-2 border-yellow p-1.5 text-lg leading-6 text-white hover:bg-white hover:bg-opacity-50 active:right-2"
             onClick={() => {
               onHandleBack();
             }}
@@ -208,18 +230,18 @@ const DashBoard: React.FC<DashBoardProps> = ({
           </h1>
         </div>
         <div className="flex w-full  items-center justify-center gap-4 py-4">
-          <div className="flex items-center  text-xl">
+          <div className="flex items-center  text-xl  p-1" >
             {extractFirstAndLast5Characters(selectedGame.attributes[1].value)}{" "}
             <div style={whiteStyle}></div>
           </div>
-          <div className="flex items-center gap-2 text-xl">
+          <div className="flex items-center gap-2 text-xl  p-1">
             {extractFirstAndLast5Characters(selectedGame.attributes[2].value)}{" "}
             <div style={blackStyle}></div>
           </div>
         </div>
         <div className="flex w-full cursor-pointer justify-evenly py-2">
           <div
-            className="flex items-center gap-2  bg-yellow px-3 py-1"
+            className="flex items-center gap-2 rounded-none bg-yellow px-3 py-3 font-semibold"
             onClick={() => {
               handleLike(selectedGame.image);
             }}
@@ -227,7 +249,7 @@ const DashBoard: React.FC<DashBoardProps> = ({
             Like this Game{" "}
             <AiFillHeart color={selectedGame.isLiked ? "red" : ""} />
           </div>
-          <div className="group relative flex items-center gap-2  bg-slate-500 px-3 py-1">
+          <div className="group relative flex items-center gap-2 rounded-none bg-slate-500 px-3 py-3 font-semibold">
             Analyze this game
             <div
               style={{
@@ -242,33 +264,58 @@ const DashBoard: React.FC<DashBoardProps> = ({
             </div>
           </div>
         </div>
-        <div className="no-scrollbar h-auto w-full grow overflow-scroll">
-          <table className=" w-full border-collapse border bg-yellow">
-            <thead>
-              <tr>
-                <th className="border border-black p-2">Move No.</th>
-                <th className=" border border-black p-2">White</th>
-                <th className=" border border-black p-2">Black</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({ length: Math.ceil(moves.length / 2) }).map(
-                (_, index) => (
-                  <tr key={index}>
-                    <td className=" border border-black p-2">{index + 1}</td>
-                    <td className=" border border-black p-2">
-                      {moves[2 * index] || ""}
-                    </td>
-                    <td className=" border border-black p-2">
-                      {moves[2 * index + 1] || ""}
-                    </td>
-                  </tr>
-                ),
-              )}
-            </tbody>
-          </table>
-        </div>
+        <div className=" h-2/4  grow align-middle flex flex-col items-center  w-full">
+  <h1 className="p-4 font-bold text-white text-2xl">MOVES</h1>
+  <div
+    className="relative flex cursor-pointer items-center justify-center
+   gap-1 bg-yellow p-2 text-black w-3/4 "
+  >
+    <AiFillFastBackward size={30} onClick={fastBackward} />
+    <AiFillStepBackward
+      size={25}
+      onClick={() => {
+        stepBackward();
+      }}
+    />
+    <AiFillStepForward
+      size={25}
+      onClick={() => {
+        stepForward();
+      }}
+    />
+    <AiFillFastForward size={30} onClick={loadToEnd} />
+  </div>
+  
+  <div className="w-3/4  overflow-y-scroll no-scrollbar" style={{ maxHeight: '300' }}> {/* This container is what makes your table scroll */}
+    <table className="w-full border-collapse border bg-yellow">
+      <thead>
+        <tr>
+          <th className="border border-black p-2">Move No.</th>
+          <th className=" border border-black p-2">White</th>
+          <th className=" border border-black p-2">Black</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Array.from({ length: Math.ceil(moves.length / 2) }).map(
+          (_, index) => (
+            <tr key={index}>
+              <td className=" border border-black p-2">{index + 1}</td>
+              <td className=" border border-black p-2">
+                {moves[2 * index] || ""}
+              </td>
+              <td className=" border border-black p-2">
+                {moves[2 * index + 1] || ""}
+              </td>
+            </tr>
+          ),
+        )}
+      </tbody>
+    </table>
+  </div>
+</div>
+
       </div>
+     
     </div>
   );
 };

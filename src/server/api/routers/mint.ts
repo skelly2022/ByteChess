@@ -92,7 +92,7 @@ export const mintRouter = createTRPCRouter({
   getAllNftsProfile: publicProcedure
     .input(z.object({ address: z.string() }))
     .mutation(async ({ input }) => {
-      const url = `https://devnet.helius-rpc.com/?api-key=2a0a1927-3fb2-4924-9701-23a098d4e383`;
+      const url = `https://devnet.helius-rpc.com/?api-key=${process.env.RPC_KEY}`;
 
       try {
         // Log input to ensure it's being received correctly
@@ -171,8 +171,7 @@ export const mintRouter = createTRPCRouter({
   getAllNfts: publicProcedure
     .input(z.object({ address: z.string() }))
     .mutation(async ({ input }) => {
-      const url =
-        "https://devnet.helius-rpc.com/?api-key=2a0a1927-3fb2-4924-9701-23a098d4e383";
+      const url = `https://devnet.helius-rpc.com/?api-key=${process.env.RPC_KEY}`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
