@@ -22,6 +22,9 @@ import useWinModal from "~/hooks/InGameModals/useWinModal";
 import UserProfile from "~/modals/UserProfile";
 import useLossModal from "~/hooks/InGameModals/useLossModal";
 import useDrawModal from "~/hooks/InGameModals/useDrawModal";
+import WaitingModal from "~/modals/WaitingModal";
+import useWaitingModal from "~/hooks/InGameModals/useWaitingModal";
+
 const { getRandomColor } = assets;
 const { getOppositeColor } = joinGameLogic;
 
@@ -33,6 +36,7 @@ const Home = () => {
   const WinModal = useWinModal();
   const LossModal = useLossModal();
   const DrawModal = useDrawModal();
+  const WaitModal = useWaitingModal();
   const play = usePlayModal();
   const [boardOrientation, setBoardOrientation] = useState("black");
   const [connected, setConnected] = useState(false);
@@ -234,6 +238,7 @@ const Home = () => {
       const data = { address: roomData.username.username };
       getOpponent.mutateAsync(data);
       setConnected(true);
+      WaitModal.onClose()
     });
     // socket.on("updateTime", (data) => {
     //   play.setOpponentTime(data);
@@ -309,6 +314,7 @@ const Home = () => {
       <ClientOnly>
         <ToasterProvider />
         <Navbar />
+        <WaitingModal />
         <LoginModal />
         <ModalWin />
         <ModalLoss />

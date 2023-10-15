@@ -146,9 +146,7 @@ const PlayVsPlay = () => {
             ))}
           </div>
           <div className="flex h-auto w-full grow flex-row justify-center gap-2 ">
-            <button className="h-10 w-48 rounded  bg-yellow px-2 py-1 font-bold text-green">
-              Play with a friend
-            </button>
+      
             <button
               className="h-10 w-48 rounded  bg-yellow px-2 py-1 font-bold text-green "
               onClick={() => {

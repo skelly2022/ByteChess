@@ -12,6 +12,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { AiFillTrophy } from "react-icons/ai";
 import { IoExtensionPuzzleSharp } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
+import{ImExit} from "react-icons/im";
 import { MdLeaderboard } from "react-icons/md";
 
 import { signOut, useSession } from "next-auth/react";
@@ -152,7 +153,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
               }}
             >
               Disconnect
-              <CgProfile className="m-1" />
+              <ImExit className="m-1" />
             </div>
             <div
               onClick={() => {

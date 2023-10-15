@@ -20,7 +20,7 @@ const defaultUser = {
   completedPuzzles: [],
 };
 const LBContainer = () => {
-  const [page, setPage] = useState("none");
+  const [page, setPage] = useState("1v1");
   const user = useUserModal();
   const router = useRouter();
   const [searchFocus, setSearchFocus] = useState(false);
@@ -137,8 +137,8 @@ const LBContainer = () => {
           <>
             {" "}
             <div className="flex w-full gap-3  py-0  md:w-1/2">
-              <div className="flex h-auto w-full max-w-fit flex-col	justify-start gap-3   py-4">
-                <div className=" flex h-auto w-auto  flex-row rounded-xl bg-yellow md:flex md:flex-col">
+              <div className="flex h-auto w-full md:max-w-fit flex-col	justify-start gap-3   py-4">
+                <div className=" flex h-auto w-auto  items-center justify-center flex-row rounded-xl bg-yellow md:flex md:flex-col">
                   <div className="z-10 flex items-center justify-center p-4">
                     <img
                       src="https://ipfs.io/ipfs/QmQ5TWTtXoKeupMucMUuss8pCbt3ZyyfV3frCKPjzzJXQf/3597.png"

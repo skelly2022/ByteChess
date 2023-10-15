@@ -15,11 +15,13 @@ import "react-dropdown/style.css";
 import Loading from "src/components/Loading";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import useWaitingModal from "~/hooks/InGameModals/useWaitingModal";
 
 const { whiteStyle, blackStyle, half } = Assets;
 
 const options = ["Timed", "Unlimited"];
 const LoginModal = () => {
+  const wait = useWaitingModal();
   const user = useUserStore();
   const play = usePlayModal();
   const login = useLoginModal();
@@ -29,13 +31,15 @@ const LoginModal = () => {
   const [incrementCount, setIncrementCount] = useState(0);
   const [selectedOption, setSelectedOption] = useState(options[0]); // Initialize selected option
   const [selectedMode, setSelectedMode] = useState("rated"); // Initialize selected option
-  const { select, wallets, publicKey, disconnect } = useWallet();
+  const { publicKey } = useWallet();
   const session = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const newGame = api.games.newGame.useMutation({
     async onSuccess(data) {
       router.push(`/play/${data.id}`);
       play.onClose();
+      wait.setPk(data.id)
+      wait.onOpen();
     },
     onError(error) {
       console.log(error);
@@ -149,34 +153,7 @@ const LoginModal = () => {
               </div>
             </>
           )}
-          <div className="flex w-full justify-center pt-1">
-            <button
-              className={` px-4 py-2 font-bold  shadow ${
-                selectedMode === "casual"
-                  ? "bg-success text-white"
-                  : "bg-slate-50 text-black"
-              }`}
-              onClick={() => {
-                setSelectedMode("casual");
-              }}
-            >
-              {" "}
-              Casual
-            </button>
-            <button
-              className={` px-4 py-2 font-bold  shadow ${
-                selectedMode === "rated"
-                  ? "bg-success text-white"
-                  : "bg-slate-50 text-black"
-              }`}
-              onClick={() => {
-                setSelectedMode("rated");
-              }}
-            >
-              {" "}
-              Rated
-            </button>
-          </div>
+      
           <div className="flex h-24 w-full items-end justify-center gap-4">
             <div className="flex h-[60px] w-[60px] items-center justify-center bg-slate-300 hover:scale-110">
               <div
